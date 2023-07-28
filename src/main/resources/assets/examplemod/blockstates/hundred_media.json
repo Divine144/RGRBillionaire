@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "examplemod:block/hundred_media",
+      "y": 180
+    },
+    "facing=north": {
+      "model": "examplemod:block/hundred_media",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "examplemod:block/hundred_media",
+      "y": 270
+    },
+    "facing=west": {
+      "model": "examplemod:block/hundred_media"
+    }
+  }
+}
