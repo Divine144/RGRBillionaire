@@ -9,4 +9,6 @@ import net.minecraftforge.registries.DeferredRegister;
 public class MorphInit {
     public static final DeferredRegister<Morph> MORPHS = DeferredRegister.create(new ResourceLocation(HundredMediaMorphsMod.MODID, "morphs"), RGRBillionaire.MODID);
 
+    // TODO: Specify money caps and effects after each morph is obtained here
+
 }

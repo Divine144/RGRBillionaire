@@ -15,7 +15,7 @@ public class ItemInit {
 
     public static final RegistryObject<Item> COIN_CANNON = ITEMS.register("the_coin_cannon", () -> new CoinCannonItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> MARKET_CRASHER = ITEMS.register("market_crasher", () -> new MarketCrasherItem(new Item.Properties().stacksTo(1)));
-    public static final RegistryObject<Item> ROCKET_TO_MARS = ITEMS.register("market_crasher", () -> new SimpleAnimatedItem(new AnimatedItemProperties().stacksTo(1)));
+    public static final RegistryObject<Item> ROCKET_TO_MARS = ITEMS.register("rocket_to_mars", () -> new SimpleAnimatedItem(new AnimatedItemProperties().stacksTo(1)));
 
     public static Item.Properties getItemProperties() {
         return new Item.Properties();

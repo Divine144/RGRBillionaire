@@ -1,6 +1,7 @@
 package com.divinity.hmedia.rgrbillionaire.init;
 
 import com.divinity.hmedia.rgrbillionaire.RGRBillionaire;
+import com.divinity.hmedia.rgrbillionaire.requirement.ArmorSetSkillRequirement;
 import com.divinity.hmedia.rgrbillionaire.requirement.MoneySkillRequirement;
 import com.divinity.hmedia.rgrbillionaire.skill.MorphSkill;
 import com.divinity.hmedia.rgrbillionaire.skill.tree.CombatTree;
@@ -18,18 +19,19 @@ import dev._100media.hundredmediaquests.skill.defaults.QuestSkill;
 import dev._100media.hundredmediaquests.skill.defaults.SimpleSkill;
 import dev._100media.hundredmediaquests.skill.requirements.ItemSkillRequirement;
 import dev._100media.hundredmediaquests.skill.requirements.ItemTagSkillRequirement;
-import dev._100media.hundredmediaquests.skill.requirements.PotionSkillRequirement;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ArmorMaterials;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class SkillInit {
     public static final DeferredRegister<SkillTree> SKILL_TREES = DeferredRegister.create(HMQSkillsInit.SKILL_TREES.getRegistryName(), RGRBillionaire.MODID);
@@ -144,7 +146,7 @@ public class SkillInit {
                     new ItemSkillRequirement(() -> Items.ENDER_PEARL, 4),
                     new ItemSkillRequirement(() -> Items.MAGMA_BLOCK, 16),
                     new ItemSkillRequirement(() -> Items.TNT, 8),
-                    new MoneySkillRequirement(60000)
+                    new MoneySkillRequirement(60_000)
             ),
             player -> {},
             player -> {
@@ -156,20 +158,22 @@ public class SkillInit {
             Arrays.asList(
                     new ItemSkillRequirement(() -> Items.LIGHTNING_ROD, 10),
                     new ItemSkillRequirement(() -> Items.QUARTZ, 64),
-                    new ItemTagSkillRequirement(() -> TagInit.MUSIC_DISC, 3, Component.literal("Music Disc")),
-                    new MoneySkillRequirement(350000)
+                    new ItemTagSkillRequirement(() -> ItemTags.MUSIC_DISCS, 3, Component.literal("Music Disc")),
+                    new MoneySkillRequirement(350_000)
             ),
             player -> {},
             player -> {
             }
     ));
+    // Here
     public static final RegistryObject<Skill> GOLDEN_JETPACK = SKILLS.register("golden_jetpack", () -> new SimpleSkill(
             Component.literal("Golden Jetpack"),
             Component.literal(""),
             Arrays.asList(
-                    new ItemSkillRequirement(() -> Items.TOTEM_OF_UNDYING, 2),
-                    new ItemSkillRequirement(() -> Items.AMETHYST_BLOCK, 24),
-                    new ItemSkillRequirement(() -> Items.EMERALD_BLOCK, 5)
+                    new ArmorSetSkillRequirement(ArmorMaterials.GOLD, ItemStack::isEnchanted),
+                    new ItemSkillRequirement(() -> Items.FIREWORK_ROCKET, 32),
+                    new ItemSkillRequirement(() -> Items.HEART_OF_THE_SEA, 1),
+                    new MoneySkillRequirement(6_666_999)
             ),
             player -> {},
             player -> {
@@ -178,10 +182,8 @@ public class SkillInit {
     public static final RegistryObject<Skill> BILLIONAIRE_CLUB = SKILLS.register("billionaire_club", () -> new SimpleSkill(
             Component.literal("Billionaire's Club"),
             Component.literal(""),
-            Arrays.asList(
-                    new ItemSkillRequirement(() -> Items.NETHERITE_SCRAP, 8),
-                    new ItemSkillRequirement(() -> Items.DRAGON_BREATH, 16),
-                    new ItemSkillRequirement(() -> Items.BEACON, 1)
+            List.of(
+                    new MoneySkillRequirement(1_000_000_000)
             ),
             player -> {},
             player -> {

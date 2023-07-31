@@ -32,17 +32,18 @@ public class RGRBillionaire {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ExampleConfig.CONFIG_SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ExampleClientConfig.CLIENT_SPEC);
 
+
         ItemInit.ITEMS.register(modBus);
         EntityInit.ENTITIES.register(modBus);
         BlockInit.BLOCKS.register(modBus);
         BlockInit.BLOCK_ENTITIES.register(modBus);
-        AbilityInit.ABILITIES.register(modBus);
-        CreativeModeTabInit.CREATIVE_MODE_TABS.register(modBus);
-        QuestInit.QUESTS.register(modBus);
         MenuInit.MENUS.register(modBus);
+        CreativeModeTabInit.CREATIVE_MODE_TABS.register(modBus);
+        AbilityInit.ABILITIES.register(modBus);
+        MarkerInit.MARKERS.register(modBus);
+        QuestInit.QUESTS.register(modBus);
         SkillInit.SKILLS.register(modBus);
         SkillInit.SKILL_TREES.register(modBus);
-        MarkerInit.MARKERS.register(modBus);
         BillionaireHolderAttacher.register();
     }
 
