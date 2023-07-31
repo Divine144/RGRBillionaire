@@ -137,6 +137,24 @@ dependencies {
     // Capability Syncer
     hundredMedia.addJarJarDep('dev._100media.capabilitysyncer:capabilitysyncer', capabilitysyncer_version, capabilitysyncer_version_range)
 
+    // 100 Media Morphs
+    hundredMedia.addJarJarDep('dev._100media.hundredmediamorphs:hundredmediamorphs', hundredmediamorphs_version, hundredmediamorphs_version_range, 'fat', "1.20.1")
+
+    // Geckolib
+    hundredMedia.addJarJarDep('software.bernie.geckolib:geckolib-forge-1.20', geckolib_version, geckolib_version_range, null, null)
+
+    // 100 Media Geckolib
+    hundredMedia.addJarJarDep('dev._100media.hundredmediageckolib:hundredmediageckolib', hundredmediageckolib_version, hundredmediageckolib_version_range, null, '1.20.1')
+
+    // 100 Media Abilities
+    hundredMedia.addJarJarDep('dev._100media.hundredmediaabilities:hundredmediaabilities', hundredmediaabilities_version, hundredmediaabilities_version_range, 'fat', '1.20.1')
+
+    // 100 Media Quests
+    hundredMedia.addJarJarDep('dev._100media.hundredmediaquests:hundredmediaquests', hundredmediaquests_version, hundredmediaquests_version_range, null, '1.20.1')
+
+/*    // 100 Media Utility
+    hundredMedia.addJarJarDep('com.nyfaria.hmutility:hmutility', hmutility_version, hmutility_version_range, null, '1.19.2')*/
+
     // Suggestion Provider Fix
 //    runtimeOnly fg.deobf("com.harleyoconnor:suggestion-provider-fix:suggestion-provider-fix-1.20.1-1.0.0")
 }

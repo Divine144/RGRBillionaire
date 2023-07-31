@@ -1,0 +1,23 @@
+package com.divinity.hmedia.rgrbillionaire.init;
+
+import com.divinity.hmedia.rgrbillionaire.RGRBillionaire;
+import com.divinity.hmedia.rgrbillionaire.item.CoinCannonItem;
+import com.divinity.hmedia.rgrbillionaire.item.MarketCrasherItem;
+import dev._100media.hundredmediageckolib.item.animated.AnimatedItemProperties;
+import dev._100media.hundredmediageckolib.item.animated.SimpleAnimatedItem;
+import net.minecraft.world.item.Item;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
+
+public class ItemInit {
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, RGRBillionaire.MODID);
+
+    public static final RegistryObject<Item> COIN_CANNON = ITEMS.register("the_coin_cannon", () -> new CoinCannonItem(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> MARKET_CRASHER = ITEMS.register("market_crasher", () -> new MarketCrasherItem(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> ROCKET_TO_MARS = ITEMS.register("market_crasher", () -> new SimpleAnimatedItem(new AnimatedItemProperties().stacksTo(1)));
+
+    public static Item.Properties getItemProperties() {
+        return new Item.Properties();
+    }
+}
