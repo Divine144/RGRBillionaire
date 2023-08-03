@@ -23,7 +23,7 @@ public class MoneySkillRequirement implements SkillRequirement {
 
     @Override
     public void consumeRequirement(ServerPlayer player) {
-        BillionaireHolderAttacher.getHolder(player).ifPresent(h -> h.setMoney(h.getMoney() - cost));
+        BillionaireHolderAttacher.getHolder(player).ifPresent(h -> h.addMoney(-cost));
     }
 
     @Override

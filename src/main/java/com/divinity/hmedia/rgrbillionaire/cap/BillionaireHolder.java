@@ -43,6 +43,7 @@ public class BillionaireHolder extends EntityCapability {
         int old = this.money;
         this.money += amount;
         if (money > moneyCap) money = moneyCap;
+        else if (money < 0) money = 0;
         if (money != old) updateTracking();
     }
 

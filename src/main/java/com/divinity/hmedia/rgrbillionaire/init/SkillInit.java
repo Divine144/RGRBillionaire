@@ -42,47 +42,47 @@ public class SkillInit {
             Component.literal("Broke Baby"),
             Component.literal("%s Hearts".formatted(5)),
             Arrays.asList(),
-            () -> HMMMorphInit.getRegistry().getValue(ForgeRegistries.ENTITY_TYPES.getKey(EntityType.ZOMBIE)) // Placeholder
+            MorphInit.BROKE_BABY
     ));
     public static final RegistryObject<Skill> TIGHT_BUDGET_TEEN = SKILLS.register("tight_budget_teen", () -> new MorphSkill(
             Component.literal("Tight Budget Teen"),
-            Component.literal("%s Hearts, Strength %s, Speed %s"),
+            Component.literal("%s Hearts, Strength %s, Speed %s".formatted(15, "I", "I")),
             Arrays.asList(
                     new ItemSkillRequirement(() -> Items.MANGROVE_LEAVES, 64),
                     new ItemSkillRequirement(() -> Items.GOLD_INGOT, 32),
                     new ItemSkillRequirement(() -> Items.MAP, 1)
             ),
-            () -> HMMMorphInit.getRegistry().getValue(ForgeRegistries.ENTITY_TYPES.getKey(EntityType.ZOMBIE)) // Placeholder
+            MorphInit.TIGHT_BUDGET_TEEN
     ));
     public static final RegistryObject<Skill> MIDDLE_CLASS_MAN = SKILLS.register("middle_class_man", () -> new MorphSkill(
             Component.literal("Middle Class Man"),
-            Component.literal("%s Hearts, Strength %s, Speed %s"),
+            Component.literal("%s Hearts, Strength %s, Speed %s".formatted(25, "II", "II")),
             Arrays.asList(
                     new ItemSkillRequirement(() -> Items.GLOW_BERRIES, 64),
                     new ItemSkillRequirement(() -> Items.PRISMARINE_SHARD, 32),
                     new ItemSkillRequirement(() -> Items.WILD_ARMOR_TRIM_SMITHING_TEMPLATE, 1)
             ),
-            () -> HMMMorphInit.getRegistry().getValue(ForgeRegistries.ENTITY_TYPES.getKey(EntityType.ZOMBIE)) // Placeholder
+            MorphInit.MIDDLE_CLASS_MAN
     ));
     public static final RegistryObject<Skill> MULTI_MILLIONAIRE = SKILLS.register("multi_millionaire", () -> new MorphSkill(
             Component.literal("Multi Millionaire"),
-            Component.literal("%s Hearts, Strength %s, Speed %s"),
+            Component.literal("%s Hearts, Strength %s, Speed %s".formatted(35, "III", "III")),
             Arrays.asList(
                     new ItemSkillRequirement(() -> Items.SENTRY_ARMOR_TRIM_SMITHING_TEMPLATE, 1),
                     new ItemSkillRequirement(() -> Items.TOTEM_OF_UNDYING, 2),
                     new ItemSkillRequirement(() -> Items.MAGMA_CREAM, 10)
             ),
-            () -> HMMMorphInit.getRegistry().getValue(ForgeRegistries.ENTITY_TYPES.getKey(EntityType.ZOMBIE)) // Placeholder
+            MorphInit.MULTI_MILLIONAIRE
     ));
     public static final RegistryObject<Skill> THE_BILLIONAIRE = SKILLS.register("the_billionaire", () -> new MorphSkill(
             Component.literal("The Billionaire"),
-            Component.literal("%s Hearts, Strength %s, Speed %s"),
+            Component.literal("%s Hearts, Strength %s, Speed %s".formatted(50, "IV", "IV")),
             Arrays.asList(
                     new ItemSkillRequirement(() -> Items.DRAGON_EGG, 1),
                     new ItemSkillRequirement(() -> Items.NETHER_STAR, 1),
                     new ItemSkillRequirement(() -> Items.EYE_ARMOR_TRIM_SMITHING_TEMPLATE, 1)
             ),
-            () -> HMMMorphInit.getRegistry().getValue(ForgeRegistries.ENTITY_TYPES.getKey(EntityType.ZOMBIE)) // Placeholder
+            MorphInit.THE_BILLIONAIRE
     ));
 
     public static final RegistryObject<MenuProvidingTree> EVOLUTION_TREE = SKILL_TREES.register("evolution", () -> new EvolutionTree(

@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "examplemod:hundred_media"
+          "name": "rgrbillionaire:hundred_media"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "examplemod:blocks/hundred_media"
+  "random_sequence": "rgrbillionaire:blocks/hundred_media"
 }

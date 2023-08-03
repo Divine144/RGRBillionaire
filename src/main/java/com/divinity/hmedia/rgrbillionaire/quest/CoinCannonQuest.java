@@ -24,7 +24,7 @@ public class CoinCannonQuest extends Quest {
     @Override
     protected List<QuestGoal> initializeGoals() {
         List<QuestGoal> goals = new ArrayList<>();
-        goals.add(new AquireAdvancementGoal("trim_with_any_armor_pattern", "quest.goal.rgrbillionaire.new_look_advancement_goal"));
+        goals.add(new AquireAdvancementGoal("trim_with_any_armor_pattern", "new_look_advancement_goal"));
         goals.add(new KillPlayersGoal(2));
         goals.add(new UseItemQuestGoal(1.0, Items.APPLE));
         return goals;

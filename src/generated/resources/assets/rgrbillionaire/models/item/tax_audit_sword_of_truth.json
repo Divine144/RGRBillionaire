@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "rgrbillionaire:item/tax_audit_sword_of_truth"
+  }
+}

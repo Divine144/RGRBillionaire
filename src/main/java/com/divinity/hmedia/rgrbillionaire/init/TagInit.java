@@ -14,10 +14,6 @@ public class TagInit {
     //example
     public static TagKey<Item> TOTEMS = itemTag("totems");
 
-    public static TagKey<Item> MUSIC_DISC = itemTag("music_disc");
-
-
-
     public static void init() {
         Minecraft.getInstance().getSoundManager().stop();
     }

@@ -31,8 +31,8 @@ public class ModLangProvider extends LanguageProvider {
 
     @Override
     protected void addTranslations() {
-        ItemInit.ITEMS.getEntries().forEach(this::itemLang);
         EntityInit.ENTITIES.getEntries().forEach(this::entityLang);
+        ItemInit.ITEMS.getEntries().forEach(this::itemLang);
         BlockInit.BLOCKS.getEntries().forEach(this::blockLang);
         add("itemGroup.hundredMediaTab", "100 Media");
     }

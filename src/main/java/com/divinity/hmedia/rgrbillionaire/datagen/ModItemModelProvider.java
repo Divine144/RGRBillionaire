@@ -1,6 +1,7 @@
 package com.divinity.hmedia.rgrbillionaire.datagen;
 
 import com.divinity.hmedia.rgrbillionaire.RGRBillionaire;
+import com.divinity.hmedia.rgrbillionaire.init.ItemInit;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -10,6 +11,9 @@ import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.function.Supplier;
+import java.util.stream.Stream;
+
 public class ModItemModelProvider extends ItemModelProvider {
     public ModItemModelProvider(PackOutput generator, ExistingFileHelper existingFileHelper) {
         super(generator, RGRBillionaire.MODID, existingFileHelper);
@@ -17,9 +21,9 @@ public class ModItemModelProvider extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
-        // Stream.of()
-        //         .map(Supplier::get)
-        //         .forEach(this::simpleHandHeldModel);
+         Stream.of(ItemInit.SWORD_OF_TRUTH)
+                 .map(Supplier::get)
+                 .forEach(this::simpleHandHeldModel);
 
 //        Stream.of()
 //                .map(Supplier::get)

@@ -1,5 +1,6 @@
 package com.divinity.hmedia.rgrbillionaire;
 
+import com.divinity.hmedia.rgrbillionaire.cap.CannonHolderAttacher;
 import com.divinity.hmedia.rgrbillionaire.config.ExampleClientConfig;
 import com.divinity.hmedia.rgrbillionaire.config.ExampleConfig;
 import com.divinity.hmedia.rgrbillionaire.datagen.*;
@@ -39,12 +40,14 @@ public class RGRBillionaire {
         BlockInit.BLOCK_ENTITIES.register(modBus);
         MenuInit.MENUS.register(modBus);
         CreativeModeTabInit.CREATIVE_MODE_TABS.register(modBus);
+        MorphInit.MORPHS.register(modBus);
         AbilityInit.ABILITIES.register(modBus);
         MarkerInit.MARKERS.register(modBus);
         QuestInit.QUESTS.register(modBus);
         SkillInit.SKILLS.register(modBus);
         SkillInit.SKILL_TREES.register(modBus);
         BillionaireHolderAttacher.register();
+        CannonHolderAttacher.register();
     }
 
     @SubscribeEvent

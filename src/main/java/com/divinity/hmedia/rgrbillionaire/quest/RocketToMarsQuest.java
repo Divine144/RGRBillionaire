@@ -26,7 +26,7 @@ public class RocketToMarsQuest extends Quest {
     @Override
     protected List<QuestGoal> initializeGoals() {
         List<QuestGoal> goals = new ArrayList<>();
-        goals.add(new AquireAdvancementGoal("trim_with_all_exclusive_armor_patterns", "quest.goal.rgrbillionaire.smithing_with_style_advancement_goal"));
+        goals.add(new AquireAdvancementGoal("trim_with_all_exclusive_armor_patterns", "smithing_with_style_advancement_goal"));
         goals.add(new KillPlayersGoal(5) {
             @Override
             public boolean tallyKill(Entity entity, DamageSource source) {

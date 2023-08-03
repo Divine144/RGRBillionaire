@@ -4,6 +4,9 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "${mod_id}.refmap.json",
   "mixins": [],
-  "client": [],
+  "client": [
+    "ItemRendererMixin",
+    "RenderBuffersMixin"
+  ],
   "minVersion": "0.8.5"
 }

@@ -28,7 +28,7 @@ public class MarketCrasherQuest extends Quest {
     @Override
     protected List<QuestGoal> initializeGoals() {
         List<QuestGoal> goals = new ArrayList<>();
-        goals.add(new AquireAdvancementGoal("walk_on_powder_snow_with_leather_boots", "quest.goal.rgrbillionaire.light_as_a_rabbit_advancement_goal"));
+        goals.add(new AquireAdvancementGoal("walk_on_powder_snow_with_leather_boots", "light_as_a_rabbit_advancement_goal"));
         goals.add(new KillSpecificTypeGoal(2, EntityType.WARDEN));
         goals.add(new KillPlayersGoal(3) {
             @Override

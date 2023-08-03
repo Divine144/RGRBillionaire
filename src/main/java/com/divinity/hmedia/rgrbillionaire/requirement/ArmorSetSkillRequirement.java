@@ -5,6 +5,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
@@ -29,20 +30,14 @@ public class ArmorSetSkillRequirement implements SkillRequirement {
 
     @Override
     public boolean hasRequirement(Player player) {
-        armorList.clear();
-        player.getInventory().items.forEach(s -> {
-            if (s.getItem() instanceof ArmorItem item && item.getMaterial() == materialType && predicate.test(s)) {
-                if (armorList.stream().filter(i -> i.getItem() instanceof ArmorItem)
-                        .map(i -> (ArmorItem) i.getItem()).noneMatch(i -> i.getType() == item.getType())) {
-                    armorList.add(s);
-                }
-            }
-        });
-        return armorList.size() == 4;
+        NonNullList<ItemStack> tempList = NonNullList.create();
+        checkInventoryWithList(tempList, player.getInventory());
+        return tempList.size() == 4;
     }
 
     @Override
     public void consumeRequirement(ServerPlayer player) {
+        checkInventoryWithList(armorList, player.getInventory());
         armorList.forEach(i -> i.setCount(0));
     }
 
@@ -50,5 +45,16 @@ public class ArmorSetSkillRequirement implements SkillRequirement {
     public MutableComponent getFancyDescription(Player player) {
         int current = armorList.size() == 4 ? 1 : 0;
         return Component.literal("$%s/$%s Set Of Enchanted Golden Armor".formatted(current, 1));
+    }
+
+    private void checkInventoryWithList(NonNullList<ItemStack> list, Inventory inventory) {
+        inventory.items.forEach(s -> {
+            if (s.getItem() instanceof ArmorItem item && item.getMaterial() == materialType && predicate.test(s)) {
+                if (list.stream().filter(i -> i.getItem() instanceof ArmorItem)
+                        .map(i -> (ArmorItem) i.getItem()).noneMatch(i -> i.getType() == item.getType())) {
+                    list.add(s);
+                }
+            }
+        });
     }
 }

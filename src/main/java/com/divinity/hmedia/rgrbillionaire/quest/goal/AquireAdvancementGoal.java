@@ -1,5 +1,6 @@
 package com.divinity.hmedia.rgrbillionaire.quest.goal;
 
+import com.divinity.hmedia.rgrbillionaire.RGRBillionaire;
 import dev._100media.hundredmediaquests.goal.BasicQuestGoal;
 
 public class AquireAdvancementGoal extends BasicQuestGoal {
@@ -10,7 +11,7 @@ public class AquireAdvancementGoal extends BasicQuestGoal {
     public AquireAdvancementGoal(String advancementID, String descriptionID) {
         super(1);
         this.advancementID = advancementID;
-        this.descriptionID = descriptionID;
+        this.descriptionID = "quest.goal." + RGRBillionaire.MODID + "." + descriptionID;
     }
 
     public String getAdvancementID() {

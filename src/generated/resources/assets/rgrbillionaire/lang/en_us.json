@@ -1,0 +1,13 @@
+{
+  "block.rgrbillionaire.hundred_media": "Hundred Media",
+  "entity.rgrbillionaire.dollar_bill_entity": "Dollar Bill Entity",
+  "entity.rgrbillionaire.dollar_coin_entity": "Dollar Coin Entity",
+  "entity.rgrbillionaire.penny_entity": "Penny Entity",
+  "entity.rgrbillionaire.quarter_entity": "Quarter Entity",
+  "entity.rgrbillionaire.silver_dollar_entity": "Silver Dollar Entity",
+  "item.rgrbillionaire.market_crasher": "Market Crasher",
+  "item.rgrbillionaire.rocket_to_mars": "Rocket To Mars",
+  "item.rgrbillionaire.tax_audit_sword_of_truth": "Tax Audit Sword Of Truth",
+  "item.rgrbillionaire.the_coin_cannon": "The Coin Cannon",
+  "itemGroup.hundredMediaTab": "100 Media"
+}
