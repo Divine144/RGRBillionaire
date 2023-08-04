@@ -1,10 +1,12 @@
 package com.divinity.hmedia.rgrbillionaire.init;
 
 import com.divinity.hmedia.rgrbillionaire.RGRBillionaire;
+import com.divinity.hmedia.rgrbillionaire.menu.ButlerInventoryMenu;
 import dev._100media.hundredmediaquests.menu.AlwaysValidMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.HorseInventoryMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.network.IContainerFactory;
@@ -39,4 +41,5 @@ public class MenuInit {
             return new AlwaysValidMenu(UTILITY_TREE.get(), windowId);
         }
     }));
+    public static final RegistryObject<MenuType<ButlerInventoryMenu>> BUTLER_MENU = MENUS.register("butler_menu", () -> IForgeMenuType.create(ButlerInventoryMenu::new));
 }

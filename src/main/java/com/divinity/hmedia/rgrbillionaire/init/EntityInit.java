@@ -1,11 +1,9 @@
 package com.divinity.hmedia.rgrbillionaire.init;
 
 import com.divinity.hmedia.rgrbillionaire.RGRBillionaire;
+import com.divinity.hmedia.rgrbillionaire.entity.AIRoboButlerEntity;
 import com.divinity.hmedia.rgrbillionaire.entity.CurrencyProjectileEntity;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -43,10 +41,11 @@ public class EntityInit {
     public static final RegistryObject<EntityType<CurrencyProjectileEntity>> DOLLAR_BILL_ENTITY = registerEntity("dollar_bill_entity", () ->
             EntityType.Builder.<CurrencyProjectileEntity>of((type, level) -> new CurrencyProjectileEntity(type, level, 10), MobCategory.MISC).sized(0.25F, 0.25F));
 
+    public static final RegistryObject<EntityType<AIRoboButlerEntity>> BUTLER_ENTITY = registerEntity("butler_entity", () ->
+            EntityType.Builder.of(AIRoboButlerEntity::new, MobCategory.MISC).sized(1F, 1F), Mob::createMobAttributes);
 
     private static <T extends Entity> RegistryObject<EntityType<T>> registerEntity(String name, Supplier<EntityType.Builder<T>> supplier) {
         return ENTITIES.register(name, () -> supplier.get().build(RGRBillionaire.MODID + ":" + name));
-
     }
 
     private static <T extends LivingEntity> RegistryObject<EntityType<T>> registerEntity(String name, Supplier<EntityType.Builder<T>> supplier,

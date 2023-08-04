@@ -1,6 +1,8 @@
 package com.divinity.hmedia.rgrbillionaire.util;
 
 import com.divinity.hmedia.rgrbillionaire.cap.BillionaireHolderAttacher;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
@@ -32,4 +34,25 @@ public final class BillionaireUtils {
             holder.addMoney(-amount);
         }
     }
+
+    // Snipped from HundredDaysStory
+    public static Direction findHorizontalDirection(BlockPos pos, Vec3 vector) {
+        Vec3 center = Vec3.atCenterOf(pos);
+        Vec3 direction = vector.subtract(center);
+        boolean eastWest = (Math.abs(direction.x()) > Math.abs(direction.z()));
+        if (eastWest) {
+            if (direction.x >= 0) {
+                return Direction.EAST;
+            } else {
+                return Direction.WEST;
+            }
+        } else {
+            if (direction.z >= 0) {
+                return Direction.SOUTH;
+            } else {
+                return Direction.NORTH;
+            }
+        }
+    }
+
 }
