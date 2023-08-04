@@ -214,7 +214,7 @@ public class AIRoboButlerEntity extends PathfinderMob implements GeoEntity, Cont
             }
 
             public boolean set(ItemStack stack) {
-                return stack.is(Items.GOLDEN_APPLE);
+                return false;
             }
         } : super.getSlot(pSlot);
     }
@@ -291,7 +291,6 @@ public class AIRoboButlerEntity extends PathfinderMob implements GeoEntity, Cont
                 }
             }
         }
-
         this.inventory.addListener(this);
         this.updateContainerEquipment();
         this.itemHandler = LazyOptional.of(() -> new InvWrapper(this.inventory));

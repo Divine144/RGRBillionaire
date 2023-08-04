@@ -10,7 +10,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 
 import java.util.Objects;
 
@@ -33,7 +32,12 @@ public class ButlerInventoryMenu extends AbstractContainerMenu {
 
             @Override
             public boolean mayPlace(ItemStack p_39677_) {
-                return p_39677_.is(Items.GOLDEN_APPLE) && !this.hasItem();
+                return false;
+            }
+
+            @Override
+            public boolean isActive() {
+                return false;
             }
         });
         this.addSlot(new Slot(horseContainer, 1, 8, 36) {

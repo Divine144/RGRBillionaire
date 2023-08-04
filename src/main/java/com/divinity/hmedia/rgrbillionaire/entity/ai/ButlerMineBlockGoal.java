@@ -10,14 +10,12 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.DropExperienceBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.Comparator;
-import java.util.Optional;
 import java.util.function.Predicate;
 
+// TODO: MAKE THIS WORK
 public class ButlerMineBlockGoal extends MoveToBlockGoal {
 
     private static final int STUCK_TIMER = 20;

@@ -2,6 +2,7 @@ package com.divinity.hmedia.rgrbillionaire.init;
 
 import com.divinity.hmedia.rgrbillionaire.RGRBillionaire;
 import com.divinity.hmedia.rgrbillionaire.requirement.ArmorSetSkillRequirement;
+import com.divinity.hmedia.rgrbillionaire.requirement.ItemSkillRequirementSpecial;
 import com.divinity.hmedia.rgrbillionaire.requirement.MoneySkillRequirement;
 import com.divinity.hmedia.rgrbillionaire.skill.MorphSkill;
 import com.divinity.hmedia.rgrbillionaire.skill.tree.CombatTree;
@@ -60,7 +61,7 @@ public class SkillInit {
             Arrays.asList(
                     new ItemSkillRequirement(() -> Items.GLOW_BERRIES, 64),
                     new ItemSkillRequirement(() -> Items.PRISMARINE_SHARD, 32),
-                    new ItemSkillRequirement(() -> Items.WILD_ARMOR_TRIM_SMITHING_TEMPLATE, 1)
+                    new ItemSkillRequirementSpecial(() -> Items.WILD_ARMOR_TRIM_SMITHING_TEMPLATE, 1, "[Wild Armor Trim Smithing Template]")
             ),
             MorphInit.MIDDLE_CLASS_MAN
     ));
@@ -68,7 +69,7 @@ public class SkillInit {
             Component.literal("Multi Millionaire"),
             Component.literal("%s Hearts, Strength %s, Speed %s".formatted(35, "III", "III")),
             Arrays.asList(
-                    new ItemSkillRequirement(() -> Items.SENTRY_ARMOR_TRIM_SMITHING_TEMPLATE, 1),
+                    new ItemSkillRequirementSpecial(() -> Items.SENTRY_ARMOR_TRIM_SMITHING_TEMPLATE, 1, "[Sentry Armor Trim Smithing Template]"),
                     new ItemSkillRequirement(() -> Items.TOTEM_OF_UNDYING, 2),
                     new ItemSkillRequirement(() -> Items.MAGMA_CREAM, 10)
             ),
@@ -80,7 +81,7 @@ public class SkillInit {
             Arrays.asList(
                     new ItemSkillRequirement(() -> Items.DRAGON_EGG, 1),
                     new ItemSkillRequirement(() -> Items.NETHER_STAR, 1),
-                    new ItemSkillRequirement(() -> Items.EYE_ARMOR_TRIM_SMITHING_TEMPLATE, 1)
+                    new ItemSkillRequirementSpecial(() -> Items.EYE_ARMOR_TRIM_SMITHING_TEMPLATE, 1, "[Eye Armor Smithing Template]")
             ),
             MorphInit.THE_BILLIONAIRE
     ));

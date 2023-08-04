@@ -1,5 +1,6 @@
 {
   "block.rgrbillionaire.hundred_media": "Hundred Media",
+  "entity.rgrbillionaire.butler_entity": "Butler Entity",
   "entity.rgrbillionaire.dollar_bill_entity": "Dollar Bill Entity",
   "entity.rgrbillionaire.dollar_coin_entity": "Dollar Coin Entity",
   "entity.rgrbillionaire.penny_entity": "Penny Entity",
@@ -9,5 +10,16 @@
   "item.rgrbillionaire.rocket_to_mars": "Rocket To Mars",
   "item.rgrbillionaire.tax_audit_sword_of_truth": "Tax Audit Sword Of Truth",
   "item.rgrbillionaire.the_coin_cannon": "The Coin Cannon",
-  "itemGroup.hundredMediaTab": "100 Media"
+  "itemGroup.hundredMediaTab": "100 Media",
+  "quest.goal.rgrbillionaire.kill_player_coin_cannon.description": "Kill 3 players with the Coin Cannon",
+  "quest.goal.rgrbillionaire.kill_player_fall_damage.description": "Kill 5 Players with fall damage",
+  "quest.goal.rgrbillionaire.kill_player_grand_giveaway.description": "Kill 3 Players with the Grand Giveaway",
+  "quest.goal.rgrbillionaire.light_as_a_rabbit_advancement_goal.description": "Earn the Advancement \"Light as a Rabbit\"",
+  "quest.goal.rgrbillionaire.little_sniffs_advancement_goal.description": "Earn the Advancement \"Little Sniffs\"",
+  "quest.goal.rgrbillionaire.loot_desert_temple_goal.description": "Discover and loot a Desert Temple",
+  "quest.goal.rgrbillionaire.loot_end_ship_goal.description": "Discover and loot an End Ship",
+  "quest.goal.rgrbillionaire.new_look_advancement_goal.description": "Earn the Advancement \"Crafting a New Look\"",
+  "quest.goal.rgrbillionaire.smells_interesting_advancement_goal": "Earn the Advancement \"Smells Interesting\"",
+  "quest.goal.rgrbillionaire.smithing_with_style_advancement_goal.description": "Earn the Advancement \"Smithing With Style\"",
+  "quest.goal.rgrbillionaire.steal_money_goal.description": "Steal $2,500 from players using Exploit The Working Class"
 }

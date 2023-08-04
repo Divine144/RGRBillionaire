@@ -1,5 +1,6 @@
 package com.divinity.hmedia.rgrbillionaire.quest;
 
+import com.divinity.hmedia.rgrbillionaire.entity.CurrencyProjectileEntity;
 import com.divinity.hmedia.rgrbillionaire.init.AbilityInit;
 import com.divinity.hmedia.rgrbillionaire.init.ItemInit;
 import com.divinity.hmedia.rgrbillionaire.quest.goal.AquireAdvancementGoal;
@@ -33,7 +34,7 @@ public class MarketCrasherQuest extends Quest {
         goals.add(new KillPlayersGoal(3) {
             @Override
             public boolean tallyKill(Entity entity, DamageSource source) {
-                return super.tallyKill(entity, source); // check if source.getDirectEntity() instanceof FallingCoinEntity or FallingBillEntity
+                return source.getDirectEntity() instanceof CurrencyProjectileEntity projectile && projectile.getDeltaMovement().x == 0 && super.tallyKill(entity, source);
             }
 
             @Override

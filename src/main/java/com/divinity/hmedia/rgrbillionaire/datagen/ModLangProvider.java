@@ -35,6 +35,17 @@ public class ModLangProvider extends LanguageProvider {
         ItemInit.ITEMS.getEntries().forEach(this::itemLang);
         BlockInit.BLOCKS.getEntries().forEach(this::blockLang);
         add("itemGroup.hundredMediaTab", "100 Media");
+        add("quest.goal.rgrbillionaire.loot_desert_temple_goal.description", "Discover and loot a Desert Temple");
+        add("quest.goal.rgrbillionaire.loot_end_ship_goal.description", "Discover and loot an End Ship");
+        add("quest.goal.rgrbillionaire.steal_money_goal.description", "Steal $2,500 from players using Exploit The Working Class");
+        add("quest.goal.rgrbillionaire.new_look_advancement_goal.description", "Earn the Advancement \"Crafting a New Look\"");
+        add("quest.goal.rgrbillionaire.kill_player_coin_cannon.description", "Kill 3 players with the Coin Cannon");
+        add("quest.goal.rgrbillionaire.little_sniffs_advancement_goal.description", "Earn the Advancement \"Little Sniffs\"");
+        add("quest.goal.rgrbillionaire.light_as_a_rabbit_advancement_goal.description", "Earn the Advancement \"Light as a Rabbit\"");
+        add("quest.goal.rgrbillionaire.kill_player_grand_giveaway.description", "Kill 3 Players with the Grand Giveaway");
+        add("quest.goal.rgrbillionaire.smithing_with_style_advancement_goal.description", "Earn the Advancement \"Smithing With Style\"");
+        add("quest.goal.rgrbillionaire.kill_player_fall_damage.description", "Kill 5 Players with fall damage");
+        add("quest.goal.rgrbillionaire.smells_interesting_advancement_goal", "Earn the Advancement \"Smells Interesting\"");
     }
 
     protected void itemLang(RegistryObject<Item> entry) {

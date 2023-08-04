@@ -30,7 +30,7 @@ public class RocketToMarsQuest extends Quest {
         goals.add(new KillPlayersGoal(5) {
             @Override
             public boolean tallyKill(Entity entity, DamageSource source) {
-                return source.is(DamageTypes.FALL) ? super.tallyKill(entity, source) : false;
+                return source.is(DamageTypes.FALL) && super.tallyKill(entity, source);
             }
             @Override
             public String getDescriptionId() {
