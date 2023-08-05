@@ -3,6 +3,7 @@ package com.divinity.hmedia.rgrbillionaire.init;
 import com.divinity.hmedia.rgrbillionaire.RGRBillionaire;
 import com.divinity.hmedia.rgrbillionaire.item.CoinCannonItem;
 import com.divinity.hmedia.rgrbillionaire.item.MarketCrasherItem;
+import com.divinity.hmedia.rgrbillionaire.item.MoneyItem;
 import com.divinity.hmedia.rgrbillionaire.item.SwordOfTruthItem;
 import dev._100media.hundredmediageckolib.item.animated.AnimatedItemProperties;
 import dev._100media.hundredmediageckolib.item.animated.SimpleAnimatedItem;
@@ -20,6 +21,8 @@ public class ItemInit {
     public static final RegistryObject<Item> MARKET_CRASHER = ITEMS.register("market_crasher", () -> new MarketCrasherItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> ROCKET_TO_MARS = ITEMS.register("rocket_to_mars", () -> new SimpleAnimatedItem(new AnimatedItemProperties().stacksTo(1)));
     public static final RegistryObject<Item> SWORD_OF_TRUTH = ITEMS.register("tax_audit_sword_of_truth", () -> new SwordOfTruthItem(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> MARKETPLACE = ITEMS.register("starlinked_minebook_marketplace", () -> new SimpleAnimatedItem(new AnimatedItemProperties().stacksTo(1)));
+    public static final RegistryObject<Item> MONEY = ITEMS.register("money", () -> new MoneyItem(new Item.Properties().stacksTo(1)));
 
     public static Item.Properties getItemProperties() {
         return new Item.Properties();

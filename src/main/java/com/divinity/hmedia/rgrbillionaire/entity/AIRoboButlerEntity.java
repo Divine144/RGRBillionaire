@@ -1,9 +1,13 @@
 package com.divinity.hmedia.rgrbillionaire.entity;
 
 import com.divinity.hmedia.rgrbillionaire.cap.ButlerGlobalLevelHolderAttacher;
-import com.divinity.hmedia.rgrbillionaire.entity.ai.ButlerMineBlockGoal;
+import com.divinity.hmedia.rgrbillionaire.entity.ai.FollowOwnerGoal;
+import com.divinity.hmedia.rgrbillionaire.entity.ai.MineOresGoal;
+import com.divinity.hmedia.rgrbillionaire.entity.api.IBlockInteractor;
 import com.divinity.hmedia.rgrbillionaire.menu.ButlerInventoryMenu;
+import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
@@ -11,19 +15,21 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.*;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.wrapper.InvWrapper;
@@ -31,10 +37,8 @@ import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.animation.*;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
@@ -43,22 +47,26 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
 import java.util.UUID;
 
-public class AIRoboButlerEntity extends PathfinderMob implements GeoEntity, ContainerListener, HasCustomInventoryScreen {
+public class AIRoboButlerEntity extends PathfinderMob implements GeoEntity, ContainerListener, HasCustomInventoryScreen, IBlockInteractor {
 
-    private ItemStack tool = new ItemStack(Items.DIAMOND_PICKAXE);
     private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
     protected static final RawAnimation WALK = RawAnimation.begin().thenLoop("walk");
     protected static final RawAnimation IDLE = RawAnimation.begin().thenLoop("idle");
     protected static final RawAnimation MINE = RawAnimation.begin().thenLoop("mine");
-    protected static final RawAnimation STANDBY = RawAnimation.begin().thenLoop("standby");
-    protected static final RawAnimation GOING_STANDBY = RawAnimation.begin().thenLoop("going_standby");
-    protected static final RawAnimation LEAVING_STANDBY = RawAnimation.begin().thenLoop("leaving_standby");
+    protected static final RawAnimation STANDBY = RawAnimation.begin().thenLoop("stand_by");
+    protected static final RawAnimation GOING_STANDBY = RawAnimation.begin().then("going_standby", Animation.LoopType.PLAY_ONCE).then("stand_by", Animation.LoopType.LOOP);
+    protected static final RawAnimation LEAVING_STANDBY = RawAnimation.begin().then("leaving_standby", Animation.LoopType.PLAY_ONCE).then("idle", Animation.LoopType.LOOP);
     private static final EntityDataAccessor<Optional<UUID>> DATA_OWNERUUID_ID = SynchedEntityData.defineId(AIRoboButlerEntity.class, EntityDataSerializers.OPTIONAL_UUID);
+    protected static final EntityDataAccessor<Integer> DATA_TIME = SynchedEntityData.defineId(AIRoboButlerEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> DATA_MINING = SynchedEntityData.defineId(AIRoboButlerEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> DATA_SIT = SynchedEntityData.defineId(AIRoboButlerEntity.class, EntityDataSerializers.BOOLEAN);
+    protected static final EntityDataAccessor<Boolean> DATA_NEW = SynchedEntityData.defineId(AIRoboButlerEntity.class, EntityDataSerializers.BOOLEAN);
+
+    private int interactionTicks;
     public static final int INV_CHEST_COUNT = 17;
     protected SimpleContainer inventory;
     private LazyOptional<?> itemHandler = null;
+
 
     public AIRoboButlerEntity(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -69,7 +77,6 @@ public class AIRoboButlerEntity extends PathfinderMob implements GeoEntity, Cont
     public void readAdditionalSaveData(CompoundTag nbt) {
         if (nbt.contains("Owner"))
             this.entityData.set(DATA_OWNERUUID_ID, Optional.of(nbt.getUUID("Owner")));
-        tool = ItemStack.of(nbt.getCompound("tool"));
         this.createInventory();
         // Inventory
         ListTag listtag = nbt.getList("Items", 10);
@@ -88,6 +95,7 @@ public class AIRoboButlerEntity extends PathfinderMob implements GeoEntity, Cont
         if (this.getOwnerUUID() != null)
             nbt.putUUID("Owner", this.getOwnerUUID());
         nbt.put("tool", getTool().save(new CompoundTag()));
+        this.entityData.set(DATA_NEW, false);
         // Inventory
         ListTag listtag = new ListTag();
         for(int i = 2; i < this.inventory.getContainerSize(); ++i) {
@@ -104,7 +112,7 @@ public class AIRoboButlerEntity extends PathfinderMob implements GeoEntity, Cont
     }
 
     @Override
-    public <T> net.minecraftforge.common.util.LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, @Nullable net.minecraft.core.Direction facing) {
+    public <T> net.minecraftforge.common.util.LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, @Nullable Direction facing) {
         if (this.isAlive() && capability == ForgeCapabilities.ITEM_HANDLER && itemHandler != null)
             return itemHandler.cast();
         return super.getCapability(capability, facing);
@@ -120,8 +128,22 @@ public class AIRoboButlerEntity extends PathfinderMob implements GeoEntity, Cont
         }
     }
 
-    public boolean hasInventoryChanged(Container pInventory) {
-        return this.inventory != pInventory;
+    @Override
+    public void tick() {
+        super.tick();
+        if (!this.level().isClientSide) {
+            Player owner = this.getOwner();
+            if (owner != null) {
+                if (this.getTime() > 0) {
+                    this.decreaseTime(1);
+                }
+                if (this.getTime() == 0) {
+                    owner.sendSystemMessage(Component.literal("Butler: Your meal, sir").withStyle(ChatFormatting.GREEN));
+                    owner.getInventory().add(new ItemStack(Items.ENCHANTED_GOLDEN_APPLE));
+                    this.setTime(200);
+                }
+            }
+        }
     }
 
     @Override
@@ -130,12 +152,23 @@ public class AIRoboButlerEntity extends PathfinderMob implements GeoEntity, Cont
         this.entityData.define(DATA_OWNERUUID_ID, Optional.empty());
         this.entityData.define(DATA_MINING, false);
         this.entityData.define(DATA_SIT, true);
+        this.entityData.define(DATA_NEW, true);
+        this.entityData.define(DATA_TIME, 200);
     }
 
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(1, new ButlerMineBlockGoal(this, 0.8D, 15, 15, state -> !state.is(Blocks.BEDROCK) && state.isSolid()));
+        this.goalSelector.addGoal(1, new MineOresGoal<>(this, 0.5F, 16, 200) {
+            @Override
+            public boolean canUse() {
+                return !AIRoboButlerEntity.this.isSitting() && super.canUse();
+            }
+            @Override
+            public boolean canContinueToUse() {
+                return !AIRoboButlerEntity.this.isSitting() && super.canContinueToUse();
+            }
+        });
         this.goalSelector.addGoal(2, new WaterAvoidingRandomStrollGoal(this, 0.5D, 0.5F) {
             @Override
             public boolean canUse() {
@@ -147,10 +180,37 @@ public class AIRoboButlerEntity extends PathfinderMob implements GeoEntity, Cont
                 return super.canContinueToUse() && !AIRoboButlerEntity.this.isSitting();
             }
         });
+        this.goalSelector.addGoal(3, new FollowOwnerGoal<>(this, AIRoboButlerEntity::getOwner,  0.5D, 70f, 25f, false) {
+            @Override
+            public boolean canUse() {
+                return super.canUse() && !AIRoboButlerEntity.this.isSitting() && !AIRoboButlerEntity.this.getMoveControl().hasWanted() && !AIRoboButlerEntity.this.getMining();
+            }
+
+            @Override
+            public boolean canContinueToUse() {
+                return super.canContinueToUse() && !AIRoboButlerEntity.this.isSitting() && !AIRoboButlerEntity.this.getMining();
+            }
+        });
         this.goalSelector.addGoal(4, new LookAtPlayerGoal(this, Player.class, 6.0F) {
             @Override
             public boolean canUse() {
-                return super.canUse() && !AIRoboButlerEntity.this.getMining();
+                return super.canUse() && !AIRoboButlerEntity.this.getMining() && !AIRoboButlerEntity.this.isSitting();
+            }
+
+            @Override
+            public boolean canContinueToUse() {
+                return super.canContinueToUse() && !AIRoboButlerEntity.this.getMining() && !AIRoboButlerEntity.this.isSitting();
+            }
+        });
+        this.goalSelector.addGoal(5, new RandomLookAroundGoal(this) {
+            @Override
+            public boolean canUse() {
+                return super.canUse() && !AIRoboButlerEntity.this.getMining() && !AIRoboButlerEntity.this.isSitting();
+            }
+
+            @Override
+            public boolean canContinueToUse() {
+                return super.canContinueToUse() && !AIRoboButlerEntity.this.getMining() && !AIRoboButlerEntity.this.isSitting();
             }
         });
     }
@@ -185,13 +245,27 @@ public class AIRoboButlerEntity extends PathfinderMob implements GeoEntity, Cont
     }
 
     @Override
-    public void containerChanged(Container pContainer) {
-        this.updateContainerEquipment();
+    public boolean isInvulnerableTo(DamageSource pSource) {
+        return !pSource.is(DamageTypes.GENERIC_KILL) && !pSource.is(DamageTypes.FELL_OUT_OF_WORLD);
     }
 
     @Override
-    public boolean isInvulnerableTo(DamageSource pSource) {
-        return !pSource.is(DamageTypes.GENERIC_KILL) && !pSource.is(DamageTypes.FELL_OUT_OF_WORLD);
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        Entity entity1 = pSource.getEntity();
+        if (!this.level().isClientSide) {
+            if (entity1 != null && !pSource.is(DamageTypeTags.IS_EXPLOSION)) {
+                double d0 = entity1.getX() - this.getX();
+
+                double d1;
+                for (d1 = entity1.getZ() - this.getZ(); d0 * d0 + d1 * d1 < 1.0E-4D; d1 = (Math.random() - Math.random()) * 0.01D) {
+                    d0 = (Math.random() - Math.random()) * 0.01D;
+                }
+                this.markHurt();
+                this.indicateDamage(d0, d1);
+                this.knockback((double) 0.4F, d0, d1);
+            }
+        }
+        return super.hurt(pSource, pAmount);
     }
 
     @Override
@@ -234,22 +308,91 @@ public class AIRoboButlerEntity extends PathfinderMob implements GeoEntity, Cont
                 }
             }
         });
+        this.setItemInHand(InteractionHand.MAIN_HAND, Items.DIAMOND_PICKAXE.getDefaultInstance());
         return pSpawnData;
     }
 
-    protected <E extends AIRoboButlerEntity> PlayState animationController(final AnimationState<E> event) {
-        if (event.isMoving()) {
-            return event.setAndContinue(WALK);
+    @Override
+    public int getInteractionTicks() {
+        return interactionTicks;
+    }
+
+    @Override
+    public void setInteractionTicks(int ticks) {
+        this.interactionTicks = ticks;
+    }
+
+    @Override
+    public boolean getMining() {
+        return entityData.get(DATA_MINING);
+    }
+
+    @Override
+    public void setMining(boolean isMining) {
+        entityData.set(DATA_MINING, isMining);
+    }
+
+    @Override
+    public void containerChanged(Container pContainer) {}
+
+    public boolean hasInventoryChanged(Container pInventory) {
+        return this.inventory != pInventory;
+    }
+
+    public int getTime() {
+        return entityData.get(DATA_TIME);
+    }
+
+    public void decreaseTime(int time) {
+        setTime(this.getTime() - time);
+        if (getTime() < 0) {
+            setTime(0);
         }
-        return event.setAndContinue(IDLE);
+    }
+
+    public void setTime(int time) {
+        entityData.set(DATA_TIME, time);
+    }
+
+    // This didn't need to be this complex and unreadable, I'm just dumb
+    protected <E extends AIRoboButlerEntity> PlayState animationController(final AnimationState<E> event) {
+        AnimationController<?> controller = event.getController();
+
+        if ((controller.getCurrentAnimation() == null
+                || (controller.getCurrentAnimation() != null
+                && controller.getAnimationState() != AnimationController.State.STOPPED
+                && controller.getCurrentAnimation().animation().name().equals("leaving_standby")))) {
+            return event.setAndContinue(LEAVING_STANDBY);
+        }
+
+        if (this.isSitting() && (controller.getCurrentAnimation() == null || (controller.getCurrentAnimation() != null
+                    && (!controller.getCurrentAnimation().animation().name().equals("going_standby")
+                && !controller.getCurrentAnimation().animation().name().equals("stand_by") ||
+                (controller.getAnimationState() != AnimationController.State.STOPPED
+                && (controller.getCurrentAnimation().animation().name().equals("going_standby")
+                || controller.getCurrentAnimation().animation().name().equals("stand_by"))))))) {
+            return event.setAndContinue(GOING_STANDBY);
+        }
+
+        if (!this.isSitting() && (controller.getCurrentAnimation() == null || (controller.getCurrentAnimation() != null
+                && (controller.getCurrentAnimation().animation().name().equals("stand_by") ||
+                (controller.getAnimationState() != AnimationController.State.STOPPED
+                        && controller.getCurrentAnimation().animation().name().equals("leaving_standby")))))) {
+            return event.setAndContinue(LEAVING_STANDBY);
+        }
+
+        RawAnimation animationName = IDLE;
+        if (this.getMining() && this.getMainHandItem().canPerformAction(ToolActions.PICKAXE_DIG)) {
+            animationName = MINE;
+        }
+        else if (event.isMoving()) {
+            animationName = WALK;
+        }
+        return event.setAndContinue(animationName);
     }
 
     public SimpleContainer getInventory() {
         return this.inventory;
-    }
-
-    public void setMining(boolean isMining) {
-        entityData.set(DATA_MINING, isMining);
     }
 
     public void setSitting(boolean isSitting) {
@@ -258,10 +401,6 @@ public class AIRoboButlerEntity extends PathfinderMob implements GeoEntity, Cont
 
     public boolean isSitting() {
         return entityData.get(DATA_SIT);
-    }
-
-    public boolean getMining() {
-        return entityData.get(DATA_MINING);
     }
 
     public void dismissButler() {
@@ -274,7 +413,7 @@ public class AIRoboButlerEntity extends PathfinderMob implements GeoEntity, Cont
     }
 
     public ItemStack getTool() {
-        return this.tool;
+        return this.getItemInHand(InteractionHand.MAIN_HAND);
     }
 
     protected void createInventory() {
@@ -292,14 +431,7 @@ public class AIRoboButlerEntity extends PathfinderMob implements GeoEntity, Cont
             }
         }
         this.inventory.addListener(this);
-        this.updateContainerEquipment();
         this.itemHandler = LazyOptional.of(() -> new InvWrapper(this.inventory));
-    }
-
-    protected void updateContainerEquipment() {
-        if (!this.level().isClientSide) {
-
-        }
     }
 
     @Nullable

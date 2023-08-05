@@ -1,6 +1,9 @@
 package com.divinity.hmedia.rgrbillionaire.init;
 
 import com.divinity.hmedia.rgrbillionaire.RGRBillionaire;
+import com.divinity.hmedia.rgrbillionaire.cap.BillionaireHolder;
+import com.divinity.hmedia.rgrbillionaire.cap.BillionaireHolderAttacher;
+import com.divinity.hmedia.rgrbillionaire.entity.AIRoboButlerEntity;
 import com.divinity.hmedia.rgrbillionaire.requirement.ArmorSetSkillRequirement;
 import com.divinity.hmedia.rgrbillionaire.requirement.ItemSkillRequirementSpecial;
 import com.divinity.hmedia.rgrbillionaire.requirement.MoneySkillRequirement;
@@ -21,7 +24,9 @@ import dev._100media.hundredmediaquests.skill.defaults.SimpleSkill;
 import dev._100media.hundredmediaquests.skill.requirements.ItemSkillRequirement;
 import dev._100media.hundredmediaquests.skill.requirements.ItemTagSkillRequirement;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorMaterials;
@@ -103,22 +108,28 @@ public class SkillInit {
     ));
     public static final RegistryObject<Skill> EXPLOIT_WORKING_CLASS = SKILLS.register("exploit_working_class", () -> new QuestSkill(
             Component.literal("Exploit The Working Class"),
-            Component.literal(""),
+            Component.literal("""
+                    You create a 6 block red ring aura around yourself.
+                    Players that step within this aura have their life energy sucked out quickly (1/2 a heart per second regardless of armor) 
+                    and are given Weakness I. The taken health of other players is given to the you to heal you, 
+                    and also generates $50/s per player until the affected player(s) die.
+                    """),
             QuestInit.EXPLOIT_WORKING_CLASS
     ));
     public static final RegistryObject<Skill> GRAND_GIVEAWAY = SKILLS.register("the_grand_giveaway", () -> new QuestSkill(
             Component.literal("The Grand Giveaway"),
-            Component.literal(""),
+            Component.literal("Summon a shower of Dollar Bills and Coins that rain in a 20 block area following you. " +
+                    "Dollar bills do 10 impact damage and coins cause a small explosion upon impact, alongside 10 impact damage."),
             QuestInit.GRAND_GIVEAWAY
     ));
     public static final RegistryObject<Skill> MARKET_CRASHER = SKILLS.register("market_crasher", () -> new QuestSkill(
             Component.literal("Market Crasher"),
-            Component.literal(""),
+            Component.literal("A slug shotgun that shoots one long red line that looks like a rising stock graph. This projectile line knocks the entities it comes into contact with upwards and backwards into the air 60+ blocks."),
             QuestInit.MARKET_CRASHER
     ));
     public static final RegistryObject<Skill> ROCKET_TO_MARS = SKILLS.register("rocket_to_mars", () -> new QuestSkill(
             Component.literal("Rocket To Mars"),
-            Component.literal(""),
+            Component.literal("The Ultimate Pay 2 Win Protocol."),
             QuestInit.ROCKET_TO_MARS
     ));
 
@@ -129,7 +140,16 @@ public class SkillInit {
     // Utility
     public static final RegistryObject<Skill> CRYPTO_MINER = SKILLS.register("crypto_miner", () -> new SimpleSkill(
             Component.literal("Crypto Miner"),
-            Component.literal(""),
+            Component.literal("""
+                    Place these server towers in the world to increase the rate at which the Billionaire makes money.
+                    Feeding Materials to them increases the production rate:
+                    Standard = 1$/s
+                    Iron Miner = 3$/s (Use 1 Iron Ingot)
+                    Gold Miner = 5$/s (Use 1 Gold Ingot)
+                    Diamond Miner = 7$/s (Use 1 Diamond)
+                    Netherite Miner = 10$/s (Use 1 Netherite Scrap)
+                    Omni Miner = 1000$/s (Use 1 Dragon Egg / The Omni Miner is Unbreakable)        
+                    """),
             Arrays.asList(
                     new ItemSkillRequirement(() -> Items.LAPIS_LAZULI, 16),
                     new ItemSkillRequirement(() -> Items.REPEATER, 8),
@@ -142,20 +162,36 @@ public class SkillInit {
     ));
     public static final RegistryObject<Skill> ROBO_BUTLER = SKILLS.register("robo_butler", () -> new SimpleSkill(
             Component.literal("AI Robo-Butler"),
-            Component.literal(""),
+            Component.literal("Summon a diligent Mining Butler who tirelessly auto mines ores within a 10-block radius of him, including through walls."),
             Arrays.asList(
                     new ItemSkillRequirement(() -> Items.ENDER_PEARL, 4),
                     new ItemSkillRequirement(() -> Items.MAGMA_BLOCK, 16),
                     new ItemSkillRequirement(() -> Items.TNT, 8),
                     new MoneySkillRequirement(60_000)
             ),
-            player -> {},
             player -> {
+                ServerLevel level = player.serverLevel();
+                var butler = EntityInit.BUTLER_ENTITY.get().create(level);
+                if (butler != null) {
+                    butler.setPos(player.position());
+                    butler.setOwnerUUID(player.getUUID());
+                    BillionaireHolderAttacher.getHolder(player).ifPresent(h -> h.setLinkedEntityID(butler.getId()));
+                    level.addFreshEntity(butler);
+                }
+            },
+            player -> {
+                ServerLevel level = player.serverLevel();
+                int id = BillionaireHolderAttacher.getHolder(player).map(BillionaireHolder::getLinkedEntityID).orElse(-1);
+                Entity entity = level.getEntity(id);
+                if (entity instanceof AIRoboButlerEntity butler) {
+                    butler.dismissButler();
+                }
+                BillionaireHolderAttacher.getHolder(player).ifPresent(h -> h.setLinkedEntityID(-1));
             }
     ));
     public static final RegistryObject<Skill> STARLINKED_MINEBOOK_MARKETPLACE = SKILLS.register("starlinked_minebook_marketplace", () -> new SimpleSkill(
             Component.literal("Starlinked Minebook Marketplace"),
-            Component.literal(""),
+            Component.literal("An online market that allows the Billionaire to buy and sell extra items and materials. Prices on the left are the Buy Price, prices on the right are the Sell Price."),
             Arrays.asList(
                     new ItemSkillRequirement(() -> Items.LIGHTNING_ROD, 10),
                     new ItemSkillRequirement(() -> Items.QUARTZ, 64),
@@ -169,7 +205,11 @@ public class SkillInit {
     // Here
     public static final RegistryObject<Skill> GOLDEN_JETPACK = SKILLS.register("golden_jetpack", () -> new SimpleSkill(
             Component.literal("Golden Jetpack"),
-            Component.literal(""),
+            Component.literal("""
+                    A Golden Jetpack that takes the chest armor slot and acts as an unbreakable Netherite Chestplate.
+                    The Golden Jetpack allows the Billionaire to fly as if they are in creative mode
+                    While equipped, every kill on any entities give you $1000 and all attacks are considered crits.
+                    """),
             Arrays.asList(
                     new ArmorSetSkillRequirement(ArmorMaterials.GOLD, ItemStack::isEnchanted),
                     new ItemSkillRequirement(() -> Items.FIREWORK_ROCKET, 32),

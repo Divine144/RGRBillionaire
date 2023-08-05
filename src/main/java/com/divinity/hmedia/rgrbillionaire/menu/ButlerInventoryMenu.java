@@ -4,12 +4,14 @@ import com.divinity.hmedia.rgrbillionaire.entity.AIRoboButlerEntity;
 import com.divinity.hmedia.rgrbillionaire.init.MenuInit;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
+import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.event.village.VillagerTradesEvent;
 
 import java.util.Objects;
 
@@ -75,17 +77,14 @@ public class ButlerInventoryMenu extends AbstractContainerMenu {
         }
     }
 
-    /**
-     * Determines whether supplied player can use this container
-     */
+    @Override
     public boolean stillValid(Player pPlayer) {
         return !this.butler.hasInventoryChanged(this.horseContainer) && this.horseContainer.stillValid(pPlayer) && this.butler.isAlive() && this.butler.distanceTo(pPlayer) < 8.0F;
     }
 
-    /**
-     * Handle when the stack in slot {@code index} is shift-clicked. Normally this moves the stack between the player
-     * inventory and the other inventory(s).
-     */
+
+
+    @Override
     public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.slots.get(pIndex);

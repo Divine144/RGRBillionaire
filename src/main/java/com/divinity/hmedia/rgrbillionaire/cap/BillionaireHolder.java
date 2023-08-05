@@ -16,6 +16,8 @@ public class BillionaireHolder extends EntityCapability {
     private int moneyCap;
     private int productionRate;
 
+    private int linkedEntityID = -1;
+
     protected BillionaireHolder(Entity entity) {
         super(entity);
         moneyCap = 10000;
@@ -63,12 +65,21 @@ public class BillionaireHolder extends EntityCapability {
         productionRate -= staggerAmount;
     }
 
+    public int getLinkedEntityID() {
+        return linkedEntityID;
+    }
+
+    public void setLinkedEntityID(int id) {
+        this.linkedEntityID = id;
+    }
+
     @Override
     public CompoundTag serializeNBT(boolean savingToDisk) {
         CompoundTag tag = new CompoundTag();
         tag.putInt("money", this.money);
         tag.putInt("productionRate", this.productionRate);
         tag.putInt("moneyCap", this.moneyCap);
+        tag.putInt("id", this.linkedEntityID);
         return tag;
     }
 
@@ -77,6 +88,7 @@ public class BillionaireHolder extends EntityCapability {
         this.money = nbt.getInt("money");
         this.productionRate = nbt.getInt("productionRate");
         this.moneyCap = nbt.getInt("moneyCap");
+        this.linkedEntityID = nbt.getInt("id");
     }
 
     @Override

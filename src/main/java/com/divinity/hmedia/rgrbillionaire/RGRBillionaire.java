@@ -2,6 +2,7 @@ package com.divinity.hmedia.rgrbillionaire;
 
 import com.divinity.hmedia.rgrbillionaire.cap.ButlerGlobalLevelHolderAttacher;
 import com.divinity.hmedia.rgrbillionaire.cap.CannonHolderAttacher;
+import com.divinity.hmedia.rgrbillionaire.cap.MoneyHolderAttacher;
 import com.divinity.hmedia.rgrbillionaire.config.ExampleClientConfig;
 import com.divinity.hmedia.rgrbillionaire.config.ExampleConfig;
 import com.divinity.hmedia.rgrbillionaire.datagen.*;
@@ -48,6 +49,7 @@ public class RGRBillionaire {
         SkillInit.SKILLS.register(modBus);
         SkillInit.SKILL_TREES.register(modBus);
         BillionaireHolderAttacher.register();
+        MoneyHolderAttacher.register();
         CannonHolderAttacher.register();
         ButlerGlobalLevelHolderAttacher.register();
     }

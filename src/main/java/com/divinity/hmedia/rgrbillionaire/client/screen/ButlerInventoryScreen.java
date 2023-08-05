@@ -28,9 +28,6 @@ public class ButlerInventoryScreen extends AbstractContainerScreen<ButlerInvento
         int j = (this.height - this.imageHeight) / 2;
         pGuiGraphics.blit(HORSE_INVENTORY_LOCATION, i, j, 0, 0, this.imageWidth, this.imageHeight);
         pGuiGraphics.blit(HORSE_INVENTORY_LOCATION, i + 79, j + 17, 0, this.imageHeight, horse.getInventoryColumns() * 18, 54);
-
-        // Saddle
-        pGuiGraphics.blit(HORSE_INVENTORY_LOCATION, i + 7, j + 35 - 18, 18, this.imageHeight + 54, 18, 18);
         InventoryScreen.renderEntityInInventoryFollowsMouse(pGuiGraphics, i + 51, j + 60, 17, (float)(i + 51) - this.xMouse, (float)(j + 75 - 50) - this.yMouse, this.horse);
     }
 

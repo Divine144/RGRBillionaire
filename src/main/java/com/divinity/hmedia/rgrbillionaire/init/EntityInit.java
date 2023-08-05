@@ -42,7 +42,7 @@ public class EntityInit {
             EntityType.Builder.<CurrencyProjectileEntity>of((type, level) -> new CurrencyProjectileEntity(type, level, 10), MobCategory.MISC).sized(0.25F, 0.25F));
 
     public static final RegistryObject<EntityType<AIRoboButlerEntity>> BUTLER_ENTITY = registerEntity("butler_entity", () ->
-            EntityType.Builder.of(AIRoboButlerEntity::new, MobCategory.MISC).sized(1F, 1F), Mob::createMobAttributes);
+            EntityType.Builder.of(AIRoboButlerEntity::new, MobCategory.MISC).sized(0.75F, 0.75F), Mob::createMobAttributes);
 
     private static <T extends Entity> RegistryObject<EntityType<T>> registerEntity(String name, Supplier<EntityType.Builder<T>> supplier) {
         return ENTITIES.register(name, () -> supplier.get().build(RGRBillionaire.MODID + ":" + name));

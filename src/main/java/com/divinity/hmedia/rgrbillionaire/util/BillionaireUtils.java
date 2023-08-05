@@ -1,12 +1,16 @@
 package com.divinity.hmedia.rgrbillionaire.util;
 
 import com.divinity.hmedia.rgrbillionaire.cap.BillionaireHolderAttacher;
+import com.divinity.hmedia.rgrbillionaire.cap.MoneyHolderAttacher;
+import com.divinity.hmedia.rgrbillionaire.init.ItemInit;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 
 public final class BillionaireUtils {
@@ -53,6 +57,13 @@ public final class BillionaireUtils {
                 return Direction.NORTH;
             }
         }
+    }
+
+    public static ItemStack getMoneyForAmount(int amount) {
+        Item temp = ItemInit.MONEY.get();
+        ItemStack tempStack = new ItemStack(temp);
+        MoneyHolderAttacher.getItemStackCapability(tempStack).ifPresent(h -> h.setAmount(amount));
+        return tempStack;
     }
 
 }

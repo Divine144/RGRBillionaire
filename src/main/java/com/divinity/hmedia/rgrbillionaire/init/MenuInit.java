@@ -2,6 +2,7 @@ package com.divinity.hmedia.rgrbillionaire.init;
 
 import com.divinity.hmedia.rgrbillionaire.RGRBillionaire;
 import com.divinity.hmedia.rgrbillionaire.menu.ButlerInventoryMenu;
+import com.divinity.hmedia.rgrbillionaire.menu.MarketplaceMenu;
 import dev._100media.hundredmediaquests.menu.AlwaysValidMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -42,4 +43,6 @@ public class MenuInit {
         }
     }));
     public static final RegistryObject<MenuType<ButlerInventoryMenu>> BUTLER_MENU = MENUS.register("butler_menu", () -> IForgeMenuType.create(ButlerInventoryMenu::new));
+    public static final RegistryObject<MenuType<MarketplaceMenu>> MARKET_MENU = MENUS.register("market_menu", () -> IForgeMenuType.create(MarketplaceMenu::new));
+
 }

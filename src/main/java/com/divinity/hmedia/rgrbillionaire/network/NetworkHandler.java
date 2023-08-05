@@ -1,6 +1,7 @@
 package com.divinity.hmedia.rgrbillionaire.network;
 
 import com.divinity.hmedia.rgrbillionaire.cap.ButlerGlobalLevelHolderAttacher;
+import com.divinity.hmedia.rgrbillionaire.network.serverbound.UpdateMarketTradesPacket;
 import com.google.common.collect.ImmutableList;
 import com.divinity.hmedia.rgrbillionaire.RGRBillionaire;
 import com.divinity.hmedia.rgrbillionaire.cap.BillionaireHolderAttacher;
@@ -27,6 +28,7 @@ public class NetworkHandler {
         List<BiConsumer<SimpleChannel, Integer>> packets = ImmutableList.<BiConsumer<SimpleChannel, Integer>>builder()
                 .add(SimpleEntityCapabilityStatusPacket::register)
                 .add(SimpleLevelCapabilityStatusPacket::register)
+                .add(UpdateMarketTradesPacket::register)
                 .build();
         SimpleEntityCapabilityStatusPacket.registerRetriever(BillionaireHolderAttacher.EXAMPLE_RL, BillionaireHolderAttacher::getHolderUnwrap);
         SimpleLevelCapabilityStatusPacket.registerRetriever(ButlerGlobalLevelHolderAttacher.EXAMPLE_GLOBAL_LEVEL_CAPABILITY_RL, ButlerGlobalLevelHolderAttacher::getGlobalLevelCapabilityUnwrap);
