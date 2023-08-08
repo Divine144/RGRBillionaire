@@ -1,8 +1,10 @@
 package com.divinity.hmedia.rgrbillionaire.init;
 
 import com.divinity.hmedia.rgrbillionaire.RGRBillionaire;
+import com.divinity.hmedia.rgrbillionaire.client.screen.MinebookScreen;
 import com.divinity.hmedia.rgrbillionaire.menu.ButlerInventoryMenu;
 import com.divinity.hmedia.rgrbillionaire.menu.MarketplaceMenu;
+import com.divinity.hmedia.rgrbillionaire.menu.MinebookMenu;
 import dev._100media.hundredmediaquests.menu.AlwaysValidMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -42,7 +44,14 @@ public class MenuInit {
             return new AlwaysValidMenu(UTILITY_TREE.get(), windowId);
         }
     }));
+    public static final RegistryObject<MenuType<MinebookMenu>> MINEBOOK_SCREEN = MENUS.register("minebook_menu", () -> IForgeMenuType.create(new IContainerFactory<>() {
+        @Override
+        public MinebookMenu create(int windowId, Inventory inv, FriendlyByteBuf data) {
+            return new MinebookMenu(MINEBOOK_SCREEN.get(), windowId);
+        }
+    }));
     public static final RegistryObject<MenuType<ButlerInventoryMenu>> BUTLER_MENU = MENUS.register("butler_menu", () -> IForgeMenuType.create(ButlerInventoryMenu::new));
+
     public static final RegistryObject<MenuType<MarketplaceMenu>> MARKET_MENU = MENUS.register("market_menu", () -> IForgeMenuType.create(MarketplaceMenu::new));
 
 }

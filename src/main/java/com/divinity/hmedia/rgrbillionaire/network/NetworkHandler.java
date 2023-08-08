@@ -1,6 +1,9 @@
 package com.divinity.hmedia.rgrbillionaire.network;
 
 import com.divinity.hmedia.rgrbillionaire.cap.ButlerGlobalLevelHolderAttacher;
+import com.divinity.hmedia.rgrbillionaire.network.serverbound.OpenMarketMenuPacket;
+import com.divinity.hmedia.rgrbillionaire.network.serverbound.OpenMinebookScreenPacket;
+import com.divinity.hmedia.rgrbillionaire.network.serverbound.UpdateMarketOfferPacket;
 import com.divinity.hmedia.rgrbillionaire.network.serverbound.UpdateMarketTradesPacket;
 import com.google.common.collect.ImmutableList;
 import com.divinity.hmedia.rgrbillionaire.RGRBillionaire;
@@ -29,6 +32,9 @@ public class NetworkHandler {
                 .add(SimpleEntityCapabilityStatusPacket::register)
                 .add(SimpleLevelCapabilityStatusPacket::register)
                 .add(UpdateMarketTradesPacket::register)
+                .add(OpenMarketMenuPacket::register)
+                .add(OpenMinebookScreenPacket::register)
+                .add(UpdateMarketOfferPacket::register)
                 .build();
         SimpleEntityCapabilityStatusPacket.registerRetriever(BillionaireHolderAttacher.EXAMPLE_RL, BillionaireHolderAttacher::getHolderUnwrap);
         SimpleLevelCapabilityStatusPacket.registerRetriever(ButlerGlobalLevelHolderAttacher.EXAMPLE_GLOBAL_LEVEL_CAPABILITY_RL, ButlerGlobalLevelHolderAttacher::getGlobalLevelCapabilityUnwrap);

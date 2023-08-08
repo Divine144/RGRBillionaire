@@ -5,6 +5,7 @@ import com.divinity.hmedia.rgrbillionaire.client.renderer.AIRobotButlerEntityRen
 import com.divinity.hmedia.rgrbillionaire.client.renderer.ShootableCoinRenderer;
 import com.divinity.hmedia.rgrbillionaire.client.screen.ButlerInventoryScreen;
 import com.divinity.hmedia.rgrbillionaire.client.screen.MarketplaceScreen;
+import com.divinity.hmedia.rgrbillionaire.client.screen.MinebookScreen;
 import com.divinity.hmedia.rgrbillionaire.entity.AIRoboButlerEntity;
 import com.divinity.hmedia.rgrbillionaire.init.EntityInit;
 import com.divinity.hmedia.rgrbillionaire.init.MenuInit;
@@ -59,6 +60,7 @@ public class ClientModEvents {
     public static void initClient(FMLClientSetupEvent event) {
         MenuScreens.register(MenuInit.BUTLER_MENU.get(), ButlerInventoryScreen::new);
         MenuScreens.register(MenuInit.MARKET_MENU.get(), MarketplaceScreen::new);
+        MenuScreens.register(MenuInit.MINEBOOK_SCREEN.get(), MinebookScreen::new);
         MenuScreens.register(MenuInit.SKILL_TREE.get(), (AbstractContainerMenu menu, Inventory inv, Component title) -> new TreeScreen(menu, inv, title,
                 new ResourceLocation(RGRBillionaire.MODID, "textures/gui/screen/skill_tree.png"), 21, 22,
                 Arrays.asList(

@@ -2,51 +2,43 @@ package com.divinity.hmedia.rgrbillionaire.event;
 
 import com.divinity.hmedia.rgrbillionaire.RGRBillionaire;
 import com.divinity.hmedia.rgrbillionaire.cap.BillionaireHolderAttacher;
-import com.divinity.hmedia.rgrbillionaire.cap.MoneyHolderAttacher;
-import com.divinity.hmedia.rgrbillionaire.entity.special.DummyMerchant;
 import com.divinity.hmedia.rgrbillionaire.init.ItemInit;
 import com.divinity.hmedia.rgrbillionaire.init.MarkerInit;
-import com.divinity.hmedia.rgrbillionaire.menu.ButlerInventoryMenu;
-import com.divinity.hmedia.rgrbillionaire.menu.MarketplaceMenu;
+import com.divinity.hmedia.rgrbillionaire.init.MenuInit;
+import com.divinity.hmedia.rgrbillionaire.menu.MinebookMenu;
 import com.divinity.hmedia.rgrbillionaire.mixin.TemplateStructurePieceAccessor;
 import com.divinity.hmedia.rgrbillionaire.quest.goal.AquireAdvancementGoal;
 import com.divinity.hmedia.rgrbillionaire.quest.goal.LootDesertTempleGoal;
 import com.divinity.hmedia.rgrbillionaire.quest.goal.LootEndShipGoal;
 import com.divinity.hmedia.rgrbillionaire.util.BillionaireUtils;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import dev._100media.hundredmediaabilities.capability.MarkerHolderAttacher;
 import dev._100media.hundredmediaquests.cap.QuestHolderAttacher;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.data.worldgen.Structures;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.StructureTags;
 import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.trading.MerchantOffer;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.JigsawBlock;
-import net.minecraft.world.level.levelgen.structure.*;
-import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
+import net.minecraft.world.level.levelgen.structure.BuiltinStructures;
+import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.levelgen.structure.StructurePiece;
+import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.levelgen.structure.structures.EndCityPieces;
-import net.minecraft.world.level.levelgen.structure.structures.JigsawStructure;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.player.AdvancementEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.NetworkHooks;
 
-import java.util.List;
+import java.util.UUID;
 
 @Mod.EventBusSubscriber(modid = RGRBillionaire.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class CommonForgeEvents {
@@ -110,24 +102,30 @@ public class CommonForgeEvents {
         }
     }
 
-    public static List<MerchantOffer> offers;
+    private static final UUID MAX_HEALTH_UUID = UUID.fromString("5D6F0BA2-1186-46AC-B896-C61C5CEE99CC");
+
 
     @SubscribeEvent
     public static void onRightClickItem(PlayerInteractEvent.RightClickItem event) {
         Player player = event.getEntity();
         if (player instanceof ServerPlayer serverPlayer) {
             if (event.getItemStack().getItem() == ItemInit.MARKETPLACE.get()) {
-                initializeLists();
                 NetworkHooks.openScreen(serverPlayer,
-                        new SimpleMenuProvider((id, inv, pl) -> new MarketplaceMenu(id, inv, new DummyMerchant(pl, offers)), Component.literal("How are we here")));
+                        new SimpleMenuProvider((id, inv, pl) -> new MinebookMenu(MenuInit.MINEBOOK_SCREEN.get(), id), Component.literal("How are we here")));
+            }
+            else if (event.getItemStack().getItem() == ItemInit.HEART.get()) {
+                Multimap<Attribute, AttributeModifier> multimap = HashMultimap.create();
+                int amount = (int) (serverPlayer.getAttributes().getValue(Attributes.MAX_HEALTH) - 20);
+                multimap.put(Attributes.MAX_HEALTH, new AttributeModifier(MAX_HEALTH_UUID, "Temp Hearts", 2 + amount, AttributeModifier.Operation.ADDITION));
+                serverPlayer.getAttributes().addTransientAttributeModifiers(multimap);
+                event.getItemStack().shrink(1);
             }
         }
     }
 
-    private static void initializeLists() {
-        if (offers == null) {
-            offers = List.of(new MerchantOffer(new ItemStack(Blocks.DIRT.asItem(), 16), BillionaireUtils.getMoneyForAmount(40), Integer.MAX_VALUE, 0, 0));
-        }
+    @SubscribeEvent
+    public static void onEntityJoinWorld(EntityJoinLevelEvent event) {
+        BillionaireUtils.initializeLists();
     }
 
     private static StructureStart getStructureOfType(ResourceKey<Structure> key, ServerPlayer player) {

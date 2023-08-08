@@ -9,6 +9,7 @@ import com.divinity.hmedia.rgrbillionaire.datagen.*;
 import com.divinity.hmedia.rgrbillionaire.init.*;
 import com.divinity.hmedia.rgrbillionaire.network.NetworkHandler;
 import com.divinity.hmedia.rgrbillionaire.cap.BillionaireHolderAttacher;
+import com.divinity.hmedia.rgrbillionaire.util.BillionaireUtils;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraftforge.common.data.ExistingFileHelper;

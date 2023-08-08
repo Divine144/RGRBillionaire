@@ -43,8 +43,10 @@ public class ArmorSetSkillRequirement implements SkillRequirement {
 
     @Override
     public MutableComponent getFancyDescription(Player player) {
-        int current = armorList.size() == 4 ? 1 : 0;
-        return Component.literal("$%s/$%s Set Of Enchanted Golden Armor".formatted(current, 1));
+        NonNullList<ItemStack> tempList = NonNullList.create();
+        checkInventoryWithList(tempList, player.getInventory());
+        int current = tempList.size() == 4 ? 1 : 0;
+        return Component.literal("%s/%s Set Of Enchanted Golden Armor".formatted(current, 1));
     }
 
     private void checkInventoryWithList(NonNullList<ItemStack> list, Inventory inventory) {

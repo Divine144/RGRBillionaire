@@ -226,18 +226,6 @@ public class MineOresGoal<T extends AIRoboButlerEntity> extends ButlerMoveToBloc
         return list;
     }
 
-    public boolean destroyBlock(ServerLevel level, BlockPos pPos, boolean pDropBlock) {
-        BlockState blockstate = level.getBlockState(pPos);
-        if (blockstate.isAir()) {
-            return false;
-        } else {
-            if (pDropBlock) {
-                this.dropResources(level, pPos);
-            }
-            return true;
-        }
-    }
-
     private void dropResources(ServerLevel pLevel, BlockPos pos) {
         Block.getDrops(pLevel.getBlockState(pos), pLevel, pos, null, this.mob, this.mob.getTool()).forEach(stack -> {
             stack.setCount(stack.getCount() * 2); // Multiply Drops By 2 cause bulter

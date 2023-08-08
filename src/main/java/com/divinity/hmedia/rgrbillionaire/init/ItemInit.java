@@ -23,6 +23,7 @@ public class ItemInit {
     public static final RegistryObject<Item> SWORD_OF_TRUTH = ITEMS.register("tax_audit_sword_of_truth", () -> new SwordOfTruthItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> MARKETPLACE = ITEMS.register("starlinked_minebook_marketplace", () -> new SimpleAnimatedItem(new AnimatedItemProperties().stacksTo(1)));
     public static final RegistryObject<Item> MONEY = ITEMS.register("money", () -> new MoneyItem(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> HEART = ITEMS.register("heart", () -> new Item(new Item.Properties().stacksTo(1)));
 
     public static Item.Properties getItemProperties() {
         return new Item.Properties();

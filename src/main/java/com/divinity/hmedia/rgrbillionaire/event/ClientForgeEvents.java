@@ -3,6 +3,7 @@ package com.divinity.hmedia.rgrbillionaire.event;
 import com.divinity.hmedia.rgrbillionaire.cap.BillionaireHolderAttacher;
 import com.divinity.hmedia.rgrbillionaire.init.MenuInit;
 import com.mojang.blaze3d.vertex.PoseStack;
+import dev._100media.hundredmediaquests.menu.AlwaysValidMenu;
 import dev._100media.hundredmediaquests.network.HMQNetworkHandler;
 import dev._100media.hundredmediaquests.network.packet.OpenMainTreePacket;
 import net.minecraft.client.Minecraft;
@@ -13,6 +14,7 @@ import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.network.NetworkHooks;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ClientForgeEvents {
