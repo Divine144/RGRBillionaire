@@ -1,6 +1,5 @@
 package com.divinity.hmedia.rgrbillionaire.menu;
 
-
 import com.divinity.hmedia.rgrbillionaire.entity.special.DummyMerchant;
 import com.divinity.hmedia.rgrbillionaire.init.MenuInit;
 import com.divinity.hmedia.rgrbillionaire.util.BillionaireUtils;

@@ -1,12 +1,17 @@
 package com.divinity.hmedia.rgrbillionaire.init;
 
 import com.divinity.hmedia.rgrbillionaire.RGRBillionaire;
+import com.divinity.hmedia.rgrbillionaire.block.CryptoMinerBlock;
 import com.divinity.hmedia.rgrbillionaire.block.HundredMediaBlock;
+import com.divinity.hmedia.rgrbillionaire.block.be.CryptoMinerBlockEntity;
+import net.minecraft.client.resources.model.Material;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -19,6 +24,10 @@ public class BlockInit {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, RGRBillionaire.MODID);
 
     public static final RegistryObject<HundredMediaBlock> HUNDRED_MEDIA = registerBlock("hundred_media", () -> new HundredMediaBlock(BlockBehaviour.Properties.of().mapColor(DyeColor.RED).noOcclusion().strength(1)));
+
+    public static final RegistryObject<Block> CRYPTO_MINER_BLOCK = registerBlock("crypto_miner", () -> new CryptoMinerBlock(BlockBehaviour.Properties.of().mapColor(MapColor.RAW_IRON).requiresCorrectToolForDrops().strength(5.0F, 6.0F)));
+    public static final RegistryObject<BlockEntityType<CryptoMinerBlockEntity>> MINER_BLOCK_ENTITY = BLOCK_ENTITIES.register("miner_block_entity", () -> BlockEntityType.Builder.of(CryptoMinerBlockEntity::new, CRYPTO_MINER_BLOCK.get()).build(null));
+
 
     protected static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {
         return registerBlock(name, block, b -> () -> new BlockItem(b.get(), ItemInit.getItemProperties()));

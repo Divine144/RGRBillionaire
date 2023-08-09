@@ -1,10 +1,12 @@
 package com.divinity.hmedia.rgrbillionaire.cap;
 
+import com.divinity.hmedia.rgrbillionaire.init.MarkerInit;
 import com.divinity.hmedia.rgrbillionaire.network.NetworkHandler;
 import com.google.common.collect.Maps;
 import dev._100media.capabilitysyncer.core.GlobalLevelCapability;
 import dev._100media.capabilitysyncer.network.LevelCapabilityStatusPacket;
 import dev._100media.capabilitysyncer.network.SimpleLevelCapabilityStatusPacket;
+import dev._100media.hundredmediaabilities.capability.MarkerHolderAttacher;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
@@ -16,11 +18,12 @@ import net.minecraftforge.network.simple.SimpleChannel;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ButlerGlobalLevelHolder extends GlobalLevelCapability {
+public class GlobalLevelHolder extends GlobalLevelCapability {
 
     private final Map<Integer, ItemStack> inventoryMap = new HashMap<>();
+    private int productionRate;
 
-    protected ButlerGlobalLevelHolder(Level level) {
+    protected GlobalLevelHolder(Level level) {
         super(level);
     }
 
@@ -30,6 +33,21 @@ public class ButlerGlobalLevelHolder extends GlobalLevelCapability {
 
     public void putItems(int slot, ItemStack item) {
         inventoryMap.put(slot, item);
+    }
+
+    public int getProductionRate() {
+        return this.productionRate;
+    }
+
+    public void increaseProductionRate(int staggerAmount) {
+        int oldAmount = productionRate;
+        productionRate += staggerAmount;
+        if (productionRate < 0) productionRate = 0;
+        if (oldAmount != productionRate) updateTracking();
+    }
+
+    public void decreaseProductionRate(int staggerAmount) {
+        increaseProductionRate(-staggerAmount);
     }
 
     @Override
@@ -42,6 +60,7 @@ public class ButlerGlobalLevelHolder extends GlobalLevelCapability {
         inventoryMap.values().forEach(stack -> stacksNBT.add(stack.save(new CompoundTag())));
         nbt.put("slotIds", slotsNBT);
         nbt.put("stacks", stacksNBT);
+        nbt.putInt("productionRate", this.productionRate);
         return nbt;
     }
 
@@ -59,11 +78,12 @@ public class ButlerGlobalLevelHolder extends GlobalLevelCapability {
                 }
             }
         }
+        this.productionRate = nbt.getInt("productionRate");
     }
 
     @Override
     public LevelCapabilityStatusPacket createUpdatePacket() {
-        return new SimpleLevelCapabilityStatusPacket(ButlerGlobalLevelHolderAttacher.EXAMPLE_GLOBAL_LEVEL_CAPABILITY_RL, this);
+        return new SimpleLevelCapabilityStatusPacket(GlobalLevelHolderAttacher.EXAMPLE_GLOBAL_LEVEL_CAPABILITY_RL, this);
     }
 
     @Override

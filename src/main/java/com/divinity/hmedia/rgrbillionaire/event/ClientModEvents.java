@@ -2,14 +2,18 @@ package com.divinity.hmedia.rgrbillionaire.event;
 
 import com.divinity.hmedia.rgrbillionaire.RGRBillionaire;
 import com.divinity.hmedia.rgrbillionaire.client.renderer.AIRobotButlerEntityRenderer;
+import com.divinity.hmedia.rgrbillionaire.client.renderer.DollarFishingHookRenderer;
 import com.divinity.hmedia.rgrbillionaire.client.renderer.ShootableCoinRenderer;
+import com.divinity.hmedia.rgrbillionaire.client.renderer.StockGraphEntityRenderer;
 import com.divinity.hmedia.rgrbillionaire.client.screen.ButlerInventoryScreen;
 import com.divinity.hmedia.rgrbillionaire.client.screen.MarketplaceScreen;
 import com.divinity.hmedia.rgrbillionaire.client.screen.MinebookScreen;
 import com.divinity.hmedia.rgrbillionaire.entity.AIRoboButlerEntity;
 import com.divinity.hmedia.rgrbillionaire.init.EntityInit;
+import com.divinity.hmedia.rgrbillionaire.init.ItemInit;
 import com.divinity.hmedia.rgrbillionaire.init.MenuInit;
 import com.divinity.hmedia.rgrbillionaire.init.SkillInit;
+import com.divinity.hmedia.rgrbillionaire.item.DollarFishingPoleItem;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
@@ -20,11 +24,15 @@ import dev._100media.hundredmediaquests.client.screen.TreeScreen;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.FishingRodItem;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
@@ -54,10 +62,24 @@ public class ClientModEvents {
         event.registerEntityRenderer(EntityInit.QUARTER_ENTITY.get(), ctx -> new ShootableCoinRenderer(ctx, "quarter_entity"));
         event.registerEntityRenderer(EntityInit.SILVER_DOLLAR_ENTITY.get(), ctx -> new ShootableCoinRenderer(ctx, "silver_dollar_entity"));
         event.registerEntityRenderer(EntityInit.BUTLER_ENTITY.get(), AIRobotButlerEntityRenderer::new);
+        event.registerEntityRenderer(EntityInit.STOCK_GRAPH_ENTITY.get(), StockGraphEntityRenderer::new);
+        event.registerEntityRenderer(EntityInit.DOLLAR_BOBBER_ENTITY.get(), DollarFishingHookRenderer::new);
     }
 
     @SubscribeEvent
     public static void initClient(FMLClientSetupEvent event) {
+        ItemProperties.register(ItemInit.DOLLAR_FISHING_ROD.get(), new ResourceLocation("dollar"), (p_174585_, p_174586_, p_174587_, p_174588_) -> {
+            if (p_174587_ == null) {
+                return 0.0F;
+            } else {
+                boolean flag = p_174587_.getMainHandItem() == p_174585_;
+                boolean flag1 = p_174587_.getOffhandItem() == p_174585_;
+                if (p_174587_.getMainHandItem().getItem() instanceof DollarFishingPoleItem) {
+                    flag1 = false;
+                }
+                return (flag || flag1) && p_174587_ instanceof Player && ((Player)p_174587_).fishing != null ? 1.0F : 0.0F;
+            }
+        });
         MenuScreens.register(MenuInit.BUTLER_MENU.get(), ButlerInventoryScreen::new);
         MenuScreens.register(MenuInit.MARKET_MENU.get(), MarketplaceScreen::new);
         MenuScreens.register(MenuInit.MINEBOOK_SCREEN.get(), MinebookScreen::new);

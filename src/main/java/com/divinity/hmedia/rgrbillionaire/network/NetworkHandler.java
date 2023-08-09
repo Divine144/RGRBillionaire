@@ -1,6 +1,6 @@
 package com.divinity.hmedia.rgrbillionaire.network;
 
-import com.divinity.hmedia.rgrbillionaire.cap.ButlerGlobalLevelHolderAttacher;
+import com.divinity.hmedia.rgrbillionaire.cap.GlobalLevelHolderAttacher;
 import com.divinity.hmedia.rgrbillionaire.network.serverbound.OpenMarketMenuPacket;
 import com.divinity.hmedia.rgrbillionaire.network.serverbound.OpenMinebookScreenPacket;
 import com.divinity.hmedia.rgrbillionaire.network.serverbound.UpdateMarketOfferPacket;
@@ -37,7 +37,7 @@ public class NetworkHandler {
                 .add(UpdateMarketOfferPacket::register)
                 .build();
         SimpleEntityCapabilityStatusPacket.registerRetriever(BillionaireHolderAttacher.EXAMPLE_RL, BillionaireHolderAttacher::getHolderUnwrap);
-        SimpleLevelCapabilityStatusPacket.registerRetriever(ButlerGlobalLevelHolderAttacher.EXAMPLE_GLOBAL_LEVEL_CAPABILITY_RL, ButlerGlobalLevelHolderAttacher::getGlobalLevelCapabilityUnwrap);
+        SimpleLevelCapabilityStatusPacket.registerRetriever(GlobalLevelHolderAttacher.EXAMPLE_GLOBAL_LEVEL_CAPABILITY_RL, GlobalLevelHolderAttacher::getGlobalLevelCapabilityUnwrap);
 
         packets.forEach(consumer -> consumer.accept(INSTANCE, getNextId()));
     }

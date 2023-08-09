@@ -18,14 +18,13 @@ import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class DummyMerchant implements Merchant {
+
     private final Player source;
     private MerchantOffers offers = new MerchantOffers();
     private int xp;
-    private boolean shouldListSellItems;
 
     public DummyMerchant(Player pSource, List<MerchantOffer> offers) {
         this.source = pSource;

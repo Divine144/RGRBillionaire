@@ -1,7 +1,11 @@
 package com.divinity.hmedia.rgrbillionaire.event;
 
 import com.divinity.hmedia.rgrbillionaire.RGRBillionaire;
+import com.divinity.hmedia.rgrbillionaire.block.be.CryptoMinerBlockEntity;
 import com.divinity.hmedia.rgrbillionaire.cap.BillionaireHolderAttacher;
+import com.divinity.hmedia.rgrbillionaire.cap.GlobalLevelHolder;
+import com.divinity.hmedia.rgrbillionaire.cap.GlobalLevelHolderAttacher;
+import com.divinity.hmedia.rgrbillionaire.init.BlockInit;
 import com.divinity.hmedia.rgrbillionaire.init.ItemInit;
 import com.divinity.hmedia.rgrbillionaire.init.MarkerInit;
 import com.divinity.hmedia.rgrbillionaire.init.MenuInit;
@@ -24,6 +28,8 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.levelgen.structure.BuiltinStructures;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
@@ -34,6 +40,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.player.AdvancementEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.NetworkHooks;
@@ -68,9 +75,28 @@ public class CommonForgeEvents {
                     }
                 }
                 if (player.tickCount % 20 == 0) {
-                    h.addMoney(h.getProductionRate());
+                    if (marker != null && !marker.hasMarker(MarkerInit.NO_ADDED_PRODUCTION_RATE.get())) {
+                        h.addMoney(GlobalLevelHolderAttacher.getGlobalLevelCapability(player.serverLevel()).map(GlobalLevelHolder::getProductionRate).orElse(0));
+                    }
                 }
             });
+        }
+    }
+
+    @SubscribeEvent
+    public static void onBlockBreak(BlockEvent.BreakEvent event) {
+        if (event.getPlayer() != null && !event.getPlayer().level().isClientSide) {
+            Player player = event.getPlayer();
+            BlockPos pos = event.getPos();
+            Level level = player.level();
+            if (level.getBlockState(pos).is(BlockInit.CRYPTO_MINER_BLOCK.get())) {
+                BlockEntity entity = level.getBlockEntity(pos);
+                if (entity instanceof CryptoMinerBlockEntity crypto) {
+                    if (crypto.amount == 1000) {
+                        event.setCanceled(true);
+                    }
+                }
+            }
         }
     }
 

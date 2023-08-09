@@ -1,0 +1,6 @@
+{
+    "parent": "rgrbillionaire:item/dollar_fishing_rod",
+    "textures": {
+        "layer0": "rgrbillionaire:item/dollar_fishing_rod_dollar"
+    }
+}

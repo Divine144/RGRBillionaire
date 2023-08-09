@@ -522,8 +522,6 @@ public class MarketplaceScreen extends AbstractContainerScreen<MarketplaceMenu> 
             return super.mouseScrolled(pMouseX, pMouseY, pDelta);
         }
 
-
-
         @Override
         protected boolean isValidClickButton(int pButton) {
             return super.isValidClickButton(pButton);
@@ -635,7 +633,6 @@ public class MarketplaceScreen extends AbstractContainerScreen<MarketplaceMenu> 
                     }
                 }
             }
-
         }
     }
 }

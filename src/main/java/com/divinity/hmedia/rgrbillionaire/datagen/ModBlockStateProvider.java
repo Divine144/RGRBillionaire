@@ -1,12 +1,16 @@
 package com.divinity.hmedia.rgrbillionaire.datagen;
 
 import com.divinity.hmedia.rgrbillionaire.RGRBillionaire;
+import com.divinity.hmedia.rgrbillionaire.init.BlockInit;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.model.generators.BlockModelBuilder;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 public class ModBlockStateProvider extends BlockStateProvider {
     public ModBlockStateProvider(PackOutput generator, ExistingFileHelper existingFileHelper) {
@@ -22,10 +26,9 @@ public class ModBlockStateProvider extends BlockStateProvider {
         //         .map(Supplier::get)
         //         .forEach(this::simpleCubeBottomTopBlockState);
         //
-        // Stream.of(
-        //
-        // ).map(Supplier::get)
-        //         .forEach(this::simpleBlock);
+         Stream.of(BlockInit.CRYPTO_MINER_BLOCK)
+                 .map(Supplier::get)
+                 .forEach(this::simpleBlock);
 
     }
 

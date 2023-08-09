@@ -106,6 +106,4 @@ public class MinebookScreen extends AbstractContainerScreen<MinebookMenu> {
             }
         }
     }
-
-
 }

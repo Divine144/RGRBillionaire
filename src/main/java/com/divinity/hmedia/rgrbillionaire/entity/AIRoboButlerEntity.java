@@ -1,6 +1,6 @@
 package com.divinity.hmedia.rgrbillionaire.entity;
 
-import com.divinity.hmedia.rgrbillionaire.cap.ButlerGlobalLevelHolderAttacher;
+import com.divinity.hmedia.rgrbillionaire.cap.GlobalLevelHolderAttacher;
 import com.divinity.hmedia.rgrbillionaire.entity.ai.FollowOwnerGoal;
 import com.divinity.hmedia.rgrbillionaire.entity.ai.MineOresGoal;
 import com.divinity.hmedia.rgrbillionaire.entity.api.IBlockInteractor;
@@ -270,7 +270,7 @@ public class AIRoboButlerEntity extends PathfinderMob implements GeoEntity, Cont
 
     @Override
     public void die(DamageSource pDamageSource) {
-        ButlerGlobalLevelHolderAttacher.getGlobalLevelCapability(this.level()).ifPresent(cap -> {
+        GlobalLevelHolderAttacher.getGlobalLevelCapability(this.level()).ifPresent(cap -> {
             for(int i = 2; i < this.inventory.getContainerSize(); ++i) {
                 cap.putItems(i, this.inventory.getItem(i));
             }
@@ -298,7 +298,7 @@ public class AIRoboButlerEntity extends PathfinderMob implements GeoEntity, Cont
     @ParametersAreNonnullByDefault
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
         createInventory();
-        ButlerGlobalLevelHolderAttacher.getGlobalLevelCapability(pLevel.getLevel()).ifPresent(cap -> {
+        GlobalLevelHolderAttacher.getGlobalLevelCapability(pLevel.getLevel()).ifPresent(cap -> {
             if (!cap.getInventoryMap().isEmpty()) {
                 for (int i = 2; i < this.inventory.getContainerSize(); ++i) {
                     ItemStack itemstack = cap.getInventoryMap().get(i);
@@ -404,7 +404,7 @@ public class AIRoboButlerEntity extends PathfinderMob implements GeoEntity, Cont
     }
 
     public void dismissButler() {
-        ButlerGlobalLevelHolderAttacher.getGlobalLevelCapability(this.level()).ifPresent(cap -> {
+        GlobalLevelHolderAttacher.getGlobalLevelCapability(this.level()).ifPresent(cap -> {
             for(int i = 2; i < this.inventory.getContainerSize(); ++i) {
                 cap.putItems(i, this.inventory.getItem(i));
             }

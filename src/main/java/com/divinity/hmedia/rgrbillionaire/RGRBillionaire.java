@@ -1,6 +1,6 @@
 package com.divinity.hmedia.rgrbillionaire;
 
-import com.divinity.hmedia.rgrbillionaire.cap.ButlerGlobalLevelHolderAttacher;
+import com.divinity.hmedia.rgrbillionaire.cap.GlobalLevelHolderAttacher;
 import com.divinity.hmedia.rgrbillionaire.cap.CannonHolderAttacher;
 import com.divinity.hmedia.rgrbillionaire.cap.MoneyHolderAttacher;
 import com.divinity.hmedia.rgrbillionaire.config.ExampleClientConfig;
@@ -9,7 +9,6 @@ import com.divinity.hmedia.rgrbillionaire.datagen.*;
 import com.divinity.hmedia.rgrbillionaire.init.*;
 import com.divinity.hmedia.rgrbillionaire.network.NetworkHandler;
 import com.divinity.hmedia.rgrbillionaire.cap.BillionaireHolderAttacher;
-import com.divinity.hmedia.rgrbillionaire.util.BillionaireUtils;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraftforge.common.data.ExistingFileHelper;
@@ -52,7 +51,7 @@ public class RGRBillionaire {
         BillionaireHolderAttacher.register();
         MoneyHolderAttacher.register();
         CannonHolderAttacher.register();
-        ButlerGlobalLevelHolderAttacher.register();
+        GlobalLevelHolderAttacher.register();
     }
 
     @SubscribeEvent

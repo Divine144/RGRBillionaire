@@ -3,6 +3,8 @@ package com.divinity.hmedia.rgrbillionaire.init;
 import com.divinity.hmedia.rgrbillionaire.RGRBillionaire;
 import com.divinity.hmedia.rgrbillionaire.entity.AIRoboButlerEntity;
 import com.divinity.hmedia.rgrbillionaire.entity.CurrencyProjectileEntity;
+import com.divinity.hmedia.rgrbillionaire.entity.DollarFishingHookEntity;
+import com.divinity.hmedia.rgrbillionaire.entity.StockGraphEntity;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.level.Level;
@@ -40,6 +42,12 @@ public class EntityInit {
 
     public static final RegistryObject<EntityType<CurrencyProjectileEntity>> DOLLAR_BILL_ENTITY = registerEntity("dollar_bill_entity", () ->
             EntityType.Builder.<CurrencyProjectileEntity>of((type, level) -> new CurrencyProjectileEntity(type, level, 10), MobCategory.MISC).sized(0.25F, 0.25F));
+
+    public static final RegistryObject<EntityType<StockGraphEntity>> STOCK_GRAPH_ENTITY = registerEntity("stock_graph_entity", () ->
+            EntityType.Builder.of(StockGraphEntity::new, MobCategory.MISC).sized(0.25F, 0.25F));
+
+    public static final RegistryObject<EntityType<DollarFishingHookEntity>> DOLLAR_BOBBER_ENTITY = registerEntity("dollar_bobber_entity", () ->
+            EntityType.Builder.<DollarFishingHookEntity>of(DollarFishingHookEntity::new, MobCategory.MISC).noSave().noSummon().sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(5));
 
     public static final RegistryObject<EntityType<AIRoboButlerEntity>> BUTLER_ENTITY = registerEntity("butler_entity", () ->
             EntityType.Builder.of(AIRoboButlerEntity::new, MobCategory.MISC).sized(0.75F, 0.75F), Mob::createMobAttributes);

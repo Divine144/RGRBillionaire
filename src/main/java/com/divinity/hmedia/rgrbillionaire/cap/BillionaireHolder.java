@@ -49,22 +49,6 @@ public class BillionaireHolder extends EntityCapability {
         if (money != old) updateTracking();
     }
 
-    public int getProductionRate() {
-        var holder = MarkerHolderAttacher.getMarkerHolderUnwrap(this.entity);
-        if (holder != null && holder.hasMarker(MarkerInit.NO_ADDED_PRODUCTION_RATE.get())) {
-            return 0;
-        }
-        return this.productionRate;
-    }
-
-    public void increaseProductionRate(int staggerAmount) {
-        productionRate += staggerAmount;
-    }
-
-    public void decreaseProductionRate(int staggerAmount) {
-        productionRate -= staggerAmount;
-    }
-
     public int getLinkedEntityID() {
         return linkedEntityID;
     }
