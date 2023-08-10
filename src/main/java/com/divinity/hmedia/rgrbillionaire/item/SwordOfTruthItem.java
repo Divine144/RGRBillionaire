@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -26,6 +27,23 @@ public class SwordOfTruthItem extends Item {
         super(pProperties);
     }
 
+    private int storedMoney;
+
+    public void setStoredMoney(int money) {
+        this.storedMoney = money;
+    }
+
+    public int getStoredMoney() {
+        return storedMoney;
+    }
+
+    @Override
+    public @Nullable CompoundTag getShareTag(ItemStack stack) {
+        CompoundTag tag = new CompoundTag();
+        tag.putInt("money", storedMoney);
+        return tag;
+    }
+
     @Override
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         if (FMLEnvironment.dist == Dist.CLIENT) {
@@ -38,7 +56,15 @@ public class SwordOfTruthItem extends Item {
                         BakedModel pModel = renderer.getModel(pStack, mc.level, null, 0);
                         for (var model : pModel.getRenderPasses(pStack, true)) {
                             for (var renderType : model.getRenderTypes(pStack, true)) {
-                                VertexConsumer vertexConsumer = VertexMultiConsumer.create(pBuffer.getBuffer(CustomRenderTypes.ENERGY_SWIRL_ITEM), pBuffer.getBuffer(renderType));
+                                // Default render layer behaviour
+                                VertexConsumer vertexConsumer = ItemRenderer.getFoilBufferDirect(pBuffer, renderType, true, pStack.hasFoil());
+                                var tag = SwordOfTruthItem.this.getShareTag(pStack);
+                                if (tag != null) {
+                                    if (tag.getInt("money") >= 1000) {
+                                        // Setting to creeper render layer
+                                        vertexConsumer = VertexMultiConsumer.create(pBuffer.getBuffer(CustomRenderTypes.ENERGY_SWIRL_ITEM), pBuffer.getBuffer(renderType));
+                                    }
+                                }
                                 renderer.renderModelLists(model, pStack, pPackedLight, pPackedOverlay, pPoseStack, vertexConsumer);
                             }
                         }

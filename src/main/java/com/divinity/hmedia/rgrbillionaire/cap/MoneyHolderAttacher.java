@@ -27,7 +27,7 @@ public class MoneyHolderAttacher extends CapabilityAttacher {
     }
 
     private static void attach(AttachCapabilitiesEvent<ItemStack> event, ItemStack itemStack) {
-        if (itemStack.is(ItemInit.MONEY.get())) {
+        if (itemStack.is(ItemInit.MONEY.get()) || itemStack.is(ItemInit.SWORD_OF_TRUTH.get())) {
             genericAttachCapability(event, new MoneyHolder(itemStack), EXAMPLE_ITEM_STACK_CAPABILITY, EXAMPLE_ITEM_STACK_CAPABILITY_RL);
         }
     }

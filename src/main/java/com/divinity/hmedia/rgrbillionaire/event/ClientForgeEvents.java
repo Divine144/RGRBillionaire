@@ -2,6 +2,7 @@ package com.divinity.hmedia.rgrbillionaire.event;
 
 import com.divinity.hmedia.rgrbillionaire.cap.BillionaireHolderAttacher;
 import com.divinity.hmedia.rgrbillionaire.init.MenuInit;
+import com.divinity.hmedia.rgrbillionaire.network.ClientHandler;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev._100media.hundredmediaquests.menu.AlwaysValidMenu;
 import dev._100media.hundredmediaquests.network.HMQNetworkHandler;
@@ -15,6 +16,7 @@ import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.NetworkHooks;
+import org.lwjgl.glfw.GLFW;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ClientForgeEvents {
@@ -25,6 +27,9 @@ public class ClientForgeEvents {
     public static void keyPressEvent(InputEvent.Key event) {
         if (ClientModEvents.SKILL_TREE_KEY.isDown()) {
             HMQNetworkHandler.INSTANCE.sendToServer(new OpenMainTreePacket(MenuInit.SKILL_TREE.get()));
+        }
+        if (ClientModEvents.MONEY_EXPLOSION_KEY.isDown()) {
+            ClientHandler.startMoneyExplosionAnimation();
         }
     }
 

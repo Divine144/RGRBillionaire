@@ -10,9 +10,11 @@ import com.divinity.hmedia.rgrbillionaire.network.serverbound.UpdateMarketOfferP
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
@@ -24,11 +26,15 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public final class BillionaireUtils {
 
@@ -93,14 +99,32 @@ public final class BillionaireUtils {
         }
     }
 
-    public static void createHelix(DustParticleOptions type, LivingEntity player, ServerLevel pLevel, float radius) {
+    public static void createHelix(ParticleOptions type, LivingEntity player, ServerLevel pLevel, float radius, float amount) {
         Vec3 loc = player.position();
-        for (double y = 0; y <= 1; y += 0.001) {
+        for (double y = 0; y <= 1; y += amount) {
             double x = radius * Math.cos(9 * y);
             double z = radius * Math.sin(9 * y);
             pLevel.sendParticles(type, loc.x() + x, loc.y() + 1.1, loc.z() + z, 0, 0, 0, 0, 0);
         }
     }
+
+    /**
+     * Returns a list of entities (targets) from a relative entity within the specified x, y, and z bounds.
+     */
+    public static <T extends LivingEntity> List<T> getEntitiesInRange(LivingEntity relativeEntity, Class<T> targets, double xBound, double yBound, double zBound, Predicate<T> filter) {
+        return relativeEntity.level().getEntitiesOfClass(targets,
+                        new AABB(relativeEntity.getX() - xBound, relativeEntity.getY() - yBound, relativeEntity.getZ() - zBound,
+                                relativeEntity.getX() + xBound, relativeEntity.getY() + yBound, relativeEntity.getZ() + zBound))
+                .stream().sorted(getEntityComparator(relativeEntity)).filter(filter).collect(Collectors.toList());
+    }
+
+    /**
+     * Returns a comparator which compares entities' distances to a given LivingEntity
+     */
+    private static Comparator<Entity> getEntityComparator(LivingEntity other) {
+        return Comparator.comparing(entity -> entity.distanceToSqr(other.getX(), other.getY(), other.getZ()));
+    }
+
 
     public static boolean hasEnoughMoney(Player player, int amount) {
         var holder = BillionaireHolderAttacher.getHolderUnwrap(player);

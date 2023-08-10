@@ -1,6 +1,7 @@
 package com.divinity.hmedia.rgrbillionaire.event;
 
 import com.divinity.hmedia.rgrbillionaire.RGRBillionaire;
+import com.divinity.hmedia.rgrbillionaire.client.gui.MoneyExplosionGuiOverlay;
 import com.divinity.hmedia.rgrbillionaire.client.renderer.AIRobotButlerEntityRenderer;
 import com.divinity.hmedia.rgrbillionaire.client.renderer.DollarFishingHookRenderer;
 import com.divinity.hmedia.rgrbillionaire.client.renderer.ShootableCoinRenderer;
@@ -35,6 +36,7 @@ import net.minecraft.world.item.FishingRodItem;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -50,10 +52,12 @@ import java.util.Arrays;
 public class ClientModEvents {
 
     public static final KeyMapping SKILL_TREE_KEY = new KeyMapping("key." + RGRBillionaire.MODID + ".skill_tree", KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_G, "key.category." + RGRBillionaire.MODID);
+    public static final KeyMapping MONEY_EXPLOSION_KEY = new KeyMapping("key." + RGRBillionaire.MODID + ".money_explosion", KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_K, "key.category." + RGRBillionaire.MODID);
 
     @SubscribeEvent
     public static void registerKeybind(RegisterKeyMappingsEvent event) {
         event.register(SKILL_TREE_KEY);
+        event.register(MONEY_EXPLOSION_KEY);
     }
 
     @SubscribeEvent
@@ -121,5 +125,10 @@ public class ClientModEvents {
                         new Pair<>(141, 102)
                 ), SkillInit.UTILITY_TREE.get(), 256, 256, 256, 192
         ));
+    }
+
+    @SubscribeEvent
+    public static void onRegisterGuiOverlays(RegisterGuiOverlaysEvent event) {
+        event.registerAboveAll("money_explosion", MoneyExplosionGuiOverlay.INSTANCE);
     }
 }

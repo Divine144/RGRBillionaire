@@ -24,9 +24,7 @@ public record OpenMarketMenuPacket(int menuID) implements IPacket {
                         new SimpleMenuProvider((id, inv, pl) ->
                                 new MarketplaceMenu(id, inv, new DummyMerchant(pl, BillionaireUtils.allOffers.get(menuID))),
                                 Component.literal("How are we here")),
-                        buf -> {
-                        buf.writeInt(menuID);
-                });
+                        buf -> buf.writeInt(menuID));
             }
         });
         context.setPacketHandled(true);

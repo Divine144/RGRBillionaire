@@ -15,6 +15,8 @@ public class BillionaireHolder extends EntityCapability {
     private int money;
     private int moneyCap;
     private int productionRate;
+    private int mugEatTicks;
+    private boolean canDoubleJump;
 
     private int linkedEntityID = -1;
 
@@ -64,6 +66,8 @@ public class BillionaireHolder extends EntityCapability {
         tag.putInt("productionRate", this.productionRate);
         tag.putInt("moneyCap", this.moneyCap);
         tag.putInt("id", this.linkedEntityID);
+        tag.putInt("mugEatTicks", this.mugEatTicks);
+        tag.putBoolean("doubleJump", this.canDoubleJump);
         return tag;
     }
 
@@ -73,6 +77,8 @@ public class BillionaireHolder extends EntityCapability {
         this.productionRate = nbt.getInt("productionRate");
         this.moneyCap = nbt.getInt("moneyCap");
         this.linkedEntityID = nbt.getInt("id");
+        this.mugEatTicks = nbt.getInt("mugEatTicks");
+        this.canDoubleJump = nbt.getBoolean("doubleJump");
     }
 
     @Override
@@ -83,5 +89,21 @@ public class BillionaireHolder extends EntityCapability {
     @Override
     public SimpleChannel getNetworkChannel() {
         return NetworkHandler.INSTANCE;
+    }
+
+    public int getMugEatTicks() {
+        return mugEatTicks;
+    }
+
+    public void setMugEatTicks(int mugEatTicks) {
+        this.mugEatTicks = mugEatTicks;
+    }
+
+    public boolean isCanDoubleJump() {
+        return canDoubleJump;
+    }
+
+    public void setCanDoubleJump(boolean canDoubleJump) {
+        this.canDoubleJump = canDoubleJump;
     }
 }

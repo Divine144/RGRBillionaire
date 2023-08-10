@@ -5,10 +5,8 @@ import com.divinity.hmedia.rgrbillionaire.block.be.CryptoMinerBlockEntity;
 import com.divinity.hmedia.rgrbillionaire.cap.BillionaireHolderAttacher;
 import com.divinity.hmedia.rgrbillionaire.cap.GlobalLevelHolder;
 import com.divinity.hmedia.rgrbillionaire.cap.GlobalLevelHolderAttacher;
-import com.divinity.hmedia.rgrbillionaire.init.BlockInit;
-import com.divinity.hmedia.rgrbillionaire.init.ItemInit;
-import com.divinity.hmedia.rgrbillionaire.init.MarkerInit;
-import com.divinity.hmedia.rgrbillionaire.init.MenuInit;
+import com.divinity.hmedia.rgrbillionaire.init.*;
+import com.divinity.hmedia.rgrbillionaire.item.SwordOfTruthItem;
 import com.divinity.hmedia.rgrbillionaire.menu.MinebookMenu;
 import com.divinity.hmedia.rgrbillionaire.mixin.TemplateStructurePieceAccessor;
 import com.divinity.hmedia.rgrbillionaire.quest.goal.AquireAdvancementGoal;
@@ -23,11 +21,18 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.levelgen.structure.BuiltinStructures;
@@ -36,11 +41,16 @@ import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.levelgen.structure.structures.EndCityPieces;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.AdvancementEvent;
+import net.minecraftforge.event.entity.player.CriticalHitEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.level.BlockEvent;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.NetworkHooks;
@@ -49,6 +59,8 @@ import java.util.UUID;
 
 @Mod.EventBusSubscriber(modid = RGRBillionaire.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class CommonForgeEvents {
+
+    private static final MobEffectInstance WEAKNESS = new MobEffectInstance(MobEffects.WEAKNESS, 60, 0);
 
     @SubscribeEvent
     public static void onAdvancementEarn(AdvancementEvent.AdvancementEarnEvent event) {
@@ -68,18 +80,75 @@ public class CommonForgeEvents {
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
         if (event.player instanceof ServerPlayer player && event.phase == TickEvent.Phase.END) {
             BillionaireHolderAttacher.getHolder(player).ifPresent(h -> {
+                var reachDistance = player.getAttribute(ForgeMod.BLOCK_REACH.get());
+                var attackDistance = player.getAttribute(ForgeMod.ENTITY_REACH.get());
                 var marker = MarkerHolderAttacher.getMarkerHolderUnwrap(player);
-                if (marker != null && !marker.hasMarker(MarkerInit.NO_BASE_PRODUCTION_RATE.get())) {
-                    if (player.tickCount % 100 == 0) {
-                        h.addMoney(1);
+                if (marker != null) {
+                    if (!marker.hasMarker(MarkerInit.NO_BASE_PRODUCTION_RATE.get())) {
+                        if (player.tickCount % 100 == 0) {
+                            h.addMoney(1);
+                        }
+                    }
+                    if (player.tickCount % 20 == 0) {
+                        if (!marker.hasMarker(MarkerInit.NO_ADDED_PRODUCTION_RATE.get())) {
+                            h.addMoney(GlobalLevelHolderAttacher.getGlobalLevelCapability(player.serverLevel()).map(GlobalLevelHolder::getProductionRate).orElse(0));
+                        }
+                    }
+                    if (marker.hasMarker(MarkerInit.TAX_FORM.get())) {
+                        if (!player.hasEffect(MobEffects.WEAKNESS)) {
+                            player.addEffect(WEAKNESS);
+                        }
                     }
                 }
-                if (player.tickCount % 20 == 0) {
-                    if (marker != null && !marker.hasMarker(MarkerInit.NO_ADDED_PRODUCTION_RATE.get())) {
-                        h.addMoney(GlobalLevelHolderAttacher.getGlobalLevelCapability(player.serverLevel()).map(GlobalLevelHolder::getProductionRate).orElse(0));
+                if (h.getMugEatTicks() > 0) {
+                    if (reachDistance != null && attackDistance != null) {
+                        if (reachDistance.getBaseValue() <= 4.5) {
+                            reachDistance.setBaseValue(reachDistance.getAttribute().getDefaultValue() + 1);
+                            attackDistance.setBaseValue(attackDistance.getAttribute().getDefaultValue() + 1);
+                        }
+                    }
+                    h.setMugEatTicks(h.getMugEatTicks() - 1);
+                }
+                else {
+                    if (reachDistance != null && attackDistance != null) {
+                        if (reachDistance.getBaseValue() != 4.5) {
+                            reachDistance.setBaseValue(reachDistance.getAttribute().getDefaultValue());
+                            attackDistance.setBaseValue(attackDistance.getAttribute().getDefaultValue());
+                        }
+                    }
+                    SkillInit.removeAbility(player, AbilityInit.DOUBLE_JUMP.get());
+                }
+                if (!h.isCanDoubleJump()) {
+                    if (h.getMugEatTicks() > 0 && player.onGround()) {
+                        h.setCanDoubleJump(true);
                     }
                 }
             });
+        }
+    }
+
+    @SubscribeEvent
+    public static void onHurtEnemy(LivingHurtEvent event) {
+        if (event.getSource().getDirectEntity() instanceof ServerPlayer player) {
+            if (event.getEntity() instanceof ServerPlayer hurtPlayer) {
+                for (InteractionHand hand : InteractionHand.values()) {
+                    ItemStack stack = player.getItemInHand(hand);
+                    if (stack.getItem() instanceof SwordOfTruthItem item) {
+                        BillionaireHolderAttacher.getHolder(hurtPlayer).ifPresent(cap -> {
+                            int money = item.getStoredMoney();
+                            if (money == 1000) {
+                                item.setStoredMoney(0);
+                                MarkerHolderAttacher.getMarkerHolder(hurtPlayer).ifPresent(h -> h.addMarker(MarkerInit.TAX_FORM.get(), false));
+                            }
+                            else {
+                                cap.addMoney(-100);
+                                item.setStoredMoney(item.getStoredMoney() + 100);
+                            }
+                        });
+                        break;
+                    }
+                }
+            }
         }
     }
 
@@ -99,6 +168,8 @@ public class CommonForgeEvents {
             }
         }
     }
+
+
 
     @SubscribeEvent
     public static void onRightClickChest(PlayerInteractEvent.RightClickBlock event) {
@@ -152,6 +223,29 @@ public class CommonForgeEvents {
     @SubscribeEvent
     public static void onEntityJoinWorld(EntityJoinLevelEvent event) {
         BillionaireUtils.initializeLists();
+    }
+
+    @SubscribeEvent
+    public static void onCrit(CriticalHitEvent event) {
+        Player player = event.getEntity();
+        if (player instanceof ServerPlayer serverPlayer) {
+            if (serverPlayer.getItemBySlot(EquipmentSlot.CHEST).is(ItemInit.GOLDEN_JETPACK.get())) {
+                event.setResult(Event.Result.ALLOW);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onKill(LivingDeathEvent event) {
+        if (event.getEntity() != null && event.getEntity().getLastAttacker() instanceof ServerPlayer player) {
+            if (player.getItemBySlot(EquipmentSlot.CHEST).is(ItemInit.GOLDEN_JETPACK.get())) {
+                BillionaireHolderAttacher.getHolder(player).ifPresent(cap -> cap.addMoney(1000));
+            }
+        }
+    }
+
+    private static boolean isHoldingItem(Player player, Item item) {
+        return player.getItemInHand(InteractionHand.MAIN_HAND).is(item) || player.getItemInHand(InteractionHand.OFF_HAND).is(item);
     }
 
     private static StructureStart getStructureOfType(ResourceKey<Structure> key, ServerPlayer player) {
