@@ -5,6 +5,7 @@ import com.divinity.hmedia.rgrbillionaire.cap.BillionaireHolder;
 import com.divinity.hmedia.rgrbillionaire.cap.BillionaireHolderAttacher;
 import com.divinity.hmedia.rgrbillionaire.entity.AIRoboButlerEntity;
 import com.divinity.hmedia.rgrbillionaire.requirement.ArmorSetSkillRequirement;
+import com.divinity.hmedia.rgrbillionaire.requirement.ItemMapSkillRequirement;
 import com.divinity.hmedia.rgrbillionaire.requirement.ItemSkillRequirementSpecial;
 import com.divinity.hmedia.rgrbillionaire.requirement.MoneySkillRequirement;
 import com.divinity.hmedia.rgrbillionaire.skill.MorphSkill;
@@ -13,8 +14,8 @@ import com.divinity.hmedia.rgrbillionaire.skill.tree.EvolutionTree;
 import com.divinity.hmedia.rgrbillionaire.skill.tree.UtilityTree;
 import dev._100media.hundredmediaabilities.ability.Ability;
 import dev._100media.hundredmediaabilities.capability.AbilityHolderAttacher;
+import dev._100media.hundredmediaabilities.capability.MarkerHolderAttacher;
 import dev._100media.hundredmediaabilities.init.HMAAbilityInit;
-import dev._100media.hundredmediamorphs.init.HMMMorphInit;
 import dev._100media.hundredmediaquests.init.HMQSkillsInit;
 import dev._100media.hundredmediaquests.skill.Skill;
 import dev._100media.hundredmediaquests.skill.SkillTree;
@@ -27,13 +28,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorMaterials;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.Arrays;
@@ -56,7 +55,7 @@ public class SkillInit {
             Arrays.asList(
                     new ItemSkillRequirement(() -> Items.MANGROVE_LEAVES, 64),
                     new ItemSkillRequirement(() -> Items.GOLD_INGOT, 32),
-                    new ItemSkillRequirement(() -> Items.MAP, 1)
+                    new ItemMapSkillRequirement()
             ),
             MorphInit.TIGHT_BUDGET_TEEN
     ));
@@ -99,20 +98,18 @@ public class SkillInit {
     public static final RegistryObject<Skill> THE_COIN_CANNON = SKILLS.register("the_coin_cannon", () -> new QuestSkill(
             Component.literal("The Coin Cannon"),
             Component.literal("""
-            This held item takes money from the Billionaire and shoots a fast moving coin. Shift+Right Click to change currency:
-                                
-            Pennies: Can be shot at rapid fire! Does 8 impact damage per shot (1$/Per Shot)
-            Quarters: Does a powerful and concentrated straight shot. This shot does a devastating 30 Damage but has a 3s Cooldown. (5$/Per Shot)
-            Silver Dollars: Acts as a rocket launcher and explodes surfaces and entities it makes contact with. Has a 5s Cooldown. (10$/Per Shot)"""),
+            This held item takes money from you and shoots a fast moving coin. Shift+Right Click to change currency:
+            Pennies: Rapid Fire and 8 damage/shot (1$/Per Shot)
+            Quarters: Deals a Devastating 30 damage, with a 3s cooldown (5$/Per Shot)
+            Silver Dollars: Explodes on contact. Has a 5s Cooldown. (10$/Per Shot)"""),
             QuestInit.COIN_CANNON
     ));
     public static final RegistryObject<Skill> EXPLOIT_WORKING_CLASS = SKILLS.register("exploit_working_class", () -> new QuestSkill(
             Component.literal("Exploit The Working Class"),
             Component.literal("""
                     You create a 6 block red ring aura around yourself.
-                    Players that step within this aura have their life energy sucked out quickly (1/2 a heart per second regardless of armor) 
-                    and are given Weakness I. The taken health of other players is given to the you to heal you, 
-                    and also generates $50/s per player until the affected player(s) die.
+                    Players that step within this aura have their life energy sucked out quickly and are given Weakness I.
+                    The taken health of other players is given to the you, and you also generate $50/s per player within the aura.
                     """),
             QuestInit.EXPLOIT_WORKING_CLASS
     ));
@@ -141,14 +138,14 @@ public class SkillInit {
     public static final RegistryObject<Skill> CRYPTO_MINER = SKILLS.register("crypto_miner", () -> new SimpleSkill(
             Component.literal("Crypto Miner"),
             Component.literal("""
-                    Place these server towers in the world to increase the rate at which the Billionaire makes money.
+                    Place these server towers in the world to increase the rate you make money.
                     Feeding Materials to them increases the production rate:
                     Standard = 1$/s
                     Iron Miner = 3$/s (Use 1 Iron Ingot)
                     Gold Miner = 5$/s (Use 1 Gold Ingot)
                     Diamond Miner = 7$/s (Use 1 Diamond)
                     Netherite Miner = 10$/s (Use 1 Netherite Scrap)
-                    Omni Miner = 1000$/s (Use 1 Dragon Egg / The Omni Miner is Unbreakable)        
+                    Omni Miner = 1000$/s (Use 1 Dragon Egg / The Omni Miner is Unbreakable)     
                     """),
             Arrays.asList(
                     new ItemSkillRequirement(() -> Items.LAPIS_LAZULI, 16),
@@ -162,7 +159,8 @@ public class SkillInit {
     ));
     public static final RegistryObject<Skill> ROBO_BUTLER = SKILLS.register("robo_butler", () -> new SimpleSkill(
             Component.literal("AI Robo-Butler"),
-            Component.literal("Summon a diligent Mining Butler who tirelessly auto mines ores within a 10-block radius of him, including through walls."),
+            Component.literal("Summon a diligent Mining Butler who tirelessly auto mines ores within a 10-block radius of him, including through walls." +
+                    "This Butler can be summoned or de-summoned as you wish, and also has his own inventory to store mined goods."),
             Arrays.asList(
                     new ItemSkillRequirement(() -> Items.ENDER_PEARL, 4),
                     new ItemSkillRequirement(() -> Items.MAGMA_BLOCK, 16),
@@ -191,15 +189,18 @@ public class SkillInit {
     ));
     public static final RegistryObject<Skill> STARLINKED_MINEBOOK_MARKETPLACE = SKILLS.register("starlinked_minebook_marketplace", () -> new SimpleSkill(
             Component.literal("Starlinked Minebook Marketplace"),
-            Component.literal("An online market that allows the Billionaire to buy and sell extra items and materials. Prices on the left are the Buy Price, prices on the right are the Sell Price."),
+            Component.literal("An online market that allows you to buy and sell extra items and materials. " +
+                    "Right click an offer to change it to a sell offer. " +
+                    "Shift+Scroll on an offer to cycle through variants (if applicable)"),
             Arrays.asList(
                     new ItemSkillRequirement(() -> Items.LIGHTNING_ROD, 10),
                     new ItemSkillRequirement(() -> Items.QUARTZ, 64),
                     new ItemTagSkillRequirement(() -> ItemTags.MUSIC_DISCS, 3, Component.literal("Music Disc")),
                     new MoneySkillRequirement(350_000)
             ),
-            player -> {},
+            player -> player.getInventory().add(ItemInit.MARKETPLACE.get().getDefaultInstance()),
             player -> {
+
             }
     ));
     // Here
@@ -207,8 +208,8 @@ public class SkillInit {
             Component.literal("Golden Jetpack"),
             Component.literal("""
                     A Golden Jetpack that takes the chest armor slot and acts as an unbreakable Netherite Chestplate.
-                    The Golden Jetpack allows the Billionaire to fly as if they are in creative mode
-                    While equipped, every kill on any entities give you $1000 and all attacks are considered crits.
+                    The Golden Jetpack allows you to fly as if they are in creative mode
+                    While equipped, every kill on any entities give you $100,000 and all attacks are considered crits.
                     """),
             Arrays.asList(
                     new ArmorSetSkillRequirement(ArmorMaterials.GOLD, ItemStack::isEnchanted),
@@ -226,8 +227,15 @@ public class SkillInit {
             List.of(
                     new MoneySkillRequirement(1_000_000_000)
             ),
-            player -> {},
             player -> {
+                MarkerHolderAttacher.getMarkerHolder(player).ifPresent(m -> {
+                    m.addMarker(MarkerInit.BILLIONAIRES_CLUB.get(), true);
+                });
+            },
+            player -> {
+                MarkerHolderAttacher.getMarkerHolder(player).ifPresent(m -> {
+                    m.removeMarker(MarkerInit.BILLIONAIRES_CLUB.get(), true);
+                });
             }
     ));
 
@@ -263,7 +271,6 @@ public class SkillInit {
             if (i == -1) {
                 return;
             }
-
             holder.setAbility(i, HMAAbilityInit.NONE.get());
         });
     }

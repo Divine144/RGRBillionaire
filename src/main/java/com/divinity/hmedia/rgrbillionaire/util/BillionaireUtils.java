@@ -2,14 +2,13 @@ package com.divinity.hmedia.rgrbillionaire.util;
 
 import com.divinity.hmedia.rgrbillionaire.cap.BillionaireHolderAttacher;
 import com.divinity.hmedia.rgrbillionaire.cap.MoneyHolderAttacher;
-import com.divinity.hmedia.rgrbillionaire.client.screen.MarketplaceScreen;
 import com.divinity.hmedia.rgrbillionaire.init.ItemInit;
+import com.divinity.hmedia.rgrbillionaire.init.MorphInit;
 import com.divinity.hmedia.rgrbillionaire.menu.offer.CustomMerchantOffer;
-import com.divinity.hmedia.rgrbillionaire.network.NetworkHandler;
-import com.divinity.hmedia.rgrbillionaire.network.serverbound.UpdateMarketOfferPacket;
+import dev._100media.hundredmediamorphs.capability.MorphHolderAttacher;
+import dev._100media.hundredmediamorphs.morph.Morph;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -17,12 +16,13 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.EnchantedBookItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.block.Blocks;
@@ -139,6 +139,29 @@ public final class BillionaireUtils {
         if (holder != null) {
             holder.addMoney(-amount);
         }
+    }
+
+    public static void addMoney(Player player, int amount) {
+        var holder = BillionaireHolderAttacher.getHolderUnwrap(player);
+        if (holder != null) {
+            holder.addMoney(amount);
+        }
+    }
+
+    public static boolean hasAnyMorph(Player player) {
+        var morphOptional = MorphHolderAttacher.getCurrentMorph(player);
+        if (morphOptional.isPresent()) {
+            Morph morph = morphOptional.get();
+            var list = List.of(
+                    MorphInit.BROKE_BABY.get(),
+                    MorphInit.TIGHT_BUDGET_TEEN.get(),
+                    MorphInit.MIDDLE_CLASS_MAN.get(),
+                    MorphInit.MULTI_MILLIONAIRE.get(),
+                    MorphInit.THE_BILLIONAIRE.get()
+            );
+            return list.contains(morph);
+        }
+        return false;
     }
 
     // Snipped from HundredDaysStory

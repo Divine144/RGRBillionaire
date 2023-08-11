@@ -9,31 +9,23 @@ import com.divinity.hmedia.rgrbillionaire.client.renderer.StockGraphEntityRender
 import com.divinity.hmedia.rgrbillionaire.client.screen.ButlerInventoryScreen;
 import com.divinity.hmedia.rgrbillionaire.client.screen.MarketplaceScreen;
 import com.divinity.hmedia.rgrbillionaire.client.screen.MinebookScreen;
-import com.divinity.hmedia.rgrbillionaire.entity.AIRoboButlerEntity;
-import com.divinity.hmedia.rgrbillionaire.init.EntityInit;
-import com.divinity.hmedia.rgrbillionaire.init.ItemInit;
-import com.divinity.hmedia.rgrbillionaire.init.MenuInit;
-import com.divinity.hmedia.rgrbillionaire.init.SkillInit;
+import com.divinity.hmedia.rgrbillionaire.init.*;
 import com.divinity.hmedia.rgrbillionaire.item.DollarFishingPoleItem;
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
-import dev._100media.hundredmediageckolib.client.model.SimpleGeoEntityModel;
 import dev._100media.hundredmediaquests.client.screen.QuestSkillScreen;
 import dev._100media.hundredmediaquests.client.screen.SkillScreen;
 import dev._100media.hundredmediaquests.client.screen.TreeScreen;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.FishingRodItem;
-import net.minecraft.world.item.Items;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
@@ -43,9 +35,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import org.lwjgl.glfw.GLFW;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-import java.awt.*;
 import java.util.Arrays;
 
 @Mod.EventBusSubscriber(modid = RGRBillionaire.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -72,6 +62,7 @@ public class ClientModEvents {
 
     @SubscribeEvent
     public static void initClient(FMLClientSetupEvent event) {
+        ItemBlockRenderTypes.setRenderLayer(BlockInit.UNBREAKABLE_IRON_BARS.get(), RenderType.cutout());
         ItemProperties.register(ItemInit.DOLLAR_FISHING_ROD.get(), new ResourceLocation("dollar"), (p_174585_, p_174586_, p_174587_, p_174588_) -> {
             if (p_174587_ == null) {
                 return 0.0F;

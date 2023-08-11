@@ -1,10 +1,7 @@
 package com.divinity.hmedia.rgrbillionaire.init;
 
 import com.divinity.hmedia.rgrbillionaire.RGRBillionaire;
-import com.divinity.hmedia.rgrbillionaire.entity.AIRoboButlerEntity;
-import com.divinity.hmedia.rgrbillionaire.entity.CurrencyProjectileEntity;
-import com.divinity.hmedia.rgrbillionaire.entity.DollarFishingHookEntity;
-import com.divinity.hmedia.rgrbillionaire.entity.StockGraphEntity;
+import com.divinity.hmedia.rgrbillionaire.entity.*;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.level.Level;
@@ -51,6 +48,9 @@ public class EntityInit {
 
     public static final RegistryObject<EntityType<AIRoboButlerEntity>> BUTLER_ENTITY = registerEntity("butler_entity", () ->
             EntityType.Builder.of(AIRoboButlerEntity::new, MobCategory.MISC).sized(0.75F, 0.75F), Mob::createMobAttributes);
+
+    public static final RegistryObject<EntityType<RocketEntity>> ROCKET_ENTITY = registerEntity("rocket_entity", () ->
+            EntityType.Builder.of(RocketEntity::new, MobCategory.MISC).sized(1.5F, 1.5F), Mob::createMobAttributes);
 
     private static <T extends Entity> RegistryObject<EntityType<T>> registerEntity(String name, Supplier<EntityType.Builder<T>> supplier) {
         return ENTITIES.register(name, () -> supplier.get().build(RGRBillionaire.MODID + ":" + name));

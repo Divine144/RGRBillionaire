@@ -1,13 +1,13 @@
 package com.divinity.hmedia.rgrbillionaire.network;
 
+import com.divinity.hmedia.rgrbillionaire.RGRBillionaire;
+import com.divinity.hmedia.rgrbillionaire.cap.BillionaireHolderAttacher;
 import com.divinity.hmedia.rgrbillionaire.cap.GlobalLevelHolderAttacher;
 import com.divinity.hmedia.rgrbillionaire.network.serverbound.OpenMarketMenuPacket;
 import com.divinity.hmedia.rgrbillionaire.network.serverbound.OpenMinebookScreenPacket;
 import com.divinity.hmedia.rgrbillionaire.network.serverbound.UpdateMarketOfferPacket;
 import com.divinity.hmedia.rgrbillionaire.network.serverbound.UpdateMarketTradesPacket;
 import com.google.common.collect.ImmutableList;
-import com.divinity.hmedia.rgrbillionaire.RGRBillionaire;
-import com.divinity.hmedia.rgrbillionaire.cap.BillionaireHolderAttacher;
 import dev._100media.capabilitysyncer.network.SimpleEntityCapabilityStatusPacket;
 import dev._100media.capabilitysyncer.network.SimpleLevelCapabilityStatusPacket;
 import net.minecraft.resources.ResourceLocation;
@@ -38,7 +38,6 @@ public class NetworkHandler {
                 .build();
         SimpleEntityCapabilityStatusPacket.registerRetriever(BillionaireHolderAttacher.EXAMPLE_RL, BillionaireHolderAttacher::getHolderUnwrap);
         SimpleLevelCapabilityStatusPacket.registerRetriever(GlobalLevelHolderAttacher.EXAMPLE_GLOBAL_LEVEL_CAPABILITY_RL, GlobalLevelHolderAttacher::getGlobalLevelCapabilityUnwrap);
-
         packets.forEach(consumer -> consumer.accept(INSTANCE, getNextId()));
     }
 

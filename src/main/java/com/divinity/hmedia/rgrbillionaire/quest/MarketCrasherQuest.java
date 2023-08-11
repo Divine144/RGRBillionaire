@@ -1,10 +1,8 @@
 package com.divinity.hmedia.rgrbillionaire.quest;
 
 import com.divinity.hmedia.rgrbillionaire.entity.CurrencyProjectileEntity;
-import com.divinity.hmedia.rgrbillionaire.init.AbilityInit;
 import com.divinity.hmedia.rgrbillionaire.init.ItemInit;
 import com.divinity.hmedia.rgrbillionaire.quest.goal.AquireAdvancementGoal;
-import com.divinity.hmedia.rgrbillionaire.quest.reward.AbilityQuestReward;
 import dev._100media.hundredmediaquests.goal.KillPlayersGoal;
 import dev._100media.hundredmediaquests.goal.KillSpecificTypeGoal;
 import dev._100media.hundredmediaquests.goal.QuestGoal;

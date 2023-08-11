@@ -1,14 +1,6 @@
 package com.divinity.hmedia.rgrbillionaire.item;
 
-import com.divinity.hmedia.rgrbillionaire.cap.BillionaireHolderAttacher;
-import com.divinity.hmedia.rgrbillionaire.cap.CannonHolder;
-import com.divinity.hmedia.rgrbillionaire.cap.CannonHolderAttacher;
 import com.divinity.hmedia.rgrbillionaire.init.EntityInit;
-import com.divinity.hmedia.rgrbillionaire.init.ItemInit;
-import com.divinity.hmedia.rgrbillionaire.util.BillionaireUtils;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
@@ -16,7 +8,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 
 public class MarketCrasherItem extends Item {
@@ -49,7 +40,7 @@ public class MarketCrasherItem extends Item {
                 entity.setNoGravity(true);
                 entity.shootFromRotation(player, player.getXRot(), player.getYRot(), 0, 0.5F, 0);
                 player.level().addFreshEntity(entity);
-                player.getCooldowns().addCooldown(this, 60);
+                player.getCooldowns().addCooldown(this, 20);
             }
         }
     }

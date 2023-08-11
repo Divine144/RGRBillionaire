@@ -4,7 +4,6 @@ import com.divinity.hmedia.rgrbillionaire.RGRBillionaire;
 import dev._100media.capabilitysyncer.core.CapabilityAttacher;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.util.LazyOptional;

@@ -1,12 +1,10 @@
 package com.divinity.hmedia.rgrbillionaire.cap;
 
-import com.divinity.hmedia.rgrbillionaire.init.MarkerInit;
 import com.divinity.hmedia.rgrbillionaire.network.NetworkHandler;
 import com.google.common.collect.Maps;
 import dev._100media.capabilitysyncer.core.GlobalLevelCapability;
 import dev._100media.capabilitysyncer.network.LevelCapabilityStatusPacket;
 import dev._100media.capabilitysyncer.network.SimpleLevelCapabilityStatusPacket;
-import dev._100media.hundredmediaabilities.capability.MarkerHolderAttacher;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;

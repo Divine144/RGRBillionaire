@@ -1,11 +1,9 @@
 package com.divinity.hmedia.rgrbillionaire.cap;
 
-import com.divinity.hmedia.rgrbillionaire.init.MarkerInit;
 import com.divinity.hmedia.rgrbillionaire.network.NetworkHandler;
 import dev._100media.capabilitysyncer.core.EntityCapability;
 import dev._100media.capabilitysyncer.network.EntityCapabilityStatusPacket;
 import dev._100media.capabilitysyncer.network.SimpleEntityCapabilityStatusPacket;
-import dev._100media.hundredmediaabilities.capability.MarkerHolderAttacher;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.network.simple.SimpleChannel;

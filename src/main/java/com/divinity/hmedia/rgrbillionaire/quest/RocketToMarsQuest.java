@@ -3,6 +3,7 @@ package com.divinity.hmedia.rgrbillionaire.quest;
 import com.divinity.hmedia.rgrbillionaire.init.ItemInit;
 import com.divinity.hmedia.rgrbillionaire.quest.goal.AquireAdvancementGoal;
 import com.divinity.hmedia.rgrbillionaire.quest.goal.LootEndShipGoal;
+import com.divinity.hmedia.rgrbillionaire.util.BillionaireUtils;
 import dev._100media.hundredmediaquests.goal.KillPlayersGoal;
 import dev._100media.hundredmediaquests.goal.QuestGoal;
 import dev._100media.hundredmediaquests.quest.Quest;
@@ -12,6 +13,7 @@ import dev._100media.hundredmediaquests.reward.QuestReward;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
@@ -30,7 +32,8 @@ public class RocketToMarsQuest extends Quest {
         goals.add(new KillPlayersGoal(5) {
             @Override
             public boolean tallyKill(Entity entity, DamageSource source) {
-                return source.is(DamageTypes.FALL) && super.tallyKill(entity, source);
+                return entity instanceof Player player && player.getLastAttacker() instanceof Player killer && BillionaireUtils.hasAnyMorph(killer) &&
+                source.is(DamageTypes.FALL) && super.tallyKill(entity, source);
             }
             @Override
             public String getDescriptionId() {

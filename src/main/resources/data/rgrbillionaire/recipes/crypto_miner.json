@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "X": {
+      "item": "minecraft:cobblestone"
+    },
+    "#": {
+      "item": "minecraft:coal"
+    }
+  },
+  "pattern": [
+    "XXX",
+    "X#X",
+    "XXX"
+  ],
+  "result": {
+    "item": "rgrbillionaire:crypto_miner"
+  }
+}

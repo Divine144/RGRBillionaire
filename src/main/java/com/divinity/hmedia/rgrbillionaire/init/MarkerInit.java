@@ -10,9 +10,8 @@ import net.minecraftforge.registries.RegistryObject;
 public class MarkerInit {
     public static final DeferredRegister<Marker> MARKERS = DeferredRegister.create(new ResourceLocation(HundredMediaAbilitiesMod.MODID, "markers"), RGRBillionaire.MODID);
 
-    public static final RegistryObject<Marker> JETPACK_FLIGHT = MARKERS.register("jetpack_flight", Marker::new);
     public static final RegistryObject<Marker> NO_ADDED_PRODUCTION_RATE = MARKERS.register("no_added_production_rate", Marker::new);
     public static final RegistryObject<Marker> NO_BASE_PRODUCTION_RATE = MARKERS.register("no_base_production_rate", Marker::new);
     public static final RegistryObject<Marker> TAX_FORM = MARKERS.register("tax_form", Marker::new);
-
+    public static final RegistryObject<Marker> BILLIONAIRES_CLUB = MARKERS.register("billionaires_club", Marker::new);
 }

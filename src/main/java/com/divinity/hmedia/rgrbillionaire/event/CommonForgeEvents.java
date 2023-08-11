@@ -6,6 +6,7 @@ import com.divinity.hmedia.rgrbillionaire.cap.BillionaireHolderAttacher;
 import com.divinity.hmedia.rgrbillionaire.cap.GlobalLevelHolder;
 import com.divinity.hmedia.rgrbillionaire.cap.GlobalLevelHolderAttacher;
 import com.divinity.hmedia.rgrbillionaire.init.*;
+import com.divinity.hmedia.rgrbillionaire.item.PortableJailItem;
 import com.divinity.hmedia.rgrbillionaire.item.SwordOfTruthItem;
 import com.divinity.hmedia.rgrbillionaire.menu.MinebookMenu;
 import com.divinity.hmedia.rgrbillionaire.mixin.TemplateStructurePieceAccessor;
@@ -18,12 +19,12 @@ import com.google.common.collect.Multimap;
 import dev._100media.hundredmediaabilities.capability.MarkerHolderAttacher;
 import dev._100media.hundredmediaquests.cap.QuestHolderAttacher;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.SimpleMenuProvider;
-import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -34,7 +35,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.levelgen.structure.BuiltinStructures;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
@@ -61,6 +66,7 @@ import java.util.UUID;
 public class CommonForgeEvents {
 
     private static final MobEffectInstance WEAKNESS = new MobEffectInstance(MobEffects.WEAKNESS, 60, 0);
+    private static final UUID MAX_HEALTH_UUID = UUID.fromString("5D6F0BA2-1186-46AC-B896-C61C5CEE99CC");
 
     @SubscribeEvent
     public static void onAdvancementEarn(AdvancementEvent.AdvancementEarnEvent event) {
@@ -177,30 +183,47 @@ public class CommonForgeEvents {
         Player player = event.getEntity();
         if (result != null) {
             if (player instanceof ServerPlayer serverPlayer) {
-                if (playerIsInStructure(BuiltinStructures.DESERT_PYRAMID, serverPlayer)) {
-                    QuestHolderAttacher.checkAllGoals(event.getEntity(), goal -> {
-                        if (goal instanceof LootDesertTempleGoal lootDesertTempleGoal) {
-                            lootDesertTempleGoal.addProgress(1);
-                            return true;
+                var state = player.level().getBlockState(result.getBlockPos());
+                if (state.getBlock() == Blocks.STONE_BUTTON) {
+                    var nextState = player.level().getBlockState(result.getBlockPos().relative(state.getValue(BlockStateProperties.HORIZONTAL_FACING).getOpposite()));
+                    if (nextState.is(BlockInit.UNBREAKABLE_STONE_BRICKS.get())) {
+                        BlockPos pos = result.getBlockPos();
+                        BlockPos facingWest = result.getBlockPos().relative(Direction.DOWN, 3).relative(Direction.NORTH, 3);
+                        BlockPos facingNorth = result.getBlockPos().relative(Direction.DOWN, 3).relative(Direction.WEST, 3);
+                        BlockPos facingEast = result.getBlockPos().relative(Direction.DOWN, 3).relative(Direction.NORTH, 3).relative(Direction.WEST, 6);
+                        BlockPos facingSouth = result.getBlockPos().relative(Direction.DOWN, 3).relative(Direction.WEST, 3).relative(Direction.NORTH, 6);
+                        switch (state.getValue(BlockStateProperties.HORIZONTAL_FACING)) {
+                            case EAST -> pos = facingEast;
+                            case WEST -> pos = facingWest;
+                            case SOUTH -> pos = facingSouth;
+                            case NORTH -> pos = facingNorth;
                         }
-                        return false;
-                    });
+                        PortableJailItem.placeTemplate(serverPlayer.serverLevel(), serverPlayer, PortableJailItem.PRISON_CLOSED, pos.below(), Rotation.NONE, Mirror.NONE, 1.0F, 0);
+                    }
                 }
-                else if (playerIsInStructurePiece(player.blockPosition().below(), getStructureOfType(BuiltinStructures.END_CITY, serverPlayer), "ship")) {
-                    QuestHolderAttacher.checkAllGoals(event.getEntity(), goal -> {
-                        if (goal instanceof LootEndShipGoal endShipGoal) {
-                            endShipGoal.addProgress(1);
-                            return true;
-                        }
-                        return false;
-                    });
+                else if (state.is(Blocks.CHEST)) {
+                    if (playerIsInStructure(BuiltinStructures.DESERT_PYRAMID, serverPlayer)) {
+                        QuestHolderAttacher.checkAllGoals(event.getEntity(), goal -> {
+                            if (goal instanceof LootDesertTempleGoal lootDesertTempleGoal) {
+                                lootDesertTempleGoal.addProgress(1);
+                                return true;
+                            }
+                            return false;
+                        });
+                    }
+                    else if (playerIsInStructurePiece(player.blockPosition().below(), getStructureOfType(BuiltinStructures.END_CITY, serverPlayer), "ship")) {
+                        QuestHolderAttacher.checkAllGoals(event.getEntity(), goal -> {
+                            if (goal instanceof LootEndShipGoal endShipGoal) {
+                                endShipGoal.addProgress(1);
+                                return true;
+                            }
+                            return false;
+                        });
+                    }
                 }
             }
         }
     }
-
-    private static final UUID MAX_HEALTH_UUID = UUID.fromString("5D6F0BA2-1186-46AC-B896-C61C5CEE99CC");
-
 
     @SubscribeEvent
     public static void onRightClickItem(PlayerInteractEvent.RightClickItem event) {
@@ -239,7 +262,7 @@ public class CommonForgeEvents {
     public static void onKill(LivingDeathEvent event) {
         if (event.getEntity() != null && event.getEntity().getLastAttacker() instanceof ServerPlayer player) {
             if (player.getItemBySlot(EquipmentSlot.CHEST).is(ItemInit.GOLDEN_JETPACK.get())) {
-                BillionaireHolderAttacher.getHolder(player).ifPresent(cap -> cap.addMoney(1000));
+                BillionaireHolderAttacher.getHolder(player).ifPresent(cap -> cap.addMoney(100_000));
             }
         }
     }

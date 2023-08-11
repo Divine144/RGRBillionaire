@@ -1,14 +1,14 @@
 package com.divinity.hmedia.rgrbillionaire;
 
-import com.divinity.hmedia.rgrbillionaire.cap.GlobalLevelHolderAttacher;
+import com.divinity.hmedia.rgrbillionaire.cap.BillionaireHolderAttacher;
 import com.divinity.hmedia.rgrbillionaire.cap.CannonHolderAttacher;
+import com.divinity.hmedia.rgrbillionaire.cap.GlobalLevelHolderAttacher;
 import com.divinity.hmedia.rgrbillionaire.cap.MoneyHolderAttacher;
 import com.divinity.hmedia.rgrbillionaire.config.ExampleClientConfig;
 import com.divinity.hmedia.rgrbillionaire.config.ExampleConfig;
 import com.divinity.hmedia.rgrbillionaire.datagen.*;
 import com.divinity.hmedia.rgrbillionaire.init.*;
 import com.divinity.hmedia.rgrbillionaire.network.NetworkHandler;
-import com.divinity.hmedia.rgrbillionaire.cap.BillionaireHolderAttacher;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraftforge.common.data.ExistingFileHelper;

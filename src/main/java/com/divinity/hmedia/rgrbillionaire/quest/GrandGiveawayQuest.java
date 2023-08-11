@@ -24,7 +24,12 @@ public class GrandGiveawayQuest extends Quest {
     protected List<QuestGoal> initializeGoals() {
         List<QuestGoal> goals = new ArrayList<>();
         goals.add(new AquireAdvancementGoal("feed_snifflet", "little_sniffs_advancement_goal"));
-        goals.add(new HarvestBlocksGoal(2, Blocks.SPAWNER));
+        goals.add(new HarvestBlocksGoal(2, Blocks.SPAWNER) {
+            @Override
+            public String getDescriptionId() {
+                return "quest.goal.rgrbillionaire.harvest_spawner";
+            }
+        });
         goals.add(new StealMoneyGoal(2500));
         return goals;
     }
