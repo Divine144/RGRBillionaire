@@ -16,6 +16,13 @@ public class GoldenJetpackAbility extends Ability {
     private float tick = 0;
 
     @Override
+    public void executePressed(ServerLevel level, ServerPlayer player) {
+        if (tick == 0) {
+            super.executePressed(level, player);
+        }
+    }
+
+    @Override
     public void executeToggle(ServerLevel level, ServerPlayer player, boolean toggledOn) {
         super.executeToggle(level, player, toggledOn);
         if (toggledOn) {

@@ -66,10 +66,10 @@ public final class BillionaireUtils {
                     createListing(new ItemStack(Items.NETHERITE_SCRAP), 8000).markSellOffer()
             );
             foodOffers = List.of(
-                    createListing(new ItemStack(Items.COOKED_BEEF, 16), 500).markSellOffer(),
-                    createListing(new ItemStack(Items.GOLDEN_CARROT), 1000).markSellOffer(),
-                    createListing(new ItemStack(Items.GOLDEN_APPLE), 5000).markSellOffer(),
-                    createListing(new ItemStack(Items.ENCHANTED_GOLDEN_APPLE), 50000).markSellOffer()
+                    createListing(new ItemStack(Items.COOKED_BEEF, 16), 500),
+                    createListing(new ItemStack(Items.GOLDEN_CARROT), 1000),
+                    createListing(new ItemStack(Items.GOLDEN_APPLE), 5000),
+                    createListing(new ItemStack(Items.ENCHANTED_GOLDEN_APPLE), 50000)
             );
             enchantedBookOffers = new ArrayList<>();
             for (ResourceLocation key : ForgeRegistries.ENCHANTMENTS.getKeys()) {

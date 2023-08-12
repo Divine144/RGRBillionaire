@@ -9,20 +9,30 @@ import com.divinity.hmedia.rgrbillionaire.client.renderer.StockGraphEntityRender
 import com.divinity.hmedia.rgrbillionaire.client.screen.ButlerInventoryScreen;
 import com.divinity.hmedia.rgrbillionaire.client.screen.MarketplaceScreen;
 import com.divinity.hmedia.rgrbillionaire.client.screen.MinebookScreen;
+import com.divinity.hmedia.rgrbillionaire.entity.RocketEntity;
 import com.divinity.hmedia.rgrbillionaire.init.*;
 import com.divinity.hmedia.rgrbillionaire.item.DollarFishingPoleItem;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.datafixers.util.Pair;
+import dev._100media.hundredmediageckolib.client.animatable.SimpleAnimatable;
+import dev._100media.hundredmediageckolib.client.model.SimpleGeoEntityModel;
+import dev._100media.hundredmediageckolib.client.model.SimpleGeoPlayerModel;
+import dev._100media.hundredmediageckolib.client.renderer.GeoPlayerRenderer;
+import dev._100media.hundredmediamorphs.client.renderer.MorphRenderers;
+import dev._100media.hundredmediamorphs.morph.Morph;
 import dev._100media.hundredmediaquests.client.screen.QuestSkillScreen;
 import dev._100media.hundredmediaquests.client.screen.SkillScreen;
 import dev._100media.hundredmediaquests.client.screen.TreeScreen;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -34,7 +44,11 @@ import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 import java.util.Arrays;
 
@@ -58,6 +72,18 @@ public class ClientModEvents {
         event.registerEntityRenderer(EntityInit.BUTLER_ENTITY.get(), AIRobotButlerEntityRenderer::new);
         event.registerEntityRenderer(EntityInit.STOCK_GRAPH_ENTITY.get(), StockGraphEntityRenderer::new);
         event.registerEntityRenderer(EntityInit.DOLLAR_BOBBER_ENTITY.get(), DollarFishingHookRenderer::new);
+
+        // Change these
+        registerStandardMorphRenderer(MorphInit.BROKE_BABY.get());
+        registerStandardMorphRenderer(MorphInit.TIGHT_BUDGET_TEEN.get());
+        registerStandardMorphRenderer(MorphInit.MIDDLE_CLASS_MAN.get());
+        registerStandardMorphRenderer(MorphInit.MULTI_MILLIONAIRE.get());
+        registerStandardMorphRenderer(MorphInit.THE_BILLIONAIRE.get());
+
+        event.registerEntityRenderer(EntityInit.DOLLAR_COIN_ENTITY.get(),ctx -> new ShootableCoinRenderer(ctx, "penny_entity"));
+        event.registerEntityRenderer(EntityInit.DOLLAR_BILL_ENTITY.get(),ctx -> new ShootableCoinRenderer(ctx, "quarter_entity"));
+        event.registerEntityRenderer(EntityInit.ROCKET_ENTITY.get(), ctx -> new GeoEntityRenderer<>(ctx, new SimpleGeoEntityModel<>(RGRBillionaire.MODID, "penny_entity")));
+
     }
 
     @SubscribeEvent
@@ -121,5 +147,22 @@ public class ClientModEvents {
     @SubscribeEvent
     public static void onRegisterGuiOverlays(RegisterGuiOverlaysEvent event) {
         event.registerAboveAll("money_explosion", MoneyExplosionGuiOverlay.INSTANCE);
+    }
+
+    private static void registerStandardMorphRenderer(Morph morph) {
+        MorphRenderers.registerPlayerMorphRenderer(morph, (manager) -> {
+                    GeoPlayerRenderer<SimpleAnimatable> renderer = new GeoPlayerRenderer<>(manager, new SimpleGeoPlayerModel<>(RGRBillionaire.MODID, "butler_entity"), new SimpleAnimatable()) {
+
+                        @Override
+                        public boolean shouldRender(AbstractClientPlayer pLivingEntity, Frustum pCamera, double pCamX, double pCamY, double pCamZ) {
+                            return false;
+                        }
+
+                        @Override
+                        public ResourceLocation getTextureLocation(@Nullable AbstractClientPlayer entity) { return new ResourceLocation(""); }
+                    };
+                    return renderer;
+                }
+        );
     }
 }

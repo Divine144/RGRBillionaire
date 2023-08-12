@@ -38,7 +38,7 @@ public class MarketCrasherItem extends Item {
                 entity.setPos(player.getX(), player.getEyeY() - 0.40, player.getZ());
                 entity.setOwner(player);
                 entity.setNoGravity(true);
-                entity.shootFromRotation(player, player.getXRot(), player.getYRot(), 0, 0.5F, 0);
+                entity.shootFromRotation(player, player.getXRot(), player.getYRot(), 0, 0.65F, 0);
                 player.level().addFreshEntity(entity);
                 player.getCooldowns().addCooldown(this, 20);
             }

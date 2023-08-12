@@ -65,15 +65,16 @@ public class CoinCannonItem extends Item {
                 BillionaireHolderAttacher.getHolder(player).ifPresent(h -> h.addMoney(-this.getCostForAmmo(type)));
                 switch (cycle) {
                     case 1 -> {
-                        player.getCooldowns().addCooldown(ItemInit.COIN_CANNON.get(), 60);
+                        player.getCooldowns().addCooldown(this, 60);
                         player.stopUsingItem();
                     }
                     case 2 -> {
-                        player.getCooldowns().addCooldown(ItemInit.COIN_CANNON.get(), 100);
+                        player.getCooldowns().addCooldown(this, 100);
                         player.stopUsingItem();
                     }
                 }
             }
+            else player.displayClientMessage(Component.literal("Not Enough Money").withStyle(ChatFormatting.RED), true);
         }
     }
 

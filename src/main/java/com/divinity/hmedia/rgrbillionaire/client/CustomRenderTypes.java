@@ -41,9 +41,9 @@ public class CustomRenderTypes extends RenderType {
 
         private static void setupGlintTexturingSpecial(float pScale) {
             long i = (long)((double) Util.getMillis() * Minecraft.getInstance().options.glintSpeed().get() * 8.0D);
-            float f = 0.5f; // Set this to 0.5, otherwise it will constantly move the texture position up, and it will look weird
+            float f = 0.9f; // Set this to 0.9, otherwise it will constantly move the texture position up, and it will look weird
             float f1 = (float)(i % 30000L) / 30000.0F;
-            Matrix4f matrix4f = (new Matrix4f()).translation(-f, f1, 0.0F);
+            Matrix4f matrix4f = (new Matrix4f()).translation(-f, f1, 0F);
             matrix4f.rotateZ(0.17453292F).scale(pScale);
             RenderSystem.setTextureMatrix(matrix4f);
         }

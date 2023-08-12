@@ -20,7 +20,7 @@ public class BatonItem extends SimpleAnimatedItem {
     public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId, boolean pIsSelected) {
         super.inventoryTick(pStack, pLevel, pEntity, pSlotId, pIsSelected);
         if (!pStack.isEnchanted()) {
-            EnchantmentHelper.setEnchantments(Map.of(Enchantments.KNOCKBACK, 3), pStack);
+            EnchantmentHelper.setEnchantments(Map.of(Enchantments.KNOCKBACK, 4), pStack);
         }
     }
 }

@@ -5,7 +5,7 @@ import com.divinity.hmedia.rgrbillionaire.cap.BillionaireHolder;
 import com.divinity.hmedia.rgrbillionaire.cap.BillionaireHolderAttacher;
 import com.divinity.hmedia.rgrbillionaire.entity.AIRoboButlerEntity;
 import com.divinity.hmedia.rgrbillionaire.requirement.ArmorSetSkillRequirement;
-import com.divinity.hmedia.rgrbillionaire.requirement.ItemMapSkillRequirement;
+import com.divinity.hmedia.rgrbillionaire.requirement.ItemTreasureMapSkillRequirement;
 import com.divinity.hmedia.rgrbillionaire.requirement.ItemSkillRequirementSpecial;
 import com.divinity.hmedia.rgrbillionaire.requirement.MoneySkillRequirement;
 import com.divinity.hmedia.rgrbillionaire.skill.MorphSkill;
@@ -55,7 +55,7 @@ public class SkillInit {
             Arrays.asList(
                     new ItemSkillRequirement(() -> Items.MANGROVE_LEAVES, 64),
                     new ItemSkillRequirement(() -> Items.GOLD_INGOT, 32),
-                    new ItemMapSkillRequirement()
+                    new ItemTreasureMapSkillRequirement(1)
             ),
             MorphInit.TIGHT_BUDGET_TEEN
     ));

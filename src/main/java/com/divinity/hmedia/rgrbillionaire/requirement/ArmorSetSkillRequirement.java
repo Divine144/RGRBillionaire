@@ -53,7 +53,8 @@ public class ArmorSetSkillRequirement implements SkillRequirement {
         inventory.items.forEach(s -> {
             if (s.getItem() instanceof ArmorItem item && item.getMaterial() == materialType && predicate.test(s)) {
                 if (list.stream().filter(i -> i.getItem() instanceof ArmorItem)
-                        .map(i -> (ArmorItem) i.getItem()).noneMatch(i -> i.getType() == item.getType())) {
+                        .map(i -> (ArmorItem) i.getItem())
+                        .noneMatch(i -> i.getType() == item.getType())) {
                     list.add(s);
                 }
             }

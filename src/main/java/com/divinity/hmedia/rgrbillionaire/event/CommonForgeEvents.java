@@ -16,8 +16,12 @@ import com.divinity.hmedia.rgrbillionaire.quest.goal.LootEndShipGoal;
 import com.divinity.hmedia.rgrbillionaire.util.BillionaireUtils;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import dev._100media.hundredmediaabilities.capability.MarkerHolderAttacher;
 import dev._100media.hundredmediaquests.cap.QuestHolderAttacher;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -47,6 +51,7 @@ import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.levelgen.structure.structures.EndCityPieces;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -80,6 +85,55 @@ public class CommonForgeEvents {
             }
             return false;
         });
+    }
+
+    @SubscribeEvent
+    public static void onRegisterCommands(RegisterCommandsEvent event) {
+        var dispatcher = event.getDispatcher();
+        dispatcher.register(Commands.literal("money")
+                .then(Commands.literal("add")
+                        .then(Commands.argument("amount", IntegerArgumentType.integer())
+                                .then(Commands.argument("player", EntityArgument.player())
+                                        .executes(context -> {
+                                            int amount = IntegerArgumentType.getInteger(context, "amount");
+                                            var holder = BillionaireHolderAttacher.getHolderUnwrap(EntityArgument.getPlayer(context, "player"));
+                                            if (holder != null) {
+                                                holder.addMoney(amount);
+                                            }
+                                            return Command.SINGLE_SUCCESS;
+                                        })
+                                )
+                        )
+                )
+                .then(Commands.literal("remove")
+                        .then(Commands.argument("amount", IntegerArgumentType.integer())
+                                .then(Commands.argument("player", EntityArgument.player())
+                                        .executes(context -> {
+                                            int amount = IntegerArgumentType.getInteger(context, "amount");
+                                            var holder = BillionaireHolderAttacher.getHolderUnwrap(EntityArgument.getPlayer(context, "player"));
+                                            if (holder != null) {
+                                                holder.addMoney(-amount);
+                                            }
+                                            return Command.SINGLE_SUCCESS;
+                                        })
+                                )
+                        )
+                )
+                .then(Commands.literal("set")
+                        .then(Commands.argument("amount", IntegerArgumentType.integer())
+                                .then(Commands.argument("player", EntityArgument.player())
+                                        .executes(context -> {
+                                            int amount = IntegerArgumentType.getInteger(context, "amount");
+                                            var holder = BillionaireHolderAttacher.getHolderUnwrap(EntityArgument.getPlayer(context, "player"));
+                                            if (holder != null) {
+                                                holder.setMoney(amount);
+                                            }
+                                            return Command.SINGLE_SUCCESS;
+                                        })
+                                )
+                        )
+                )
+        );
     }
 
     @SubscribeEvent
@@ -175,8 +229,6 @@ public class CommonForgeEvents {
         }
     }
 
-
-
     @SubscribeEvent
     public static void onRightClickChest(PlayerInteractEvent.RightClickBlock event) {
         BlockHitResult result = event.getHitVec();
@@ -184,7 +236,7 @@ public class CommonForgeEvents {
         if (result != null) {
             if (player instanceof ServerPlayer serverPlayer) {
                 var state = player.level().getBlockState(result.getBlockPos());
-                if (state.getBlock() == Blocks.STONE_BUTTON) {
+                if (state.is(Blocks.STONE_BUTTON)) {
                     var nextState = player.level().getBlockState(result.getBlockPos().relative(state.getValue(BlockStateProperties.HORIZONTAL_FACING).getOpposite()));
                     if (nextState.is(BlockInit.UNBREAKABLE_STONE_BRICKS.get())) {
                         BlockPos pos = result.getBlockPos();

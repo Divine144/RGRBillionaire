@@ -40,7 +40,6 @@ public class RocketEntity extends PathfinderMob implements GeoEntity {
     protected static final EntityDataAccessor<Boolean> CAN_TAKEOFF = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.BOOLEAN);
     protected static final EntityDataAccessor<Boolean> CAUSED_DESTRUCTION = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.BOOLEAN);
 
-
     public RocketEntity(EntityType<? extends PathfinderMob> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
@@ -58,8 +57,8 @@ public class RocketEntity extends PathfinderMob implements GeoEntity {
                 }
             }
             if (this.isVehicle() && entityData.get(CAN_TAKEOFF) && this.getY() >= 200 && level.getDayTime() < 13000) {
-                level.setDayTime(13000);
                 if (!entityData.get(CAUSED_DESTRUCTION)) {
+                    level.setDayTime(13000);
                     level.getAllEntities().forEach(entity -> {
                         if (entity instanceof LivingEntity livingEntity) {
                             if (livingEntity instanceof Player player) {
@@ -80,7 +79,7 @@ public class RocketEntity extends PathfinderMob implements GeoEntity {
                                 }
                             }
                             else {
-                                if (livingEntity != this) {
+                                if (livingEntity != RocketEntity.this) {
                                     livingEntity.kill();
                                 }
                             }
