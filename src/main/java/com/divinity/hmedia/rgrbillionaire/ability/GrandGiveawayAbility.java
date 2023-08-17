@@ -6,6 +6,7 @@ import dev._100media.hundredmediaabilities.ability.Ability;
 import dev._100media.hundredmediaabilities.capability.AbilityHolderAttacher;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EntityType;
 
 public class GrandGiveawayAbility extends Ability {
 
@@ -17,7 +18,7 @@ public class GrandGiveawayAbility extends Ability {
     @Override
     public void executeHeld(ServerLevel level, ServerPlayer player, int tick) {
         super.executeHeld(level, player, tick);
-        // TODO: Change Placeholder amounts
+        // TODO: Change Placeholder amounts 100
         if (BillionaireUtils.hasEnoughMoney(player, 0)) {
             if (tick % 20 == 0) {
                 BillionaireUtils.takeMoney(player, 0);
@@ -25,8 +26,10 @@ public class GrandGiveawayAbility extends Ability {
             for (int x = (int) (player.getX() - 10); x < player.getX() + 10; x++) {
                 for (int z = (int) player.getZ() - 10; z < player.getZ() + 10; z++) {
                     if (level.getRandom().nextIntBetweenInclusive(0, 50) == 0) {
-                        // TODO: Set 80% chance to spawn Dollar bills and 20% chance to spawn coin
                         var type = EntityInit.PENNY_ENTITY.get();
+                        if (level.getRandom().nextIntBetweenInclusive(0, 10) <= 7) {
+                            type = EntityInit.DOLLAR_BILL_ENTITY.get();
+                        }
                         var entity = type.create(level);
                         if (entity != null) {
                             entity.setPos(x, player.getY() + 15, z);

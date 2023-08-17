@@ -12,21 +12,29 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.animatable.GeoBlockEntity;
 
 import java.util.Map;
 
 public class CryptoMinerBlock extends BaseEntityBlock {
+
+    public static final DirectionProperty FACING = BlockStateProperties.FACING;
 
     private static final Map<Item, Integer> productionIncreaseForItemMap = Map.of(
             Items.IRON_INGOT, 3,
@@ -49,6 +57,21 @@ public class CryptoMinerBlock extends BaseEntityBlock {
     }
 
     @Override
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.ENTITYBLOCK_ANIMATED;
+    }
+
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(FACING);
+    }
+
+    @javax.annotation.Nullable
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        return defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
+    }
+
+    @Override
     public float getExplosionResistance(BlockState state, BlockGetter pLevel, BlockPos pPos, Explosion explosion) {
         BlockEntity entity = pLevel.getBlockEntity(pPos);
         if (entity instanceof CryptoMinerBlockEntity crypto) {
@@ -57,11 +80,6 @@ public class CryptoMinerBlock extends BaseEntityBlock {
             }
         }
         return super.getExplosionResistance(state, pLevel, pPos, explosion);
-    }
-
-    @Override
-    public RenderShape getRenderShape(BlockState pState) {
-        return RenderShape.MODEL;
     }
 
     @Nullable
@@ -73,7 +91,7 @@ public class CryptoMinerBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return !pLevel.isClientSide ? createTickerHelper(pBlockEntityType, BlockInit.MINER_BLOCK_ENTITY.get(), this::tick) : null;
+        return createTickerHelper(pBlockEntityType, BlockInit.MINER_BLOCK_ENTITY.get(), this::tick);
     }
 
     @Override

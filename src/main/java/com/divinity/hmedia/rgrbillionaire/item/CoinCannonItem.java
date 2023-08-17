@@ -31,12 +31,13 @@ public class CoinCannonItem extends Item {
         ItemStack itemStack = pPlayer.getItemInHand(pUsedHand);
         if (pLevel.isClientSide) {
             return InteractionResultHolder.pass(itemStack);
+
         }
         if (pPlayer.isShiftKeyDown()) {
             CannonHolderAttacher.getItemStackCapability(itemStack).ifPresent(h -> {
                 h.cycleSelection();
                 pPlayer.sendSystemMessage(Component.literal("Currency: " + this.getNameForEntityType(this.getAmmoForCycle(h.getCycle())))
-                        .withStyle(ChatFormatting.RED));
+                        .withStyle(ChatFormatting.DARK_RED));
             });
             return InteractionResultHolder.consume(itemStack);
         }

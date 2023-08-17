@@ -225,11 +225,4 @@ public class MineOresGoal<T extends AIRoboButlerEntity> extends ButlerMoveToBloc
         list.forEach(i -> i.setCount(i.getCount() * 2)); // Multiplying Drops by 2 cause butler
         return list;
     }
-
-    private void dropResources(ServerLevel pLevel, BlockPos pos) {
-        Block.getDrops(pLevel.getBlockState(pos), pLevel, pos, null, this.mob, this.mob.getTool()).forEach(stack -> {
-            stack.setCount(stack.getCount() * 2); // Multiply Drops By 2 cause bulter
-            Block.popResource(pLevel, pos, stack);
-        });
-    }
 }

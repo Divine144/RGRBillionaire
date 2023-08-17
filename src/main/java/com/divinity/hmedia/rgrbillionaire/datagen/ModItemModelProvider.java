@@ -25,7 +25,7 @@ public class ModItemModelProvider extends ItemModelProvider {
                  .map(Supplier::get)
                  .forEach(this::simpleHandHeldModel);
 
-        Stream.of(ItemInit.MONEY, ItemInit.STACKABLE_MONEY, ItemInit.MARKETPLACE, ItemInit.HEART, ItemInit.GOLDEN_JETPACK, ItemInit.JAIL)
+        Stream.of(ItemInit.MONEY, ItemInit.STACKABLE_MONEY, ItemInit.MARKETPLACE, ItemInit.HEART, ItemInit.GOLDEN_JETPACK, ItemInit.JAIL, ItemInit.ROCKET_TO_MARS)
                 .map(Supplier::get)
                 .forEach(this::simpleGeneratedModel);
 

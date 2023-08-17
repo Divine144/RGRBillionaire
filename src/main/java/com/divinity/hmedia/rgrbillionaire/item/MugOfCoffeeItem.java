@@ -3,6 +3,8 @@ package com.divinity.hmedia.rgrbillionaire.item;
 import com.divinity.hmedia.rgrbillionaire.cap.BillionaireHolderAttacher;
 import com.divinity.hmedia.rgrbillionaire.init.AbilityInit;
 import com.divinity.hmedia.rgrbillionaire.init.SkillInit;
+import dev._100media.hundredmediageckolib.item.animated.AnimatedItemProperties;
+import dev._100media.hundredmediageckolib.item.animated.SimpleAnimatedItem;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.LivingEntity;
@@ -11,9 +13,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-public class MugOfCoffeeItem extends Item {
+public class MugOfCoffeeItem extends SimpleAnimatedItem {
 
-    public MugOfCoffeeItem(Properties pProperties) {
+    public MugOfCoffeeItem(AnimatedItemProperties pProperties) {
         super(pProperties);
     }
 

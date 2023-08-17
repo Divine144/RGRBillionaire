@@ -1,0 +1,59 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"1": {
+			"loop": true,
+			"bones": {
+				"head": {
+					"scale": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"thruster": {
+					"scale": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"wings": {
+					"scale": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"wing": {
+					"scale": {
+						"vector": [0, 0, 0]
+					}
+				}
+			}
+		},
+		"2": {
+			"loop": true,
+			"bones": {
+				"thruster": {
+					"scale": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"wings": {
+					"scale": {
+						"vector": [0, 0, 0]
+					}
+				}
+			}
+		},
+		"3": {
+			"loop": true,
+			"bones": {
+				"wings": {
+					"scale": {
+						"vector": [0, 0, 0]
+					}
+				}
+			}
+		},
+		"4": {
+			"loop": true
+		}
+	},
+	"geckolib_format_version": 2
+}

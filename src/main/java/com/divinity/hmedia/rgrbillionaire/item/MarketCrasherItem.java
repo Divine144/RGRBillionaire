@@ -1,6 +1,8 @@
 package com.divinity.hmedia.rgrbillionaire.item;
 
 import com.divinity.hmedia.rgrbillionaire.init.EntityInit;
+import dev._100media.hundredmediageckolib.item.animated.AnimatedItemProperties;
+import dev._100media.hundredmediageckolib.item.animated.SimpleAnimatedItem;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
@@ -9,10 +11,13 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 
-public class MarketCrasherItem extends Item {
+import java.util.function.Consumer;
 
-    public MarketCrasherItem(Properties pProperties) {
+public class MarketCrasherItem extends SimpleAnimatedItem {
+
+    public MarketCrasherItem(AnimatedItemProperties pProperties) {
         super(pProperties);
     }
 

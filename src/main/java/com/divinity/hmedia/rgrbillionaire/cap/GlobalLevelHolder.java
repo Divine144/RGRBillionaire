@@ -41,7 +41,7 @@ public class GlobalLevelHolder extends GlobalLevelCapability {
         int oldAmount = productionRate;
         productionRate += staggerAmount;
         if (productionRate < 0) productionRate = 0;
-        if (oldAmount != productionRate) updateTracking();
+        if (oldAmount != productionRate) this.updateTracking();
     }
 
     public void decreaseProductionRate(int staggerAmount) {

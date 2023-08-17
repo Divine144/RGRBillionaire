@@ -25,8 +25,14 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.constant.DataTickets;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -36,7 +42,7 @@ public class RocketEntity extends PathfinderMob implements GeoEntity {
 
     private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
 
-    private static final int CONSTRUCTION_TIME = 24000; // 24000 ticks = 20 minutes which is the length of an MC day
+    private static final int CONSTRUCTION_TIME = 2000; // 24000 ticks = 20 minutes which is the length of an MC day
     protected static final EntityDataAccessor<Boolean> CAN_TAKEOFF = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.BOOLEAN);
     protected static final EntityDataAccessor<Boolean> CAUSED_DESTRUCTION = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.BOOLEAN);
 
@@ -48,6 +54,7 @@ public class RocketEntity extends PathfinderMob implements GeoEntity {
     public void tick() {
         super.tick();
         if (this.level() instanceof ServerLevel level) {
+            System.out.println(this.tickCount);
             if (this.tickCount == CONSTRUCTION_TIME) {
                 entityData.set(CAN_TAKEOFF, true);
                 LivingEntity livingentity = this.getControllingPassenger();
@@ -196,12 +203,25 @@ public class RocketEntity extends PathfinderMob implements GeoEntity {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-
+        controllerRegistrar.add(new AnimationController<>(this, "Build", this::animationController));
     }
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return geoCache;
+    }
+
+    protected <E extends RocketEntity> PlayState animationController(final AnimationState<E> event) {
+        if (event.getData(DataTickets.ENTITY) instanceof RocketEntity entity) {
+            return switch (entity.tickCount) {
+                case ((int) (CONSTRUCTION_TIME * 0.25)) -> event.setAndContinue(RawAnimation.begin().thenLoop("1"));
+                case ((int) (CONSTRUCTION_TIME * 0.50)) -> event.setAndContinue(RawAnimation.begin().thenLoop("2"));
+                case ((int) (CONSTRUCTION_TIME * 0.75)) -> event.setAndContinue(RawAnimation.begin().thenLoop("3"));
+                case (CONSTRUCTION_TIME) -> event.setAndContinue(RawAnimation.begin().thenLoop("4"));
+                default -> PlayState.CONTINUE;
+            };
+        }
+        return PlayState.CONTINUE;
     }
 }
 

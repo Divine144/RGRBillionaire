@@ -11,10 +11,15 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.animatable.GeoBlockEntity;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class CryptoMinerBlockEntity extends BlockEntity {
+public class CryptoMinerBlockEntity extends BlockEntity implements GeoBlockEntity {
 
     public int amount = 0;
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public CryptoMinerBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(BlockInit.MINER_BLOCK_ENTITY.get(), pPos, pBlockState);
@@ -62,5 +67,15 @@ public class CryptoMinerBlockEntity extends BlockEntity {
 
     public void setAmount(int amount) {
         this.amount = amount;
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
+
+    }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
     }
 }
