@@ -134,7 +134,7 @@ public class ClientModEvents {
             }
         }, 1);
         createSimplePlayerRenderer(MorphInit.TIGHT_BUDGET_TEEN.get(), "tight_budget_teen");
-        createSimplePlayerRenderer(MorphInit.MIDDLE_CLASS_MAN.get(), "middle_class_man");
+        createSimpleMorphRenderer(MorphInit.MIDDLE_CLASS_MAN.get(), "middle_class_man", new SimpleAnimatable(), 1);
         createSimpleMorphRenderer(MorphInit.MULTI_MILLIONAIRE.get(), "multi_millionaire", new SimpleAnimatable(), 1);
         createSimpleMorphRenderer(MorphInit.THE_BILLIONAIRE.get(), "the_billionaire", new MotionAttackAnimatable() {
             @Override
@@ -257,10 +257,7 @@ public class ClientModEvents {
     @SubscribeEvent
     public static void onRegisterGuiOverlays(RegisterGuiOverlaysEvent event) {
         event.registerAboveAll("money_explosion", MoneyExplosionGuiOverlay.INSTANCE);
-
     }
-
-
 
     private static <T extends IHasGeoRenderer & GeoAnimatable> void createSimplePlayerRenderer(Morph morph, String name) {
         MorphRenderers.registerPlayerMorphRenderer(morph, context -> new PlayerRenderer(context, false) {
