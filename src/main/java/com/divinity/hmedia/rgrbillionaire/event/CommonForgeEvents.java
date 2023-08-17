@@ -39,9 +39,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.levelgen.structure.BuiltinStructures;
@@ -253,7 +251,7 @@ public class CommonForgeEvents {
                         PortableJailItem.placeTemplate(serverPlayer.serverLevel(), serverPlayer, PortableJailItem.PRISON_CLOSED, pos.below(), Rotation.NONE, Mirror.NONE, 1.0F, 0);
                     }
                 }
-                else if (state.is(Blocks.CHEST)) {
+                else if (state.getBlock() instanceof AbstractChestBlock<?>) {
                     if (playerIsInStructure(BuiltinStructures.DESERT_PYRAMID, serverPlayer)) {
                         QuestHolderAttacher.checkAllGoals(event.getEntity(), goal -> {
                             if (goal instanceof LootDesertTempleGoal lootDesertTempleGoal) {

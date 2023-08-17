@@ -36,6 +36,7 @@ import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.culling.Frustum;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
@@ -131,9 +132,9 @@ public class ClientModEvents {
                 return PlayState.CONTINUE;
             }
         }, 1);
-        createSimpleMorphRenderer(MorphInit.TIGHT_BUDGET_TEEN.get(), "tight_budget_teen", new SimpleAnimatable(), 1);
-        createSimpleMorphRenderer(MorphInit.MIDDLE_CLASS_MAN.get(), "middle_class_man", new SimpleAnimatable(), 1);
-        createSimpleMorphRenderer(MorphInit.MULTI_MILLIONAIRE.get(), "multi_millionaire", new SimpleAnimatable(), 1);
+        createSimplePlayerRenderer(MorphInit.TIGHT_BUDGET_TEEN.get(), "tight_budget_teen");
+        createSimplePlayerRenderer(MorphInit.MIDDLE_CLASS_MAN.get(), "middle_class_man");
+        createSimplePlayerRenderer(MorphInit.MULTI_MILLIONAIRE.get(), "multi_millionaire");
         createSimpleMorphRenderer(MorphInit.THE_BILLIONAIRE.get(), "the_billionaire", new MotionAttackAnimatable() {
             @Override
             protected PlayState attackAnimationEvent(AnimationState<? extends MotionAttackAnimatable> state) {
@@ -173,11 +174,11 @@ public class ClientModEvents {
         event.registerEntityRenderer(EntityInit.ROCKET_ENTITY.get(), RocketEntityRenderer::new);
         event.registerBlockEntityRenderer(BlockInit.MINER_BLOCK_ENTITY.get(), ctx -> new GeoBlockRenderer<>(
                 new DefaultedBlockGeoModel<>(new ResourceLocation(RGRBillionaire.MODID, "miner_block_entity")) {
-                    private static final ResourceLocation IRON_MINER = new ResourceLocation(RGRBillionaire.MODID, "iron_miner");
-                    private static final ResourceLocation GOLD_MINER = new ResourceLocation(RGRBillionaire.MODID, "gold_miner");
-                    private static final ResourceLocation DIAMOND_MINER = new ResourceLocation(RGRBillionaire.MODID, "diamond_miner");
-                    private static final ResourceLocation NETHERITE_MINER = new ResourceLocation(RGRBillionaire.MODID, "netherite_miner");
-                    private static final ResourceLocation OMNI_MINER = new ResourceLocation(RGRBillionaire.MODID, "omni_miner");
+                    private static final ResourceLocation IRON_MINER = new ResourceLocation(RGRBillionaire.MODID, "textures/block/iron_miner.png");
+                    private static final ResourceLocation GOLD_MINER = new ResourceLocation(RGRBillionaire.MODID, "textures/block/gold_miner.png");
+                    private static final ResourceLocation DIAMOND_MINER = new ResourceLocation(RGRBillionaire.MODID, "textures/block/diamond_miner.png");
+                    private static final ResourceLocation NETHERITE_MINER = new ResourceLocation(RGRBillionaire.MODID, "textures/block/netherite_miner.png");
+                    private static final ResourceLocation OMNI_MINER = new ResourceLocation(RGRBillionaire.MODID, "textures/block/omni_miner.png");
                     @Override
                     public ResourceLocation getTextureResource(CryptoMinerBlockEntity animatable) {
                         return switch (animatable.amount) {
@@ -196,6 +197,7 @@ public class ClientModEvents {
     @SubscribeEvent
     public static void initClient(FMLClientSetupEvent event) {
         ItemBlockRenderTypes.setRenderLayer(BlockInit.UNBREAKABLE_IRON_BARS.get(), RenderType.cutout());
+
         ItemProperties.register(ItemInit.DOLLAR_FISHING_ROD.get(), new ResourceLocation("dollar"), (p_174585_, p_174586_, p_174587_, p_174588_) -> {
             if (p_174587_ == null) {
                 return 0.0F;
@@ -254,6 +256,20 @@ public class ClientModEvents {
     @SubscribeEvent
     public static void onRegisterGuiOverlays(RegisterGuiOverlaysEvent event) {
         event.registerAboveAll("money_explosion", MoneyExplosionGuiOverlay.INSTANCE);
+
+    }
+
+
+
+    private static <T extends IHasGeoRenderer & GeoAnimatable> void createSimplePlayerRenderer(Morph morph, String name) {
+        MorphRenderers.registerPlayerMorphRenderer(morph, context -> new PlayerRenderer(context, false) {
+            private final ResourceLocation location = new ResourceLocation(RGRBillionaire.MODID, "textures/entity/" + name + ".png");
+            @Override
+            public ResourceLocation getTextureLocation(AbstractClientPlayer pEntity) {
+                return location;
+            }
+        });
+
     }
 
     private static <T extends IHasGeoRenderer & GeoAnimatable> void createSimpleMorphRenderer(Morph morph, String name, T animatable, float scale) {

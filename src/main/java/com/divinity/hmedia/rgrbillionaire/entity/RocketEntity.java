@@ -128,7 +128,7 @@ public class RocketEntity extends PathfinderMob implements GeoEntity {
     public InteractionResult mobInteract(Player pPlayer, InteractionHand pHand) {
         if (!this.level().isClientSide) {
             if (!entityData.get(CAN_TAKEOFF)) {
-                if (this.isVehicle() && pPlayer instanceof ServerPlayer player) {
+                if (!this.isVehicle() && pPlayer instanceof ServerPlayer player) {
                     player.sendSystemMessage(Component.literal("Space Rocket: ").withStyle(ChatFormatting.WHITE)
                             .append(Component.literal("Under Construction!").withStyle(ChatFormatting.RED, ChatFormatting.BOLD)));
                 }
@@ -214,14 +214,17 @@ public class RocketEntity extends PathfinderMob implements GeoEntity {
     protected <E extends RocketEntity> PlayState animationController(final AnimationState<E> event) {
         if (event.getData(DataTickets.ENTITY) instanceof RocketEntity entity) {
             return switch (entity.tickCount) {
-                case ((int) (CONSTRUCTION_TIME * 0.25)) -> event.setAndContinue(RawAnimation.begin().thenLoop("1"));
                 case ((int) (CONSTRUCTION_TIME * 0.50)) -> event.setAndContinue(RawAnimation.begin().thenLoop("2"));
                 case ((int) (CONSTRUCTION_TIME * 0.75)) -> event.setAndContinue(RawAnimation.begin().thenLoop("3"));
                 case (CONSTRUCTION_TIME) -> event.setAndContinue(RawAnimation.begin().thenLoop("4"));
-                default -> PlayState.CONTINUE;
+                default -> event.setAndContinue(RawAnimation.begin().thenLoop("1"));
             };
         }
         return PlayState.CONTINUE;
+    }
+
+    public boolean canTakeOff() {
+        return entityData.get(CAN_TAKEOFF);
     }
 }
 

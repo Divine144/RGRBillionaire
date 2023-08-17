@@ -3,9 +3,13 @@ package com.divinity.hmedia.rgrbillionaire.block;
 import com.divinity.hmedia.rgrbillionaire.block.be.CryptoMinerBlockEntity;
 import com.divinity.hmedia.rgrbillionaire.cap.GlobalLevelHolderAttacher;
 import com.divinity.hmedia.rgrbillionaire.init.BlockInit;
+import com.divinity.hmedia.rgrbillionaire.network.NetworkHandler;
+import com.divinity.hmedia.rgrbillionaire.network.clientbound.SyncCryptoBlockPacket;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -27,6 +31,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 
@@ -91,7 +96,7 @@ public class CryptoMinerBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return createTickerHelper(pBlockEntityType, BlockInit.MINER_BLOCK_ENTITY.get(), this::tick);
+        return !pLevel.isClientSide ? createTickerHelper(pBlockEntityType, BlockInit.MINER_BLOCK_ENTITY.get(), this::tick) : null;
     }
 
     @Override
@@ -126,6 +131,7 @@ public class CryptoMinerBlock extends BaseEntityBlock {
                         GlobalLevelHolderAttacher.getGlobalLevelCapability(pLevel).ifPresent(h -> {
                             h.decreaseProductionRate(crypto.amount); // Decreasing by previous amount
                             crypto.setAmount(amount);
+                            NetworkHandler.INSTANCE.send(PacketDistributor.ALL.noArg(), new SyncCryptoBlockPacket(amount, pPos));
                             h.increaseProductionRate(amount);
                         });
                         pPlayer.sendSystemMessage(Component.literal("Beep Boop... Production Rate Successfully Increased To ").withStyle(ChatFormatting.WHITE)
@@ -161,5 +167,6 @@ public class CryptoMinerBlock extends BaseEntityBlock {
         }
     }
 
-    private void tick(Level level, BlockPos blockPos, BlockState state, BlockEntity blockEntity) {}
+    private void tick(Level level, BlockPos blockPos, BlockState state, BlockEntity blockEntity) {
+    }
 }

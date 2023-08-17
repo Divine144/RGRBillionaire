@@ -50,7 +50,7 @@ public class EntityInit {
             EntityType.Builder.of(AIRoboButlerEntity::new, MobCategory.MISC).sized(0.75F, 0.75F), Mob::createMobAttributes);
 
     public static final RegistryObject<EntityType<RocketEntity>> ROCKET_ENTITY = registerEntity("rocket_entity", () ->
-            EntityType.Builder.of(RocketEntity::new, MobCategory.MISC).sized(1.5F, 1.5F), Mob::createMobAttributes);
+            EntityType.Builder.of(RocketEntity::new, MobCategory.MISC).sized(5F, 1.5F), Mob::createMobAttributes);
 
     private static <T extends Entity> RegistryObject<EntityType<T>> registerEntity(String name, Supplier<EntityType.Builder<T>> supplier) {
         return ENTITIES.register(name, () -> supplier.get().build(RGRBillionaire.MODID + ":" + name));

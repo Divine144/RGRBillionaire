@@ -67,7 +67,7 @@ public class MorphInit {
     public static final RegistryObject<Morph> THE_BILLIONAIRE = MORPHS.register("the_billionaire", () -> new Morph(new Morph.Properties<>()
             .maxHealth(100)
             .swingDuration(7)
-            .dimensions(2, 2)
+            .dimensions(2, 5)
             .morphedTo(entity -> {
                 BillionaireHolderAttacher.getHolder(entity).ifPresent(h -> h.setMoneyCap(1_000_000_000));
                 entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, Integer.MAX_VALUE, 3, false, false, false));

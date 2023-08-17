@@ -3,6 +3,7 @@ package com.divinity.hmedia.rgrbillionaire.network;
 import com.divinity.hmedia.rgrbillionaire.RGRBillionaire;
 import com.divinity.hmedia.rgrbillionaire.cap.BillionaireHolderAttacher;
 import com.divinity.hmedia.rgrbillionaire.cap.GlobalLevelHolderAttacher;
+import com.divinity.hmedia.rgrbillionaire.network.clientbound.SyncCryptoBlockPacket;
 import com.divinity.hmedia.rgrbillionaire.network.serverbound.OpenMarketMenuPacket;
 import com.divinity.hmedia.rgrbillionaire.network.serverbound.OpenMinebookScreenPacket;
 import com.divinity.hmedia.rgrbillionaire.network.serverbound.UpdateMarketOfferPacket;
@@ -35,6 +36,7 @@ public class NetworkHandler {
                 .add(OpenMarketMenuPacket::register)
                 .add(OpenMinebookScreenPacket::register)
                 .add(UpdateMarketOfferPacket::register)
+                .add(SyncCryptoBlockPacket::register)
                 .build();
         SimpleEntityCapabilityStatusPacket.registerRetriever(BillionaireHolderAttacher.EXAMPLE_RL, BillionaireHolderAttacher::getHolderUnwrap);
         SimpleLevelCapabilityStatusPacket.registerRetriever(GlobalLevelHolderAttacher.EXAMPLE_GLOBAL_LEVEL_CAPABILITY_RL, GlobalLevelHolderAttacher::getGlobalLevelCapabilityUnwrap);
