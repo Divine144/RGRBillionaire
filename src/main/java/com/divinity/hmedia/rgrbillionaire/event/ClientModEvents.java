@@ -22,6 +22,7 @@ import dev._100media.hundredmediageckolib.client.model.SimpleGeoEntityModel;
 import dev._100media.hundredmediageckolib.client.model.SimpleGeoPlayerModel;
 import dev._100media.hundredmediageckolib.client.renderer.GeoPlayerRenderer;
 import dev._100media.hundredmediageckolib.client.renderer.GeoSeparatedEntityRenderer;
+import dev._100media.hundredmediamorphs.client.model.AdvancedGeoPlayerModel;
 import dev._100media.hundredmediamorphs.client.renderer.AdvancedGeoPlayerRenderer;
 import dev._100media.hundredmediamorphs.client.renderer.MorphRenderers;
 import dev._100media.hundredmediamorphs.morph.AdvancedGeoPlayerMorph;
@@ -134,7 +135,7 @@ public class ClientModEvents {
         }, 1);
         createSimplePlayerRenderer(MorphInit.TIGHT_BUDGET_TEEN.get(), "tight_budget_teen");
         createSimplePlayerRenderer(MorphInit.MIDDLE_CLASS_MAN.get(), "middle_class_man");
-        createSimplePlayerRenderer(MorphInit.MULTI_MILLIONAIRE.get(), "multi_millionaire");
+        createSimpleMorphRenderer(MorphInit.MULTI_MILLIONAIRE.get(), "multi_millionaire", new SimpleAnimatable(), 1);
         createSimpleMorphRenderer(MorphInit.THE_BILLIONAIRE.get(), "the_billionaire", new MotionAttackAnimatable() {
             @Override
             protected PlayState attackAnimationEvent(AnimationState<? extends MotionAttackAnimatable> state) {
@@ -269,11 +270,10 @@ public class ClientModEvents {
                 return location;
             }
         });
-
     }
 
     private static <T extends IHasGeoRenderer & GeoAnimatable> void createSimpleMorphRenderer(Morph morph, String name, T animatable, float scale) {
-        MorphRenderers.registerPlayerMorphRenderer(morph, context -> new AdvancedGeoPlayerRenderer<>(context, new SimpleGeoPlayerModel<>(RGRBillionaire.MODID, name), animatable, scale) {
+        MorphRenderers.registerPlayerMorphRenderer(morph, context -> new AdvancedGeoPlayerRenderer<>(context, new AdvancedGeoPlayerModel<>(RGRBillionaire.MODID, name), animatable, scale) {
             @Override
             public void preRender(PoseStack poseStack, T animatable1, BakedGeoModel model, @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
                 super.preRender(poseStack, animatable1, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
