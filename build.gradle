@@ -13,7 +13,7 @@ archivesBaseName = mod_id
 hundredMedia.mcVersion = minecraft_version
 
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(18)
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 jarJar.enable()
 
