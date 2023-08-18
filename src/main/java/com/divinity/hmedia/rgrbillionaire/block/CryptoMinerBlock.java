@@ -136,6 +136,7 @@ public class CryptoMinerBlock extends BaseEntityBlock {
                         });
                         pPlayer.sendSystemMessage(Component.literal("Beep Boop... Production Rate Successfully Increased To ").withStyle(ChatFormatting.WHITE)
                                 .append(Component.literal("$%s/Second".formatted(crypto.amount)).withStyle(ChatFormatting.GREEN, ChatFormatting.BOLD)));
+                        playerStack.shrink(1);
                         return InteractionResult.CONSUME;
                     }
                     else {

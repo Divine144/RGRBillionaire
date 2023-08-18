@@ -9,6 +9,7 @@ import com.divinity.hmedia.rgrbillionaire.init.*;
 import com.divinity.hmedia.rgrbillionaire.item.PortableJailItem;
 import com.divinity.hmedia.rgrbillionaire.item.SwordOfTruthItem;
 import com.divinity.hmedia.rgrbillionaire.menu.MinebookMenu;
+import com.divinity.hmedia.rgrbillionaire.menu.TaxForumMenu;
 import com.divinity.hmedia.rgrbillionaire.mixin.TemplateStructurePieceAccessor;
 import com.divinity.hmedia.rgrbillionaire.quest.goal.AquireAdvancementGoal;
 import com.divinity.hmedia.rgrbillionaire.quest.goal.LootDesertTempleGoal;
@@ -38,6 +39,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.MapItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -46,7 +48,9 @@ import net.minecraft.world.level.levelgen.structure.BuiltinStructures;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
+import net.minecraft.world.level.levelgen.structure.structures.BuriedTreasureStructure;
 import net.minecraft.world.level.levelgen.structure.structures.EndCityPieces;
+import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -58,6 +62,7 @@ import net.minecraftforge.event.entity.player.AdvancementEvent;
 import net.minecraftforge.event.entity.player.CriticalHitEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.level.BlockEvent;
+import net.minecraftforge.event.level.ExplosionEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -189,21 +194,30 @@ public class CommonForgeEvents {
     public static void onHurtEnemy(LivingHurtEvent event) {
         if (event.getSource().getDirectEntity() instanceof ServerPlayer player) {
             if (event.getEntity() instanceof ServerPlayer hurtPlayer) {
-                for (InteractionHand hand : InteractionHand.values()) {
-                    ItemStack stack = player.getItemInHand(hand);
-                    if (stack.getItem() instanceof SwordOfTruthItem item) {
-                        BillionaireHolderAttacher.getHolder(hurtPlayer).ifPresent(cap -> {
-                            int money = item.getStoredMoney();
-                            if (money == 1000) {
-                                item.setStoredMoney(0);
-                                MarkerHolderAttacher.getMarkerHolder(hurtPlayer).ifPresent(h -> h.addMarker(MarkerInit.TAX_FORM.get(), false));
-                            }
-                            else {
-                                cap.addMoney(-100);
-                                item.setStoredMoney(item.getStoredMoney() + 100);
-                            }
-                        });
-                        break;
+                var holder = MarkerHolderAttacher.getMarkerHolderUnwrap(hurtPlayer);
+                if (holder != null && holder.hasMarker(MarkerInit.TAX_FORM.get())) {
+                    BillionaireHolderAttacher.getHolder(hurtPlayer).ifPresent(p -> p.addMoney(-100));
+                }
+                else {
+                    for (InteractionHand hand : InteractionHand.values()) {
+                        ItemStack stack = player.getItemInHand(hand);
+                        if (stack.getItem() instanceof SwordOfTruthItem item) {
+                            BillionaireHolderAttacher.getHolder(hurtPlayer).ifPresent(cap -> {
+                                int money = item.getStoredMoney();
+                                if (money == 1000) {
+                                    item.setStoredMoney(0);
+                                    MarkerHolderAttacher.getMarkerHolder(hurtPlayer).ifPresent(h -> h.addMarker(MarkerInit.TAX_FORM.get(), false));
+                                    hurtPlayer.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, -1, 0, false, false, false));
+                                    NetworkHooks.openScreen(hurtPlayer,
+                                            new SimpleMenuProvider((id, inv, pl) -> new TaxForumMenu(MenuInit.TAX_FORUM_SCREEN.get(), id), Component.empty()));
+                                }
+                                else {
+                                    cap.addMoney(-100);
+                                    item.setStoredMoney(item.getStoredMoney() + 100);
+                                }
+                            });
+                            break;
+                        }
                     }
                 }
             }

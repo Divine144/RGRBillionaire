@@ -18,10 +18,9 @@ public class GrandGiveawayAbility extends Ability {
     @Override
     public void executeHeld(ServerLevel level, ServerPlayer player, int tick) {
         super.executeHeld(level, player, tick);
-        // TODO: Change Placeholder amounts 100
-        if (BillionaireUtils.hasEnoughMoney(player, 0)) {
+        if (BillionaireUtils.hasEnoughMoney(player, 100)) {
             if (tick % 20 == 0) {
-                BillionaireUtils.takeMoney(player, 0);
+                BillionaireUtils.takeMoney(player, 100);
             }
             for (int x = (int) (player.getX() - 10); x < player.getX() + 10; x++) {
                 for (int z = (int) player.getZ() - 10; z < player.getZ() + 10; z++) {

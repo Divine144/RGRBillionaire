@@ -139,9 +139,9 @@ public class AIRoboButlerEntity extends PathfinderMob implements GeoEntity, Cont
                     this.decreaseTime(1);
                 }
                 if (this.getTime() == 0) {
-                    owner.sendSystemMessage(Component.literal("Butler: Your meal, sir").withStyle(ChatFormatting.GREEN));
+                    owner.sendSystemMessage(Component.literal("Butler: Your meal, sir.").withStyle(ChatFormatting.GREEN));
                     owner.getInventory().add(new ItemStack(Items.ENCHANTED_GOLDEN_APPLE));
-                    this.setTime(200);
+                    this.setTime(6000);
                 }
             }
         }
@@ -154,7 +154,7 @@ public class AIRoboButlerEntity extends PathfinderMob implements GeoEntity, Cont
         this.entityData.define(DATA_MINING, false);
         this.entityData.define(DATA_SIT, true);
         this.entityData.define(DATA_NEW, true);
-        this.entityData.define(DATA_TIME, 200);
+        this.entityData.define(DATA_TIME, 6000);
     }
 
     @Override

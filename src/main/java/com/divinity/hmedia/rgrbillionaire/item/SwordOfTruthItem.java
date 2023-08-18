@@ -1,6 +1,8 @@
 package com.divinity.hmedia.rgrbillionaire.item;
 
 import com.divinity.hmedia.rgrbillionaire.client.CustomRenderTypes;
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexMultiConsumer;
@@ -11,9 +13,12 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.*;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.fml.loading.FMLEnvironment;
@@ -21,13 +26,19 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-public class SwordOfTruthItem extends Item {
+public class SwordOfTruthItem extends TieredItem {
+    private int storedMoney;
+    private final float attackDamage;
+    private final Multimap<Attribute, AttributeModifier> defaultModifiers;
 
     public SwordOfTruthItem(Properties pProperties) {
-        super(pProperties);
+        super(Tiers.DIAMOND, pProperties);
+        this.attackDamage = (float) 3 + Tiers.DIAMOND.getAttackDamageBonus() + 1;
+        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+        builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", this.attackDamage, AttributeModifier.Operation.ADDITION));
+        builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", -2.4F, AttributeModifier.Operation.ADDITION));
+        this.defaultModifiers = builder.build();
     }
-
-    private int storedMoney;
 
     public void setStoredMoney(int money) {
         this.storedMoney = money;
@@ -42,6 +53,19 @@ public class SwordOfTruthItem extends Item {
         CompoundTag tag = new CompoundTag();
         tag.putInt("money", storedMoney);
         return tag;
+    }
+
+    @Override
+    public boolean hurtEnemy(ItemStack pStack, LivingEntity pTarget, LivingEntity pAttacker) {
+        pStack.hurtAndBreak(1, pAttacker, (p_43296_) -> {
+            p_43296_.broadcastBreakEvent(EquipmentSlot.MAINHAND);
+        });
+        return true;
+    }
+
+    @Override
+    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot pEquipmentSlot) {
+        return pEquipmentSlot == EquipmentSlot.MAINHAND ? this.defaultModifiers : super.getDefaultAttributeModifiers(pEquipmentSlot);
     }
 
     @Override

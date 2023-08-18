@@ -17,7 +17,7 @@ import net.minecraftforge.registries.RegistryObject;
 public class ItemInit {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, RGRBillionaire.MODID);
 
-    public static final RegistryObject<Item> COIN_CANNON = ITEMS.register("the_coin_cannon", () -> new CoinCannonItem(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> COIN_CANNON = ITEMS.register("the_coin_cannon", () -> new CoinCannonItem(new AnimatedItemProperties().stacksTo(1)));
     public static final RegistryObject<Item> MARKET_CRASHER = ITEMS.register("market_crasher", () -> new MarketCrasherItem(new AnimatedItemProperties().stacksTo(1)));
     public static final RegistryObject<Item> ROCKET_TO_MARS = ITEMS.register("rocket_to_mars", () -> new RocketItem(new AnimatedItemProperties().stacksTo(1)));
     public static final RegistryObject<Item> BATON = ITEMS.register("baton", () -> new BatonItem(new AnimatedItemProperties().stacksTo(1)));

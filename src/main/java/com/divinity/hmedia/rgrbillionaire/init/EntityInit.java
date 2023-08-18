@@ -4,6 +4,7 @@ import com.divinity.hmedia.rgrbillionaire.RGRBillionaire;
 import com.divinity.hmedia.rgrbillionaire.entity.*;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -29,12 +30,14 @@ public class EntityInit {
 
     public static final RegistryObject<EntityType<CurrencyProjectileEntity>> SILVER_DOLLAR_ENTITY = registerEntity("silver_dollar_entity", () ->
             EntityType.Builder.<CurrencyProjectileEntity>of((type, level) -> new CurrencyProjectileEntity(type, level, 0, (entity, hitResult) -> {
-                entity.level().explode(entity, entity.getX(), entity.getY(), entity.getZ(), 4.0F, Level.ExplosionInteraction.TNT);
+                Entity sourceEntity = entity.getOwner() instanceof Player player ? player : entity;
+                entity.level().explode(sourceEntity, entity.getX(), entity.getY(), entity.getZ(), 4.0F, Level.ExplosionInteraction.TNT);
             }), MobCategory.MISC).sized(0.25F, 0.25F));
 
     public static final RegistryObject<EntityType<CurrencyProjectileEntity>> DOLLAR_COIN_ENTITY = registerEntity("dollar_coin_entity", () ->
             EntityType.Builder.<CurrencyProjectileEntity>of((type, level) -> new CurrencyProjectileEntity(type, level, 10, (entity, hitResult) -> {
-                entity.level().explode(entity, entity.getX(), entity.getY(), entity.getZ(), 2.0F, Level.ExplosionInteraction.TNT);
+                Entity sourceEntity = entity.getOwner() instanceof Player player ? player : entity;
+                entity.level().explode(sourceEntity, entity.getX(), entity.getY(), entity.getZ(), 2.0F, Level.ExplosionInteraction.TNT);
             }), MobCategory.MISC).sized(0.25F, 0.25F));
 
     public static final RegistryObject<EntityType<CurrencyProjectileEntity>> DOLLAR_BILL_ENTITY = registerEntity("dollar_bill_entity", () ->

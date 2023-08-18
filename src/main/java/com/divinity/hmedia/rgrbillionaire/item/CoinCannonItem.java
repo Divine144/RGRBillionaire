@@ -1,5 +1,6 @@
 package com.divinity.hmedia.rgrbillionaire.item;
 
+import com.divinity.hmedia.rgrbillionaire.RGRBillionaire;
 import com.divinity.hmedia.rgrbillionaire.cap.BillionaireHolderAttacher;
 import com.divinity.hmedia.rgrbillionaire.cap.CannonHolder;
 import com.divinity.hmedia.rgrbillionaire.cap.CannonHolderAttacher;
@@ -7,23 +8,78 @@ import com.divinity.hmedia.rgrbillionaire.entity.CurrencyProjectileEntity;
 import com.divinity.hmedia.rgrbillionaire.init.EntityInit;
 import com.divinity.hmedia.rgrbillionaire.init.ItemInit;
 import com.divinity.hmedia.rgrbillionaire.util.BillionaireUtils;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
+import dev._100media.hundredmediageckolib.item.animated.AnimatedItemProperties;
+import dev._100media.hundredmediageckolib.item.animated.SimpleAnimatedItem;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import software.bernie.geckolib.model.DefaultedItemGeoModel;
+import software.bernie.geckolib.renderer.GeoItemRenderer;
 
-// TODO: Make this class extend SimpleAnimatedItem
-public class CoinCannonItem extends Item {
+import java.util.function.Consumer;
 
-    public CoinCannonItem(Properties pProperties) {
+public class CoinCannonItem extends SimpleAnimatedItem {
+
+    public CoinCannonItem(AnimatedItemProperties pProperties) {
         super(pProperties);
+    }
+
+    @Override
+    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+        consumer.accept(new IClientItemExtensions() {
+            private BlockEntityWithoutLevelRenderer renderer;
+            @Override
+            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                if (this.renderer == null)
+                    this.renderer = new GeoItemRenderer<BatonItem>(new DefaultedItemGeoModel<>(new ResourceLocation(RGRBillionaire.MODID, "the_coin_cannon"))) {
+                        @Override
+                        public void renderByItem(ItemStack stack, ItemDisplayContext transformType, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
+                            poseStack.pushPose();
+                            switch (transformType) {
+                                case THIRD_PERSON_LEFT_HAND, THIRD_PERSON_RIGHT_HAND -> {
+                                    poseStack.mulPose(Axis.YP.rotationDegrees(-90));
+                                    poseStack.translate(0.1, -0.05, -0.95);
+
+                                }
+                                case FIRST_PERSON_LEFT_HAND, FIRST_PERSON_RIGHT_HAND -> {
+                                    poseStack.scale(0.8f, 0.8f, 0.8f);
+                                    poseStack.mulPose(Axis.YP.rotationDegrees(-90));
+                                    poseStack.translate(0, 0, -1.2);
+                                }
+
+                            }
+                            super.renderByItem(stack, transformType, poseStack, bufferSource, packedLight, packedOverlay);
+                            poseStack.popPose();
+                        }
+
+                        @Override
+                        protected void renderInGui(ItemDisplayContext transformType, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
+                            poseStack.pushPose();
+                            poseStack.scale(1.2f, 1.2f, 1.2f);
+                            poseStack.translate(0.02, -0.5, -0.5);
+                            super.renderInGui(transformType, poseStack, bufferSource, packedLight, packedOverlay);
+                            poseStack.popPose();
+                        }
+                    };
+
+                return this.renderer;
+            }
+        });
     }
 
     @Override

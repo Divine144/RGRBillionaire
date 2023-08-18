@@ -153,7 +153,9 @@ public class SkillInit {
                     new ItemSkillRequirement(() -> Items.DIAMOND_PICKAXE, 1),
                     new MoneySkillRequirement(800)
             ),
-            player -> {},
+            player -> {
+                player.getInventory().add(new ItemStack(BlockInit.CRYPTO_MINER_BLOCK.get().asItem()));
+            },
             player -> {
             }
     ));

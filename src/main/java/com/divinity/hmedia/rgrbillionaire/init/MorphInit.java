@@ -5,6 +5,7 @@ import com.divinity.hmedia.rgrbillionaire.cap.BillionaireHolderAttacher;
 import dev._100media.hundredmediamorphs.HundredMediaMorphsMod;
 import dev._100media.hundredmediamorphs.morph.AdvancedGeoPlayerMorph;
 import dev._100media.hundredmediamorphs.morph.Morph;
+import dev._100media.hundredmediamorphs.skin.SkinType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -22,42 +23,44 @@ public class MorphInit {
                 BillionaireHolderAttacher.getHolder(entity).ifPresent(h -> h.setMoneyCap(1_000));
             })
     ));
-    public static final RegistryObject<Morph> TIGHT_BUDGET_TEEN = MORPHS.register("tight_budget_teen", () -> new AdvancedGeoPlayerMorph(new Morph.Properties<>()
+    public static final RegistryObject<Morph> TIGHT_BUDGET_TEEN = MORPHS.register("tight_budget_teen", () -> new Morph(new Morph.Properties<>()
+            .skinType(SkinType.DEFAULT)
             .maxHealth(30)
             .swingDuration(7)
             .dimensions(2, 2)
             .morphedTo(entity -> {
                 BillionaireHolderAttacher.getHolder(entity).ifPresent(h -> h.setMoneyCap(75_000));
-                entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, Integer.MAX_VALUE, 0, false, false, false));
-                entity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, Integer.MAX_VALUE, 0, false, false, false));
+                entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 0, false, false, false));
+                entity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, -1, 0, false, false, false));
             })
             .demorph(entity -> {
                 entity.removeEffect(MobEffects.MOVEMENT_SPEED);
                 entity.removeEffect(MobEffects.DAMAGE_BOOST);
             })
     ));
-    public static final RegistryObject<Morph> MIDDLE_CLASS_MAN = MORPHS.register("middle_class_man", () -> new AdvancedGeoPlayerMorph(new Morph.Properties<>()
+    public static final RegistryObject<Morph> MIDDLE_CLASS_MAN = MORPHS.register("middle_class_man", () -> new Morph(new Morph.Properties<>()
             .maxHealth(50)
             .swingDuration(7)
             .dimensions(2, 2)
             .morphedTo(entity -> {
                 BillionaireHolderAttacher.getHolder(entity).ifPresent(h -> h.setMoneyCap(500_000));
-                entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, Integer.MAX_VALUE, 1, false, false, false));
-                entity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, Integer.MAX_VALUE, 1, false, false, false));
+                entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 1, false, false, false));
+                entity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, -1, 1, false, false, false));
             })
             .demorph(entity -> {
                 entity.removeEffect(MobEffects.MOVEMENT_SPEED);
                 entity.removeEffect(MobEffects.DAMAGE_BOOST);
             })
     ));
-    public static final RegistryObject<Morph> MULTI_MILLIONAIRE = MORPHS.register("multi_millionaire", () -> new AdvancedGeoPlayerMorph(new Morph.Properties<>()
+    public static final RegistryObject<Morph> MULTI_MILLIONAIRE = MORPHS.register("multi_millionaire", () -> new Morph(new Morph.Properties<>()
+            .skinType(SkinType.DEFAULT)
             .maxHealth(70)
             .swingDuration(7)
             .dimensions(2, 2)
             .morphedTo(entity -> {
                 BillionaireHolderAttacher.getHolder(entity).ifPresent(h -> h.setMoneyCap(10_000_000));
-                entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, Integer.MAX_VALUE, 2, false, false, false));
-                entity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, Integer.MAX_VALUE, 2, false, false, false));
+                entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 2, false, false, false));
+                entity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, -1, 2, false, false, false));
             })
             .demorph(entity -> {
                 entity.removeEffect(MobEffects.MOVEMENT_SPEED);
@@ -70,8 +73,8 @@ public class MorphInit {
             .dimensions(2, 5)
             .morphedTo(entity -> {
                 BillionaireHolderAttacher.getHolder(entity).ifPresent(h -> h.setMoneyCap(1_000_000_000));
-                entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, Integer.MAX_VALUE, 3, false, false, false));
-                entity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, Integer.MAX_VALUE, 3, false, false, false));
+                entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 3, false, false, false));
+                entity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, -1, 3, false, false, false));
             })
             .demorph(entity -> {
                 entity.removeEffect(MobEffects.MOVEMENT_SPEED);

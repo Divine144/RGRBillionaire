@@ -56,7 +56,7 @@ public class CurrencyProjectileEntity extends ThrowableProjectile implements Geo
     @Override
     protected void onHitEntity(EntityHitResult pResult) {
         super.onHitEntity(pResult);
-        if (!level().isClientSide && pResult.getEntity() instanceof LivingEntity living) {
+        if (!level().isClientSide && pResult.getEntity() != this.getOwner() && pResult.getEntity() instanceof LivingEntity living) {
             living.hurt(this.damageSources().mobProjectile(this, getOwner() instanceof LivingEntity l ? l : null), damage);
         }
     }

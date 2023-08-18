@@ -3,10 +3,12 @@ package com.divinity.hmedia.rgrbillionaire.event;
 import com.divinity.hmedia.rgrbillionaire.RGRBillionaire;
 import com.divinity.hmedia.rgrbillionaire.block.be.CryptoMinerBlockEntity;
 import com.divinity.hmedia.rgrbillionaire.client.gui.MoneyExplosionGuiOverlay;
+import com.divinity.hmedia.rgrbillionaire.client.model.SimpleDefaultedGeoPlayerModel;
 import com.divinity.hmedia.rgrbillionaire.client.renderer.*;
 import com.divinity.hmedia.rgrbillionaire.client.screen.ButlerInventoryScreen;
 import com.divinity.hmedia.rgrbillionaire.client.screen.MarketplaceScreen;
 import com.divinity.hmedia.rgrbillionaire.client.screen.MinebookScreen;
+import com.divinity.hmedia.rgrbillionaire.client.screen.TaxForumScreen;
 import com.divinity.hmedia.rgrbillionaire.entity.RocketEntity;
 import com.divinity.hmedia.rgrbillionaire.init.*;
 import com.divinity.hmedia.rgrbillionaire.item.DollarFishingPoleItem;
@@ -19,12 +21,16 @@ import dev._100media.hundredmediageckolib.client.animatable.IHasGeoRenderer;
 import dev._100media.hundredmediageckolib.client.animatable.MotionAttackAnimatable;
 import dev._100media.hundredmediageckolib.client.animatable.SimpleAnimatable;
 import dev._100media.hundredmediageckolib.client.model.SimpleGeoEntityModel;
+import dev._100media.hundredmediageckolib.client.model.SimpleGeoHumanoidModel;
 import dev._100media.hundredmediageckolib.client.model.SimpleGeoPlayerModel;
 import dev._100media.hundredmediageckolib.client.renderer.GeoPlayerRenderer;
 import dev._100media.hundredmediageckolib.client.renderer.GeoSeparatedEntityRenderer;
+import dev._100media.hundredmediamorphs.capability.AnimationHolder;
+import dev._100media.hundredmediamorphs.capability.AnimationHolderAttacher;
 import dev._100media.hundredmediamorphs.client.model.AdvancedGeoPlayerModel;
 import dev._100media.hundredmediamorphs.client.renderer.AdvancedGeoPlayerRenderer;
 import dev._100media.hundredmediamorphs.client.renderer.MorphRenderers;
+import dev._100media.hundredmediamorphs.init.HMMMorphInit;
 import dev._100media.hundredmediamorphs.morph.AdvancedGeoPlayerMorph;
 import dev._100media.hundredmediamorphs.morph.Morph;
 import dev._100media.hundredmediaquests.client.screen.QuestSkillScreen;
@@ -66,6 +72,7 @@ import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
@@ -133,9 +140,24 @@ public class ClientModEvents {
                 return PlayState.CONTINUE;
             }
         }, 1);
-        createSimplePlayerRenderer(MorphInit.TIGHT_BUDGET_TEEN.get(), "tight_budget_teen");
-        createSimpleMorphRenderer(MorphInit.MIDDLE_CLASS_MAN.get(), "middle_class_man", new SimpleAnimatable(), 1);
-        createSimpleMorphRenderer(MorphInit.MULTI_MILLIONAIRE.get(), "multi_millionaire", new SimpleAnimatable(), 1);
+
+
+        createMiddleClassMorph(MorphInit.MIDDLE_CLASS_MAN.get(), "middle_class_man", new MotionAttackAnimatable() {
+            @Override
+            protected PlayState attackAnimationEvent(AnimationState<? extends MotionAttackAnimatable> state) {
+                if (state.getData(DataTickets.ENTITY) instanceof Player player) {
+                    AnimationHolderAttacher.getAnimationHolder(player).ifPresent(p -> {
+                        if (player.swinging) {
+                            p.setCurrentAttackAnimation(null, true, false);
+                        }
+                        else if (state.isMoving()) {
+                            p.setCurrentMotionAnimation(null, true, false);
+                        }
+                    });
+                }
+                return super.attackAnimationEvent(state);
+            }
+        }, 1);
         createSimpleMorphRenderer(MorphInit.THE_BILLIONAIRE.get(), "the_billionaire", new MotionAttackAnimatable() {
             @Override
             protected PlayState attackAnimationEvent(AnimationState<? extends MotionAttackAnimatable> state) {
@@ -214,6 +236,7 @@ public class ClientModEvents {
         MenuScreens.register(MenuInit.BUTLER_MENU.get(), ButlerInventoryScreen::new);
         MenuScreens.register(MenuInit.MARKET_MENU.get(), MarketplaceScreen::new);
         MenuScreens.register(MenuInit.MINEBOOK_SCREEN.get(), MinebookScreen::new);
+        MenuScreens.register(MenuInit.TAX_FORUM_SCREEN.get(), TaxForumScreen::new);
         MenuScreens.register(MenuInit.SKILL_TREE.get(), (AbstractContainerMenu menu, Inventory inv, Component title) -> new TreeScreen(menu, inv, title,
                 new ResourceLocation(RGRBillionaire.MODID, "textures/gui/screen/skill_tree.png"), 21, 22,
                 Arrays.asList(
@@ -259,12 +282,18 @@ public class ClientModEvents {
         event.registerAboveAll("money_explosion", MoneyExplosionGuiOverlay.INSTANCE);
     }
 
-    private static <T extends IHasGeoRenderer & GeoAnimatable> void createSimplePlayerRenderer(Morph morph, String name) {
-        MorphRenderers.registerPlayerMorphRenderer(morph, context -> new PlayerRenderer(context, false) {
-            private final ResourceLocation location = new ResourceLocation(RGRBillionaire.MODID, "textures/entity/" + name + ".png");
+    private static <T extends IHasGeoRenderer & GeoAnimatable> void createMiddleClassMorph(Morph morph, String name, T animatable, float scale) {
+        MorphRenderers.registerPlayerMorphRenderer(morph, context -> new AdvancedGeoPlayerRenderer<>(context, new SimpleDefaultedGeoPlayerModel<>(RGRBillionaire.MODID, name){
             @Override
-            public ResourceLocation getTextureLocation(AbstractClientPlayer pEntity) {
-                return location;
+            public ResourceLocation getTextureResource(T animatable, @Nullable AbstractClientPlayer player) {
+                return new ResourceLocation(RGRBillionaire.MODID, "textures/entity/" + name + ".png");
+            }
+        }, animatable, scale) {
+            @Override
+            public void render(AbstractClientPlayer player, T animatable1, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+                if (player.hasEffect(MobEffects.INVISIBILITY))
+                    return;
+                super.render(player, animatable1, entityYaw, partialTick, poseStack, bufferSource, packedLight);
             }
         });
     }
