@@ -12,7 +12,8 @@ group = mod_base_package // http://maven.apache.org/guides/mini/guide-naming-con
 archivesBaseName = mod_id
 hundredMedia.mcVersion = minecraft_version
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(18)
 
 jarJar.enable()
 

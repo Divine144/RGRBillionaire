@@ -42,7 +42,7 @@ public class RocketEntity extends PathfinderMob implements GeoEntity {
 
     private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
 
-    private static final int CONSTRUCTION_TIME = 2000; // 24000 ticks = 20 minutes which is the length of an MC day
+    private static final int CONSTRUCTION_TIME = 24000; // 24000 ticks = 20 minutes which is the length of an MC day
     protected static final EntityDataAccessor<Boolean> CAN_TAKEOFF = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.BOOLEAN);
     protected static final EntityDataAccessor<Boolean> CAUSED_DESTRUCTION = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.BOOLEAN);
 
