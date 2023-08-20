@@ -1,0 +1,22 @@
+{
+  "butler_idle": {
+    "sounds": [
+      "rgrbillionaire:butler_idle"
+    ]
+  },
+  "coin_cannon_shoot": {
+    "sounds": [
+      "rgrbillionaire:coin_cannon_shoot"
+    ]
+  },
+  "grand_giveaway": {
+    "sounds": [
+      "rgrbillionaire:grand_giveaway"
+    ]
+  },
+  "rocket_ready": {
+    "sounds": [
+      "rgrbillionaire:rocket_ready"
+    ]
+  }
+}

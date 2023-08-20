@@ -1,8 +1,10 @@
 package com.divinity.hmedia.rgrbillionaire.ability;
 
+import com.divinity.hmedia.rgrbillionaire.init.MorphInit;
 import com.divinity.hmedia.rgrbillionaire.util.BillionaireUtils;
 import dev._100media.hundredmediaabilities.ability.Ability;
 import dev._100media.hundredmediaabilities.capability.AbilityHolderAttacher;
+import dev._100media.hundredmediamorphs.capability.MorphHolderAttacher;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -33,7 +35,7 @@ public class GoldenJetpackAbility extends Ability {
                     for (int z = (int) player.getZ() - radius; z < player.getZ() + radius; z++) {
                         if (level.getRandom().nextIntBetweenInclusive(0, 2) == 0) {
                             pos.set(x, y, z);
-                            if (!level.getBlockState(pos).isAir()) {
+                            if (!level.getBlockState(pos).isAir() && !pos.closerToCenterThan(player.position(), 1)) {
                                 BlockPos blockPos = pos.relative(Direction.getRandom(player.getRandom()));
                                 if (BaseFireBlock.canBePlacedAt(level, blockPos, Direction.NORTH)) {
                                     var fireState = BaseFireBlock.getState(level, blockPos);
@@ -65,7 +67,13 @@ public class GoldenJetpackAbility extends Ability {
     public void executeHeld(ServerLevel level, ServerPlayer player, int tick) {
         super.executeHeld(level, player, tick);
         this.tick += 1;
-        BillionaireUtils.createHelix(ParticleTypes.FLAME, player, level, 0.5f + (this.tick / 2), 0.005f);
+        var morph = MorphHolderAttacher.getCurrentMorphUnwrap(player);
+        if (morph != null) {
+            if (morph == MorphInit.THE_BILLIONAIRE.get()) {
+                BillionaireUtils.createHelix(ParticleTypes.FLAME, player, level, 0.5f + (this.tick / 2), 0.005f, 2f);
+            }
+            else BillionaireUtils.createHelix(ParticleTypes.FLAME, player, level, 0.5f + (this.tick / 2), 0.005f);
+        }
         if (this.tick > 18) {
             super.executePressed(level, player);
             this.tick = 0;

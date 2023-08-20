@@ -6,7 +6,7 @@ import com.divinity.hmedia.rgrbillionaire.cap.CannonHolder;
 import com.divinity.hmedia.rgrbillionaire.cap.CannonHolderAttacher;
 import com.divinity.hmedia.rgrbillionaire.entity.CurrencyProjectileEntity;
 import com.divinity.hmedia.rgrbillionaire.init.EntityInit;
-import com.divinity.hmedia.rgrbillionaire.init.ItemInit;
+import com.divinity.hmedia.rgrbillionaire.init.SoundInit;
 import com.divinity.hmedia.rgrbillionaire.util.BillionaireUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
@@ -17,12 +17,12 @@ import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
@@ -109,7 +109,7 @@ public class CoinCannonItem extends SimpleAnimatedItem {
         if (pRemainingUseDuration % 2 == 0) {
             int cycle = CannonHolderAttacher.getItemStackCapability(pStack).map(CannonHolder::getCycle).orElse(0);
             var type = this.getAmmoForCycle(cycle);
-            if (BillionaireUtils.hasEnoughMoney(player,  this.getCostForAmmo(type))) {
+            if (BillionaireUtils.hasEnoughMoney(player,  0)) {
                 var entity = type.create(pLevel);
                 if (entity != null) {
                     entity.setPos(player.getX(), player.getEyeY() - 0.15, player.getZ());
@@ -117,7 +117,7 @@ public class CoinCannonItem extends SimpleAnimatedItem {
                     entity.setNoGravity(true);
                     entity.shootFromRotation(player, player.getXRot(), player.getYRot(), 0, 1.5F, 0);
                     player.level().addFreshEntity(entity);
-                    // TODO: PUT SOUND HERE
+                    player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundInit.COIN_CANNON_SHOOT.get(), SoundSource.PLAYERS, 0.3f, 1);
                 }
                 BillionaireHolderAttacher.getHolder(player).ifPresent(h -> h.addMoney(-this.getCostForAmmo(type)));
                 switch (cycle) {

@@ -10,7 +10,6 @@ import com.divinity.hmedia.rgrbillionaire.item.PortableJailItem;
 import com.divinity.hmedia.rgrbillionaire.item.SwordOfTruthItem;
 import com.divinity.hmedia.rgrbillionaire.menu.MinebookMenu;
 import com.divinity.hmedia.rgrbillionaire.menu.TaxForumMenu;
-import com.divinity.hmedia.rgrbillionaire.mixin.TemplateStructurePieceAccessor;
 import com.divinity.hmedia.rgrbillionaire.quest.goal.AquireAdvancementGoal;
 import com.divinity.hmedia.rgrbillionaire.quest.goal.LootDesertTempleGoal;
 import com.divinity.hmedia.rgrbillionaire.quest.goal.LootEndShipGoal;
@@ -26,7 +25,6 @@ import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.SimpleMenuProvider;
@@ -37,20 +35,16 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.MapItem;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.AbstractChestBlock;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.levelgen.structure.BuiltinStructures;
-import net.minecraft.world.level.levelgen.structure.Structure;
-import net.minecraft.world.level.levelgen.structure.StructurePiece;
-import net.minecraft.world.level.levelgen.structure.StructureStart;
-import net.minecraft.world.level.levelgen.structure.structures.BuriedTreasureStructure;
-import net.minecraft.world.level.levelgen.structure.structures.EndCityPieces;
-import net.minecraft.world.level.saveddata.maps.MapDecoration;
+import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -62,7 +56,6 @@ import net.minecraftforge.event.entity.player.AdvancementEvent;
 import net.minecraftforge.event.entity.player.CriticalHitEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.level.BlockEvent;
-import net.minecraftforge.event.level.ExplosionEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -93,46 +86,74 @@ public class CommonForgeEvents {
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
         var dispatcher = event.getDispatcher();
-        dispatcher.register(Commands.literal("money")
-                .then(Commands.literal("add")
-                        .then(Commands.argument("amount", IntegerArgumentType.integer())
-                                .then(Commands.argument("player", EntityArgument.player())
-                                        .executes(context -> {
-                                            int amount = IntegerArgumentType.getInteger(context, "amount");
-                                            var holder = BillionaireHolderAttacher.getHolderUnwrap(EntityArgument.getPlayer(context, "player"));
-                                            if (holder != null) {
-                                                holder.addMoney(amount);
-                                            }
-                                            return Command.SINGLE_SUCCESS;
-                                        })
+        dispatcher.register(Commands.literal(RGRBillionaire.MODID)
+                .then(Commands.literal("rocket")
+                    .then(Commands.literal("setReadyTime")
+                            .then(Commands.argument("seconds", IntegerArgumentType.integer())
+                                    .executes(context -> {
+                                        int amount = IntegerArgumentType.getInteger(context, "seconds");
+                                        var holder = GlobalLevelHolderAttacher.getGlobalLevelCapabilityUnwrap(context.getSource().getLevel());
+                                        if (holder != null) {
+                                            holder.setRocketTimer(amount);
+                                        }
+                                        return Command.SINGLE_SUCCESS;
+                                    })
+                            )
+                    )
+                    .then(Commands.literal("setYLevelForDestruction")
+                            .then(Commands.argument("yLevel", IntegerArgumentType.integer())
+                                .executes(context -> {
+                                    int amount = IntegerArgumentType.getInteger(context, "yLevel");
+                                    var holder = GlobalLevelHolderAttacher.getGlobalLevelCapabilityUnwrap(context.getSource().getLevel());
+                                    if (holder != null) {
+                                        holder.setRocketYLevel(amount);
+                                    }
+                                    return Command.SINGLE_SUCCESS;
+                                })
+                            )
+                    )
+                )
+                .then(Commands.literal("money")
+                        .then(Commands.literal("add")
+                                .then(Commands.argument("amount", IntegerArgumentType.integer())
+                                        .then(Commands.argument("player", EntityArgument.player())
+                                                .executes(context -> {
+                                                    int amount = IntegerArgumentType.getInteger(context, "amount");
+                                                    var holder = BillionaireHolderAttacher.getHolderUnwrap(EntityArgument.getPlayer(context, "player"));
+                                                    if (holder != null) {
+                                                        holder.addMoney(amount);
+                                                    }
+                                                    return Command.SINGLE_SUCCESS;
+                                                })
+                                        )
                                 )
                         )
-                )
-                .then(Commands.literal("remove")
-                        .then(Commands.argument("amount", IntegerArgumentType.integer())
-                                .then(Commands.argument("player", EntityArgument.player())
-                                        .executes(context -> {
-                                            int amount = IntegerArgumentType.getInteger(context, "amount");
-                                            var holder = BillionaireHolderAttacher.getHolderUnwrap(EntityArgument.getPlayer(context, "player"));
-                                            if (holder != null) {
-                                                holder.addMoney(-amount);
-                                            }
-                                            return Command.SINGLE_SUCCESS;
-                                        })
+                        .then(Commands.literal("remove")
+                                .then(Commands.argument("amount", IntegerArgumentType.integer())
+                                        .then(Commands.argument("player", EntityArgument.player())
+                                                .executes(context -> {
+                                                    int amount = IntegerArgumentType.getInteger(context, "amount");
+                                                    var holder = BillionaireHolderAttacher.getHolderUnwrap(EntityArgument.getPlayer(context, "player"));
+                                                    if (holder != null) {
+                                                        holder.addMoney(-amount);
+                                                    }
+                                                    return Command.SINGLE_SUCCESS;
+                                                })
+                                        )
                                 )
                         )
-                )
-                .then(Commands.literal("set")
-                        .then(Commands.argument("amount", IntegerArgumentType.integer())
-                                .then(Commands.argument("player", EntityArgument.player())
-                                        .executes(context -> {
-                                            int amount = IntegerArgumentType.getInteger(context, "amount");
-                                            var holder = BillionaireHolderAttacher.getHolderUnwrap(EntityArgument.getPlayer(context, "player"));
-                                            if (holder != null) {
-                                                holder.setMoney(amount);
-                                            }
-                                            return Command.SINGLE_SUCCESS;
-                                        })
+                        .then(Commands.literal("set")
+                                .then(Commands.argument("amount", IntegerArgumentType.integer())
+                                        .then(Commands.argument("player", EntityArgument.player())
+                                                .executes(context -> {
+                                                    int amount = IntegerArgumentType.getInteger(context, "amount");
+                                                    var holder = BillionaireHolderAttacher.getHolderUnwrap(EntityArgument.getPlayer(context, "player"));
+                                                    if (holder != null) {
+                                                        holder.setMoney(amount);
+                                                    }
+                                                    return Command.SINGLE_SUCCESS;
+                                                })
+                                        )
                                 )
                         )
                 )
@@ -234,7 +255,9 @@ public class CommonForgeEvents {
                 BlockEntity entity = level.getBlockEntity(pos);
                 if (entity instanceof CryptoMinerBlockEntity crypto) {
                     if (crypto.amount == 1000) {
-                        event.setCanceled(true);
+                        if (!player.isCreative()) {
+                            event.setCanceled(true);
+                        }
                     }
                 }
             }
@@ -266,7 +289,7 @@ public class CommonForgeEvents {
                     }
                 }
                 else if (state.getBlock() instanceof AbstractChestBlock<?>) {
-                    if (playerIsInStructure(BuiltinStructures.DESERT_PYRAMID, serverPlayer)) {
+                    if (BillionaireUtils.playerIsInStructure(StructureType.DESERT_PYRAMID, serverPlayer)) {
                         QuestHolderAttacher.checkAllGoals(event.getEntity(), goal -> {
                             if (goal instanceof LootDesertTempleGoal lootDesertTempleGoal) {
                                 lootDesertTempleGoal.addProgress(1);
@@ -275,7 +298,7 @@ public class CommonForgeEvents {
                             return false;
                         });
                     }
-                    else if (playerIsInStructurePiece(player.blockPosition().below(), getStructureOfType(BuiltinStructures.END_CITY, serverPlayer), "ship")) {
+                    else if (BillionaireUtils.playerIsInStructurePiece(player.blockPosition().below(), BuiltinStructures.END_CITY, "ship", serverPlayer)) {
                         QuestHolderAttacher.checkAllGoals(event.getEntity(), goal -> {
                             if (goal instanceof LootEndShipGoal endShipGoal) {
                                 endShipGoal.addProgress(1);
@@ -329,30 +352,5 @@ public class CommonForgeEvents {
                 BillionaireHolderAttacher.getHolder(player).ifPresent(cap -> cap.addMoney(100_000));
             }
         }
-    }
-
-    private static boolean isHoldingItem(Player player, Item item) {
-        return player.getItemInHand(InteractionHand.MAIN_HAND).is(item) || player.getItemInHand(InteractionHand.OFF_HAND).is(item);
-    }
-
-    private static StructureStart getStructureOfType(ResourceKey<Structure> key, ServerPlayer player) {
-        return player.serverLevel().structureManager().getStructureWithPieceAt(player.blockPosition().below(), key);
-    }
-
-    private static boolean playerIsInStructure(ResourceKey<Structure> key, ServerPlayer player) {
-        return getStructureOfType(key, player).isValid();
-    }
-
-    private static boolean playerIsInStructurePiece(BlockPos pPos, StructureStart pStructureStart, String name) {
-        for (StructurePiece structurepiece : pStructureStart.getPieces()) {
-            if (structurepiece instanceof EndCityPieces.EndCityPiece endCityPiece && endCityPiece.getBoundingBox().isInside(pPos)) {
-                if (endCityPiece instanceof TemplateStructurePieceAccessor accessor) {
-                    if (accessor.getTemplateName().contains(name)) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
     }
 }

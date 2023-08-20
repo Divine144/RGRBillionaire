@@ -5,13 +5,16 @@ import com.divinity.hmedia.rgrbillionaire.cap.MoneyHolderAttacher;
 import com.divinity.hmedia.rgrbillionaire.init.ItemInit;
 import com.divinity.hmedia.rgrbillionaire.init.MorphInit;
 import com.divinity.hmedia.rgrbillionaire.menu.offer.CustomMerchantOffer;
+import com.divinity.hmedia.rgrbillionaire.mixin.TemplateStructurePieceAccessor;
 import dev._100media.hundredmediamorphs.capability.MorphHolderAttacher;
 import dev._100media.hundredmediamorphs.morph.Morph;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -26,13 +29,15 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.levelgen.structure.StructurePiece;
+import net.minecraft.world.level.levelgen.structure.StructureStart;
+import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -105,6 +110,15 @@ public final class BillionaireUtils {
             double x = radius * Math.cos(9 * y);
             double z = radius * Math.sin(9 * y);
             pLevel.sendParticles(type, loc.x() + x, loc.y() + 1.1, loc.z() + z, 0, 0, 0, 0, 0);
+        }
+    }
+
+    public static void createHelix(ParticleOptions type, LivingEntity player, ServerLevel pLevel, float radius, float amount, float yOffset) {
+        Vec3 loc = player.position();
+        for (double y = 0; y <= 1; y += amount) {
+            double x = radius * Math.cos(9 * y);
+            double z = radius * Math.sin(9 * y);
+            pLevel.sendParticles(type, loc.x() + x, loc.y() + 1.1 + yOffset, loc.z() + z, 0, 0, 0, 0, 0);
         }
     }
 
@@ -184,11 +198,42 @@ public final class BillionaireUtils {
         }
     }
 
+    public static boolean playerIsInStructure(StructureType<?> key, ServerPlayer player) {
+        return getStructureOfType(key, player).isPresent();
+    }
+
+    public static boolean playerIsInStructure(ResourceKey<Structure> key, ServerPlayer player) {
+        return getStructureOfType(key, player).isValid();
+    }
+
+    public static boolean playerIsInStructurePiece(BlockPos pPos, ResourceKey<Structure> parentStructureKey, String name, ServerPlayer player) {
+        StructureStart structureStart = getStructureOfType(parentStructureKey, player);
+        for (StructurePiece structurepiece : structureStart.getPieces()) {
+            if (structurepiece.getBoundingBox().isInside(pPos)) {
+                if (structurepiece instanceof TemplateStructurePieceAccessor accessor) {
+                    if (accessor.getTemplateName().contains(name)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     public static ItemStack getMoneyForAmount(int amount) {
         Item temp = ItemInit.MONEY.get();
         ItemStack tempStack = new ItemStack(temp);
         MoneyHolderAttacher.getItemStackCapability(tempStack).ifPresent(h -> h.setAmount(amount));
         return tempStack;
+    }
+
+    private static Optional<? extends StructureType<?>> getStructureOfType(StructureType<?> key, ServerPlayer player) {
+        Set<Structure> structureSet = player.serverLevel().structureManager().getAllStructuresAt(player.blockPosition()).keySet();
+        return structureSet.stream().map(Structure::type).filter(p -> p == key).findAny();
+    }
+
+    private static StructureStart getStructureOfType(ResourceKey<Structure> key, ServerPlayer player) {
+        return player.serverLevel().structureManager().getStructureWithPieceAt(player.blockPosition().below(), key);
     }
 
     private static CustomMerchantOffer createListing(ItemStack stack, int buyAmount) {

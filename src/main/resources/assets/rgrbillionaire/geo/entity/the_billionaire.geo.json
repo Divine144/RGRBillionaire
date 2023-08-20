@@ -55,7 +55,7 @@
 					]
 				},
 				{
-					"name": "chest",
+					"name": "chestplate",
 					"parent": "body2",
 					"pivot": [0, 37.5, 1],
 					"cubes": [
@@ -75,7 +75,7 @@
 				},
 				{
 					"name": "head",
-					"parent": "chest",
+					"parent": "chestplate",
 					"pivot": [0, 47, 1],
 					"cubes": [
 						{
@@ -94,7 +94,7 @@
 				},
 				{
 					"name": "leftarm",
-					"parent": "chest",
+					"parent": "chestplate",
 					"pivot": [-9, 43.5, 0.5],
 					"cubes": [
 						{
@@ -113,7 +113,7 @@
 				},
 				{
 					"name": "bone21",
-					"parent": "chest",
+					"parent": "chestplate",
 					"pivot": [9, 43.5, 0.5]
 				},
 				{

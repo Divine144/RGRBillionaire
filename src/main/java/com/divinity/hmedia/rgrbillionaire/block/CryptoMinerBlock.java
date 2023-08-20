@@ -6,10 +6,8 @@ import com.divinity.hmedia.rgrbillionaire.init.BlockInit;
 import com.divinity.hmedia.rgrbillionaire.network.NetworkHandler;
 import com.divinity.hmedia.rgrbillionaire.network.clientbound.SyncCryptoBlockPacket;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -33,7 +31,6 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoBlockEntity;
 
 import java.util.Map;
 

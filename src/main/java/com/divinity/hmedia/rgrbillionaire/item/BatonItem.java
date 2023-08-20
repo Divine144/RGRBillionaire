@@ -1,29 +1,20 @@
 package com.divinity.hmedia.rgrbillionaire.item;
 
 import com.divinity.hmedia.rgrbillionaire.RGRBillionaire;
-import com.divinity.hmedia.rgrbillionaire.client.renderer.GoldenJetpackArmorRenderer;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
-import dev._100media.hundredmediageckolib.client.renderer.GeoToolRenderer;
 import dev._100media.hundredmediageckolib.item.animated.AnimatedItemProperties;
 import dev._100media.hundredmediageckolib.item.animated.SimpleAnimatedItem;
-import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.model.DefaultedItemGeoModel;
-import software.bernie.geckolib.renderer.GeoArmorRenderer;
 import software.bernie.geckolib.renderer.GeoItemRenderer;
 
 import java.util.Map;

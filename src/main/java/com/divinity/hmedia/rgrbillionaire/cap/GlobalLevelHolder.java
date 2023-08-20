@@ -21,6 +21,10 @@ public class GlobalLevelHolder extends GlobalLevelCapability {
     private final Map<Integer, ItemStack> inventoryMap = new HashMap<>();
     private int productionRate;
 
+    private int rocketTimer = 1200 * 20; // 24000 ticks = 20 minutes which is the length of an MC day
+
+    private int rocketYLevel = 200;
+
     protected GlobalLevelHolder(Level level) {
         super(level);
     }
@@ -35,6 +39,22 @@ public class GlobalLevelHolder extends GlobalLevelCapability {
 
     public int getProductionRate() {
         return this.productionRate;
+    }
+
+    public int getRocketTimer() {
+        return rocketTimer;
+    }
+
+    public void setRocketTimer(int timer) {
+        this.rocketTimer = timer * 20;
+    }
+
+    public int getRocketYLevel() {
+        return rocketYLevel;
+    }
+
+    public void setRocketYLevel(int rocketYLevel) {
+        this.rocketYLevel = rocketYLevel;
     }
 
     public void increaseProductionRate(int staggerAmount) {
@@ -59,6 +79,8 @@ public class GlobalLevelHolder extends GlobalLevelCapability {
         nbt.put("slotIds", slotsNBT);
         nbt.put("stacks", stacksNBT);
         nbt.putInt("productionRate", this.productionRate);
+        nbt.putInt("rocketTimer", this.rocketTimer);
+        nbt.putInt("rocketYLevel", this.rocketYLevel);
         return nbt;
     }
 
@@ -77,6 +99,8 @@ public class GlobalLevelHolder extends GlobalLevelCapability {
             }
         }
         this.productionRate = nbt.getInt("productionRate");
+        this.rocketTimer = nbt.getInt("rocketTimer");
+        this.rocketYLevel = nbt.getInt("rocketYLevel");
     }
 
     @Override

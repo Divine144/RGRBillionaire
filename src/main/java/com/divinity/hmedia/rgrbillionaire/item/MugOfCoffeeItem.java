@@ -4,7 +4,6 @@ import com.divinity.hmedia.rgrbillionaire.RGRBillionaire;
 import com.divinity.hmedia.rgrbillionaire.cap.BillionaireHolderAttacher;
 import com.divinity.hmedia.rgrbillionaire.init.AbilityInit;
 import com.divinity.hmedia.rgrbillionaire.init.SkillInit;
-import dev._100media.hundredmediageckolib.client.renderer.GeoToolRenderer;
 import dev._100media.hundredmediageckolib.item.animated.AnimatedItemProperties;
 import dev._100media.hundredmediageckolib.item.animated.SimpleAnimatedItem;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -13,8 +12,8 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import software.bernie.geckolib.model.DefaultedItemGeoModel;
@@ -44,6 +43,11 @@ public class MugOfCoffeeItem extends SimpleAnimatedItem {
     @Override
     public SoundEvent getEatingSound() {
         return SoundEvents.GENERIC_DRINK;
+    }
+
+    @Override
+    public UseAnim getUseAnimation(ItemStack pStack) {
+        return UseAnim.DRINK;
     }
 
     @Override

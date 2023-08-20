@@ -1,6 +1,7 @@
 package com.divinity.hmedia.rgrbillionaire.item;
 
 import com.divinity.hmedia.rgrbillionaire.RGRBillionaire;
+import com.divinity.hmedia.rgrbillionaire.init.ItemInit;
 import net.minecraft.ResourceLocationException;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -8,6 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.UseOnContext;
@@ -40,6 +42,9 @@ public class PortableJailItem extends Item {
         if (pContext.getClickedFace() == Direction.UP) {
             if (player instanceof ServerPlayer player1) {
                 placeTemplate(player1.serverLevel(), player1, PRISON_OPEN, blockpos.below(), Rotation.NONE, Mirror.NONE, 1.0F, 0);
+                ItemEntity entity = new ItemEntity(player1.serverLevel(), blockpos.getX(), blockpos.getY(), blockpos.getZ(), ItemInit.BATON.get().getDefaultInstance());
+                entity.setDefaultPickUpDelay();
+                player1.serverLevel().addFreshEntity(entity);
             }
             return InteractionResult.sidedSuccess(level.isClientSide());
         }

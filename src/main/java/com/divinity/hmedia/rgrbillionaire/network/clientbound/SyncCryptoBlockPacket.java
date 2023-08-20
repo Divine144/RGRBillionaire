@@ -1,7 +1,6 @@
 package com.divinity.hmedia.rgrbillionaire.network.clientbound;
 
 import com.divinity.hmedia.rgrbillionaire.network.ClientHandler;
-import com.divinity.hmedia.rgrbillionaire.network.serverbound.OpenMarketMenuPacket;
 import dev._100media.capabilitysyncer.network.IPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;

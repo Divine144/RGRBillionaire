@@ -1,5 +1,7 @@
 package com.divinity.hmedia.rgrbillionaire.entity;
 
+import com.divinity.hmedia.rgrbillionaire.cap.GlobalLevelHolderAttacher;
+import com.divinity.hmedia.rgrbillionaire.init.SoundInit;
 import com.divinity.hmedia.rgrbillionaire.util.BillionaireUtils;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.ChatFormatting;
@@ -13,6 +15,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.UserBanList;
 import net.minecraft.server.players.UserBanListEntry;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -26,7 +29,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.constant.DataTickets;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -42,7 +44,7 @@ public class RocketEntity extends PathfinderMob implements GeoEntity {
 
     private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
 
-    private static final int CONSTRUCTION_TIME = 24000; // 24000 ticks = 20 minutes which is the length of an MC day
+    private static int CONSTRUCTION_TIME = 2000;
     protected static final EntityDataAccessor<Boolean> CAN_TAKEOFF = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.BOOLEAN);
     protected static final EntityDataAccessor<Boolean> CAUSED_DESTRUCTION = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.BOOLEAN);
 
@@ -54,16 +56,16 @@ public class RocketEntity extends PathfinderMob implements GeoEntity {
     public void tick() {
         super.tick();
         if (this.level() instanceof ServerLevel level) {
-            System.out.println(this.tickCount);
-            if (this.tickCount == CONSTRUCTION_TIME) {
-                entityData.set(CAN_TAKEOFF, true);
-                LivingEntity livingentity = this.getControllingPassenger();
-                if (this.isVehicle() && livingentity instanceof ServerPlayer player) {
-                    player.sendSystemMessage(Component.literal("Space Rocket: ").withStyle(ChatFormatting.WHITE)
-                            .append(Component.literal("Ready For Takeoff!").withStyle(ChatFormatting.BLUE, ChatFormatting.BOLD)));
+            var holder = GlobalLevelHolderAttacher.getGlobalLevelCapabilityUnwrap(level);
+            if (holder != null) {
+                if (holder.getRocketTimer() > CONSTRUCTION_TIME) {
+                    CONSTRUCTION_TIME = holder.getRocketTimer();
                 }
             }
-            if (this.isVehicle() && entityData.get(CAN_TAKEOFF) && this.getY() >= 200 && level.getDayTime() < 13000) {
+            if (this.tickCount == CONSTRUCTION_TIME) {
+                entityData.set(CAN_TAKEOFF, true);
+            }
+            if (this.isVehicle() && entityData.get(CAN_TAKEOFF) && holder != null && this.getY() >= holder.getRocketYLevel()) {
                 if (!entityData.get(CAUSED_DESTRUCTION)) {
                     level.setDayTime(13000);
                     level.getAllEntities().forEach(entity -> {
@@ -92,7 +94,18 @@ public class RocketEntity extends PathfinderMob implements GeoEntity {
                             }
                         }
                     });
+                    var player = this.getControllingPassenger();
+                    if (player instanceof ServerPlayer player1) {
+                        player1.sendSystemMessage(Component.literal("Space Rocket: ").withStyle(ChatFormatting.WHITE)
+                                .append(Component.literal("Protocol Initiated: Destroy Everything")
+                                        .withStyle(ChatFormatting.RED, ChatFormatting.BOLD)));
+                    }
                     entityData.set(CAUSED_DESTRUCTION, true);
+                }
+            }
+            if (this.canTakeOff()) {
+                if (this.tickCount % 20 == 0) {
+                    level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundInit.ROCKET_READY.get(), SoundSource.PLAYERS, 1, 1);
                 }
             }
         }
@@ -126,15 +139,18 @@ public class RocketEntity extends PathfinderMob implements GeoEntity {
 
     @Override
     public InteractionResult mobInteract(Player pPlayer, InteractionHand pHand) {
-        if (!this.level().isClientSide) {
+        if (!this.level().isClientSide && pHand == InteractionHand.MAIN_HAND) {
             if (!entityData.get(CAN_TAKEOFF)) {
                 if (!this.isVehicle() && pPlayer instanceof ServerPlayer player) {
                     player.sendSystemMessage(Component.literal("Space Rocket: ").withStyle(ChatFormatting.WHITE)
-                            .append(Component.literal("Under Construction!").withStyle(ChatFormatting.RED, ChatFormatting.BOLD)));
+                            .append(Component.literal("Under Construction! %s seconds left".formatted((CONSTRUCTION_TIME - tickCount) / 20))
+                                    .withStyle(ChatFormatting.RED, ChatFormatting.BOLD)));
                 }
             }
             else {
                 if (BillionaireUtils.hasAnyMorph(pPlayer)) {
+                    pPlayer.sendSystemMessage(Component.literal("Space Rocket: ").withStyle(ChatFormatting.WHITE)
+                            .append(Component.literal("Ready For Takeoff!").withStyle(ChatFormatting.BLUE, ChatFormatting.BOLD)));
                     pPlayer.startRiding(this);
                 }
                 else {
@@ -213,12 +229,18 @@ public class RocketEntity extends PathfinderMob implements GeoEntity {
 
     protected <E extends RocketEntity> PlayState animationController(final AnimationState<E> event) {
         if (event.getData(DataTickets.ENTITY) instanceof RocketEntity entity) {
-            return switch (entity.tickCount) {
-                case ((int) (CONSTRUCTION_TIME * 0.50)) -> event.setAndContinue(RawAnimation.begin().thenLoop("2"));
-                case ((int) (CONSTRUCTION_TIME * 0.75)) -> event.setAndContinue(RawAnimation.begin().thenLoop("3"));
-                case (CONSTRUCTION_TIME) -> event.setAndContinue(RawAnimation.begin().thenLoop("4"));
-                default -> event.setAndContinue(RawAnimation.begin().thenLoop("1"));
-            };
+            if (entity.tickCount < (int) (CONSTRUCTION_TIME * 0.50)) {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("1"));
+            }
+            if (entity.tickCount == (int) (CONSTRUCTION_TIME * 0.50)) {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("2"));
+            }
+            if (entity.tickCount == (int) (CONSTRUCTION_TIME * 0.75)) {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("3"));
+            }
+            if (entity.tickCount == CONSTRUCTION_TIME) {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("4"));
+            }
         }
         return PlayState.CONTINUE;
     }

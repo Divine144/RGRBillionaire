@@ -16,7 +16,7 @@ public class RocketEntityRenderer extends GeoEntityRenderer<RocketEntity> {
 
     @Override
     public void render(RocketEntity entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
-        if (entity.canTakeOff() && !entity.getPassengers().isEmpty()) {
+        if (entity.canTakeOff()) {
             poseStack.mulPose(Axis.XP.rotationDegrees(270));
             poseStack.translate(0, 0, 5);
         }

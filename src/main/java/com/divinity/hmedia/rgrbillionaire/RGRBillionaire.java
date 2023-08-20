@@ -35,10 +35,10 @@ public class RGRBillionaire {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ExampleConfig.CONFIG_SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ExampleClientConfig.CLIENT_SPEC);
 
-
         ItemInit.ITEMS.register(modBus);
         EntityInit.ENTITIES.register(modBus);
         BlockInit.BLOCKS.register(modBus);
+        SoundInit.SOUNDS.register(modBus);
         BlockInit.BLOCK_ENTITIES.register(modBus);
         MenuInit.MENUS.register(modBus);
         CreativeModeTabInit.CREATIVE_MODE_TABS.register(modBus);

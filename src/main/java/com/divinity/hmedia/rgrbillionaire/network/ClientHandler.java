@@ -5,10 +5,8 @@ import com.divinity.hmedia.rgrbillionaire.client.gui.MoneyExplosionGuiOverlay;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import software.bernie.shadowed.eliotlash.mclib.math.functions.limit.Min;
 
 public class ClientHandler {
 

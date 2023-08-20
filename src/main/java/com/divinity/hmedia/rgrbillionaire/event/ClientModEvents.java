@@ -3,35 +3,25 @@ package com.divinity.hmedia.rgrbillionaire.event;
 import com.divinity.hmedia.rgrbillionaire.RGRBillionaire;
 import com.divinity.hmedia.rgrbillionaire.block.be.CryptoMinerBlockEntity;
 import com.divinity.hmedia.rgrbillionaire.client.gui.MoneyExplosionGuiOverlay;
-import com.divinity.hmedia.rgrbillionaire.client.model.SimpleDefaultedGeoPlayerModel;
 import com.divinity.hmedia.rgrbillionaire.client.renderer.*;
 import com.divinity.hmedia.rgrbillionaire.client.screen.ButlerInventoryScreen;
 import com.divinity.hmedia.rgrbillionaire.client.screen.MarketplaceScreen;
 import com.divinity.hmedia.rgrbillionaire.client.screen.MinebookScreen;
 import com.divinity.hmedia.rgrbillionaire.client.screen.TaxForumScreen;
-import com.divinity.hmedia.rgrbillionaire.entity.RocketEntity;
 import com.divinity.hmedia.rgrbillionaire.init.*;
 import com.divinity.hmedia.rgrbillionaire.item.DollarFishingPoleItem;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
-import dev._100media.hundredmediaabilities.capability.AbilityHolderAttacher;
 import dev._100media.hundredmediageckolib.client.animatable.IHasGeoRenderer;
 import dev._100media.hundredmediageckolib.client.animatable.MotionAttackAnimatable;
-import dev._100media.hundredmediageckolib.client.animatable.SimpleAnimatable;
-import dev._100media.hundredmediageckolib.client.model.SimpleGeoEntityModel;
-import dev._100media.hundredmediageckolib.client.model.SimpleGeoHumanoidModel;
 import dev._100media.hundredmediageckolib.client.model.SimpleGeoPlayerModel;
-import dev._100media.hundredmediageckolib.client.renderer.GeoPlayerRenderer;
-import dev._100media.hundredmediageckolib.client.renderer.GeoSeparatedEntityRenderer;
-import dev._100media.hundredmediamorphs.capability.AnimationHolder;
-import dev._100media.hundredmediamorphs.capability.AnimationHolderAttacher;
+import dev._100media.hundredmediageckolib.client.renderer.layer.GeoPlayerArmorLayer;
+import dev._100media.hundredmediamorphs.capability.MorphHolderAttacher;
 import dev._100media.hundredmediamorphs.client.model.AdvancedGeoPlayerModel;
 import dev._100media.hundredmediamorphs.client.renderer.AdvancedGeoPlayerRenderer;
 import dev._100media.hundredmediamorphs.client.renderer.MorphRenderers;
-import dev._100media.hundredmediamorphs.init.HMMMorphInit;
-import dev._100media.hundredmediamorphs.morph.AdvancedGeoPlayerMorph;
 import dev._100media.hundredmediamorphs.morph.Morph;
 import dev._100media.hundredmediaquests.client.screen.QuestSkillScreen;
 import dev._100media.hundredmediaquests.client.screen.SkillScreen;
@@ -42,22 +32,15 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.culling.Frustum;
-import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
@@ -68,21 +51,17 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.model.DefaultedBlockGeoModel;
 import software.bernie.geckolib.renderer.GeoBlockRenderer;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 import java.util.Arrays;
-import java.util.List;
 
 @Mod.EventBusSubscriber(modid = RGRBillionaire.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientModEvents {
@@ -140,25 +119,9 @@ public class ClientModEvents {
                 return PlayState.CONTINUE;
             }
         }, 1);
-
-
-        createMiddleClassMorph(MorphInit.MIDDLE_CLASS_MAN.get(), "middle_class_man", new MotionAttackAnimatable() {
-            @Override
-            protected PlayState attackAnimationEvent(AnimationState<? extends MotionAttackAnimatable> state) {
-                if (state.getData(DataTickets.ENTITY) instanceof Player player) {
-                    AnimationHolderAttacher.getAnimationHolder(player).ifPresent(p -> {
-                        if (player.swinging) {
-                            p.setCurrentAttackAnimation(null, true, false);
-                        }
-                        else if (state.isMoving()) {
-                            p.setCurrentMotionAnimation(null, true, false);
-                        }
-                    });
-                }
-                return super.attackAnimationEvent(state);
-            }
-        }, 1);
-        createSimpleMorphRenderer(MorphInit.THE_BILLIONAIRE.get(), "the_billionaire", new MotionAttackAnimatable() {
+        createAdvancedMorphRenderer(MorphInit.MIDDLE_CLASS_MAN.get(), "middle_class_man", new MotionAttackAnimatable(), 1);
+        createAdvancedMorphRenderer(MorphInit.MULTI_MILLIONAIRE.get(), "multi_millionaire", new MotionAttackAnimatable(), 1f);
+        createAdvancedMorphRenderer(MorphInit.THE_BILLIONAIRE.get(), "the_billionaire", new MotionAttackAnimatable() {
             @Override
             protected PlayState attackAnimationEvent(AnimationState<? extends MotionAttackAnimatable> state) {
                 AnimationController<?> controller = state.getController();
@@ -282,50 +245,82 @@ public class ClientModEvents {
         event.registerAboveAll("money_explosion", MoneyExplosionGuiOverlay.INSTANCE);
     }
 
-    private static <T extends IHasGeoRenderer & GeoAnimatable> void createMiddleClassMorph(Morph morph, String name, T animatable, float scale) {
-        MorphRenderers.registerPlayerMorphRenderer(morph, context -> new AdvancedGeoPlayerRenderer<>(context, new SimpleDefaultedGeoPlayerModel<>(RGRBillionaire.MODID, name){
-            @Override
-            public ResourceLocation getTextureResource(T animatable, @Nullable AbstractClientPlayer player) {
-                return new ResourceLocation(RGRBillionaire.MODID, "textures/entity/" + name + ".png");
-            }
-        }, animatable, scale) {
-            @Override
-            public void render(AbstractClientPlayer player, T animatable1, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
-                if (player.hasEffect(MobEffects.INVISIBILITY))
-                    return;
-                super.render(player, animatable1, entityYaw, partialTick, poseStack, bufferSource, packedLight);
-            }
+    private static <T extends IHasGeoRenderer & GeoAnimatable> void createSimpleMorphRenderer(Morph morph, String name, T animatable, float scale) {
+        MorphRenderers.registerPlayerMorphRenderer(morph, context -> {
+            var renderer = new AdvancedGeoPlayerRenderer<>(context, new SimpleGeoPlayerModel<>(RGRBillionaire.MODID, name) {
+                @Override
+                public ResourceLocation getTextureResource(T animatable, @Nullable AbstractClientPlayer player) {
+                    return new ResourceLocation(RGRBillionaire.MODID, "textures/entity/" + name + ".png");
+                }
+            }, animatable, scale) {
+
+                @Override
+                protected @Nullable VertexConsumer handleArmorRenderingForBone(GeoBone bone, PoseStack stack, VertexConsumer vertexConsumer, int packedLightIn, int packedOverlayIn, ResourceLocation currentTexture, ItemStack armorForBone, EquipmentSlot boneSlot) {
+                    if (!armorForBone.is(ItemInit.GOLDEN_JETPACK.get())) {
+                        return super.handleArmorRenderingForBone(bone, stack, vertexConsumer, packedLightIn, packedOverlayIn, currentTexture, armorForBone, boneSlot);
+                    }
+                    return null;
+                }
+
+                @Override
+                public void render(AbstractClientPlayer player, T animatable1, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+                    if (player.hasEffect(MobEffects.INVISIBILITY))
+                        return;
+                    if (player.getVehicle() != null) {
+                        poseStack.pushPose();
+                        poseStack.translate(0, 0.6, 0);
+                        super.render(player, animatable1, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+                        poseStack.popPose();
+                    }
+                    else super.render(player, animatable1, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+                }
+            };;
+            renderer.addRenderLayer(new GeoPlayerArmorLayer<>(renderer));
+            return renderer;
         });
     }
 
-    private static <T extends IHasGeoRenderer & GeoAnimatable> void createSimpleMorphRenderer(Morph morph, String name, T animatable, float scale) {
-        MorphRenderers.registerPlayerMorphRenderer(morph, context -> new AdvancedGeoPlayerRenderer<>(context, new AdvancedGeoPlayerModel<>(RGRBillionaire.MODID, name){
-            @Override
-            public ResourceLocation getTextureResource(T animatable, @Nullable AbstractClientPlayer player) {
-                return new ResourceLocation(RGRBillionaire.MODID, "textures/entity/" + name + ".png");
-            }
-        }, animatable, scale) {
-            @Override
-            public void preRender(PoseStack poseStack, T animatable1, BakedGeoModel model, @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-                super.preRender(poseStack, animatable1, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
-            }
+    private static <T extends IHasGeoRenderer & GeoAnimatable> void createAdvancedMorphRenderer(Morph morph, String name, T animatable, float scale) {
+        MorphRenderers.registerPlayerMorphRenderer(morph, context -> {
+            var renderer = new AdvancedGeoPlayerRenderer<>(context, new AdvancedGeoPlayerModel<>(RGRBillionaire.MODID, name) {
+                @Override
+                public ResourceLocation getTextureResource(T animatable, @Nullable AbstractClientPlayer player) {
+                    return new ResourceLocation(RGRBillionaire.MODID, "textures/entity/" + name + ".png");
+                }
+            }, animatable, scale) {
 
-            @Override
-            public void renderRecursively(PoseStack poseStack, T animatable1, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer vertexConsumer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-                super.renderRecursively(poseStack, animatable1, bone, renderType, bufferSource, vertexConsumer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
-            }
+                @Override
+                protected @Nullable VertexConsumer handleArmorRenderingForBone(GeoBone bone, PoseStack stack, VertexConsumer vertexConsumer, int packedLightIn, int packedOverlayIn, ResourceLocation currentTexture, ItemStack armorForBone, EquipmentSlot boneSlot) {
+                    if (!armorForBone.is(ItemInit.GOLDEN_JETPACK.get())) {
+                        return super.handleArmorRenderingForBone(bone, stack, vertexConsumer, packedLightIn, packedOverlayIn, currentTexture, armorForBone, boneSlot);
+                    }
+                    return null;
+                }
 
-            @Override
-            public void render(AbstractClientPlayer player, T animatable1, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
-                if (player.hasEffect(MobEffects.INVISIBILITY))
-                    return;
-                super.render(player, animatable1, entityYaw, partialTick, poseStack, bufferSource, packedLight);
-            }
-
-            @Override
-            public RenderType getRenderType(T animatable1, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
-                return super.getRenderType(animatable1, texture, bufferSource, partialTick);
-            }
+                @Override
+                public void render(AbstractClientPlayer player, T animatable1, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+                    if (player.hasEffect(MobEffects.INVISIBILITY))
+                        return;
+                   super.render(player, animatable1, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+                }
+            };;
+            renderer.addRenderLayer(new GeoPlayerArmorLayer<>(renderer) {
+                @Override
+                public @Nullable VertexConsumer renderRecursivelyPre(GeoBone bone, PoseStack poseStack, AbstractClientPlayer entity, T animatable, VertexConsumer vertexConsumer, int packedLight, int overlay, float red, float green, float blue, float alpha) {
+                    var morph = MorphHolderAttacher.getCurrentMorphUnwrap(entity);
+                    if (morph != null) {
+                        if (morph == MorphInit.THE_BILLIONAIRE.get()) {
+                            poseStack.pushPose();
+                            poseStack.translate(0, 1, -0.76);
+                            VertexConsumer consumer = super.renderRecursivelyPre(bone, poseStack, entity, animatable, vertexConsumer, packedLight, overlay, red, green, blue, alpha);
+                            poseStack.popPose();
+                            return consumer;
+                        }
+                    }
+                    return super.renderRecursivelyPre(bone, poseStack, entity, animatable, vertexConsumer, packedLight, overlay, red, green, blue, alpha);
+                }
+            });
+            return renderer;
         });
     }
 }

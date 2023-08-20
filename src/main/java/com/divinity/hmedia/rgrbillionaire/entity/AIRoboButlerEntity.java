@@ -4,6 +4,7 @@ import com.divinity.hmedia.rgrbillionaire.cap.GlobalLevelHolderAttacher;
 import com.divinity.hmedia.rgrbillionaire.entity.ai.FollowOwnerGoal;
 import com.divinity.hmedia.rgrbillionaire.entity.ai.MineOresGoal;
 import com.divinity.hmedia.rgrbillionaire.entity.api.IBlockInteractor;
+import com.divinity.hmedia.rgrbillionaire.init.SoundInit;
 import com.divinity.hmedia.rgrbillionaire.menu.ButlerInventoryMenu;
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -15,6 +16,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.*;
 import net.minecraft.world.damagesource.DamageSource;
@@ -133,6 +135,9 @@ public class AIRoboButlerEntity extends PathfinderMob implements GeoEntity, Cont
     public void tick() {
         super.tick();
         if (!this.level().isClientSide) {
+            if (!this.isSitting() && tickCount % 30 == 0) {
+                this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundInit.BUTLER_IDLE.get(), SoundSource.PLAYERS, 1, 1);
+            }
             Player owner = this.getOwner();
             if (owner != null) {
                 if (this.getTime() > 0) {

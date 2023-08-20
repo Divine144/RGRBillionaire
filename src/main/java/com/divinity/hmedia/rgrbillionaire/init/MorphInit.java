@@ -3,7 +3,6 @@ package com.divinity.hmedia.rgrbillionaire.init;
 import com.divinity.hmedia.rgrbillionaire.RGRBillionaire;
 import com.divinity.hmedia.rgrbillionaire.cap.BillionaireHolderAttacher;
 import dev._100media.hundredmediamorphs.HundredMediaMorphsMod;
-import dev._100media.hundredmediamorphs.morph.AdvancedGeoPlayerMorph;
 import dev._100media.hundredmediamorphs.morph.Morph;
 import dev._100media.hundredmediamorphs.skin.SkinType;
 import net.minecraft.resources.ResourceLocation;
@@ -24,10 +23,10 @@ public class MorphInit {
             })
     ));
     public static final RegistryObject<Morph> TIGHT_BUDGET_TEEN = MORPHS.register("tight_budget_teen", () -> new Morph(new Morph.Properties<>()
-            .skinType(SkinType.DEFAULT)
+            .skinType(SkinType.SLIM)
             .maxHealth(30)
             .swingDuration(7)
-            .dimensions(2, 2)
+            .dimensions(0.6f, 1.8f)
             .morphedTo(entity -> {
                 BillionaireHolderAttacher.getHolder(entity).ifPresent(h -> h.setMoneyCap(75_000));
                 entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 0, false, false, false));
@@ -41,7 +40,7 @@ public class MorphInit {
     public static final RegistryObject<Morph> MIDDLE_CLASS_MAN = MORPHS.register("middle_class_man", () -> new Morph(new Morph.Properties<>()
             .maxHealth(50)
             .swingDuration(7)
-            .dimensions(2, 2)
+            .dimensions(0.6f, 1.8f)
             .morphedTo(entity -> {
                 BillionaireHolderAttacher.getHolder(entity).ifPresent(h -> h.setMoneyCap(500_000));
                 entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 1, false, false, false));
@@ -53,10 +52,9 @@ public class MorphInit {
             })
     ));
     public static final RegistryObject<Morph> MULTI_MILLIONAIRE = MORPHS.register("multi_millionaire", () -> new Morph(new Morph.Properties<>()
-            .skinType(SkinType.DEFAULT)
             .maxHealth(70)
             .swingDuration(7)
-            .dimensions(2, 2)
+            .dimensions(0.6f, 1.8f)
             .morphedTo(entity -> {
                 BillionaireHolderAttacher.getHolder(entity).ifPresent(h -> h.setMoneyCap(10_000_000));
                 entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 2, false, false, false));
