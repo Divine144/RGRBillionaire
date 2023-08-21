@@ -43,10 +43,9 @@ public class BatonItem extends SimpleAnimatedItem {
                                     poseStack.translate(0.4, -0.15, 0.55);
 
                                 }
-                                case FIRST_PERSON_LEFT_HAND, FIRST_PERSON_RIGHT_HAND -> {
+                                case FIRST_PERSON_LEFT_HAND, FIRST_PERSON_RIGHT_HAND, GROUND -> {
                                     poseStack.scale(0.6f, 0.6f, 0.6f);
                                 }
-
                             }
                             super.renderByItem(stack, transformType, poseStack, bufferSource, packedLight, packedOverlay);
                             poseStack.popPose();
