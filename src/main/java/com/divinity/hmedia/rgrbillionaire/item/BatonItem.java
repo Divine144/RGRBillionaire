@@ -55,8 +55,8 @@ public class BatonItem extends SimpleAnimatedItem {
                         @Override
                         protected void renderInGui(ItemDisplayContext transformType, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
                             poseStack.pushPose();
-                            poseStack.scale(0.6f, 0.5f, 0.6f);
-                            poseStack.translate(0.35, -0.5, -0.5);
+                            poseStack.scale(0.5f, 0.4f, 0.5f);
+                            poseStack.translate(0.5, -0.5, -0.5);
                             super.renderInGui(transformType, poseStack, bufferSource, packedLight, packedOverlay);
                             poseStack.popPose();
                         }

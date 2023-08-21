@@ -93,7 +93,7 @@
 					]
 				},
 				{
-					"name": "leftarm",
+					"name": "left_arm",
 					"parent": "chestplate",
 					"pivot": [-9, 43.5, 0.5],
 					"cubes": [
@@ -117,7 +117,7 @@
 					"pivot": [9, 43.5, 0.5]
 				},
 				{
-					"name": "rightarm",
+					"name": "right_arm",
 					"parent": "bone21",
 					"pivot": [9, 43.5, 0.5],
 					"cubes": [
@@ -136,7 +136,7 @@
 					]
 				},
 				{
-					"name": "rightleg",
+					"name": "right_leg",
 					"parent": "body",
 					"pivot": [1.5, 21, 1],
 					"cubes": [
@@ -156,7 +156,7 @@
 				},
 				{
 					"name": "bone6",
-					"parent": "rightleg",
+					"parent": "right_leg",
 					"pivot": [19.5, 0, 1.5]
 				},
 				{
@@ -360,7 +360,7 @@
 					]
 				},
 				{
-					"name": "leftleg",
+					"name": "left_leg",
 					"parent": "body",
 					"pivot": [-1.5, 21, 1],
 					"cubes": [
@@ -380,7 +380,7 @@
 				},
 				{
 					"name": "bone",
-					"parent": "leftleg",
+					"parent": "left_leg",
 					"pivot": [-18.5, 0, 1.5]
 				},
 				{

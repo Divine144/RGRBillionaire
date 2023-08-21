@@ -3,7 +3,9 @@ package com.divinity.hmedia.rgrbillionaire.item;
 import com.divinity.hmedia.rgrbillionaire.RGRBillionaire;
 import com.divinity.hmedia.rgrbillionaire.cap.BillionaireHolderAttacher;
 import com.divinity.hmedia.rgrbillionaire.init.AbilityInit;
+import com.divinity.hmedia.rgrbillionaire.init.MarkerInit;
 import com.divinity.hmedia.rgrbillionaire.init.SkillInit;
+import dev._100media.hundredmediaabilities.capability.MarkerHolderAttacher;
 import dev._100media.hundredmediageckolib.item.animated.AnimatedItemProperties;
 import dev._100media.hundredmediageckolib.item.animated.SimpleAnimatedItem;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -56,7 +58,7 @@ public class MugOfCoffeeItem extends SimpleAnimatedItem {
             player.eat(pLevel, pFood.copy());
             if (!player.level().isClientSide) {
                 BillionaireHolderAttacher.getHolder(player).ifPresent(h -> h.setMugEatTicks(30 * 20));
-                SkillInit.unlockAbility(player, AbilityInit.DOUBLE_JUMP.get());
+                MarkerHolderAttacher.getMarkerHolder(player).ifPresent(h -> h.addMarker(MarkerInit.MUG_OF_COFFEE.get(), true));
             }
         }
         return pFood;

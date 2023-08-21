@@ -5,6 +5,8 @@ import com.divinity.hmedia.rgrbillionaire.init.MarkerInit;
 import com.divinity.hmedia.rgrbillionaire.init.MenuInit;
 import com.divinity.hmedia.rgrbillionaire.init.MorphInit;
 import com.divinity.hmedia.rgrbillionaire.network.ClientHandler;
+import com.divinity.hmedia.rgrbillionaire.network.NetworkHandler;
+import com.divinity.hmedia.rgrbillionaire.network.serverbound.MugOfCoffeePacket;
 import com.divinity.hmedia.rgrbillionaire.util.BillionaireUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev._100media.hundredmediaabilities.capability.MarkerHolderAttacher;
@@ -20,6 +22,7 @@ import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.lwjgl.glfw.GLFW;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ClientForgeEvents {
@@ -41,6 +44,16 @@ public class ClientForgeEvents {
                     }
                 }
             });
+        }
+        if (event.getKey() == GLFW.GLFW_KEY_SPACE && event.getAction() == GLFW.GLFW_PRESS) {
+            if (player != null) {
+                var holder = MarkerHolderAttacher.getMarkerHolderUnwrap(player);
+                if (holder != null) {
+                    if (holder.hasMarker(MarkerInit.MUG_OF_COFFEE.get()) && !player.onGround()) {
+                        NetworkHandler.INSTANCE.sendToServer(new MugOfCoffeePacket());
+                    }
+                }
+            }
         }
     }
 

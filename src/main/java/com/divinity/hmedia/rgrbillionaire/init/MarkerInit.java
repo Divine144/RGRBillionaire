@@ -14,4 +14,6 @@ public class MarkerInit {
     public static final RegistryObject<Marker> NO_BASE_PRODUCTION_RATE = MARKERS.register("no_base_production_rate", Marker::new);
     public static final RegistryObject<Marker> TAX_FORM = MARKERS.register("tax_form", Marker::new);
     public static final RegistryObject<Marker> BILLIONAIRES_CLUB = MARKERS.register("billionaires_club", Marker::new);
+
+    public static final RegistryObject<Marker> MUG_OF_COFFEE = MARKERS.register("mug_of_coffee", Marker::new);
 }

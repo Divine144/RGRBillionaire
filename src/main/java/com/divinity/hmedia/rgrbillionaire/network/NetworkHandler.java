@@ -35,6 +35,7 @@ public class NetworkHandler {
                 .add(UpdateMarketOfferPacket::register)
                 .add(SyncCryptoBlockPacket::register)
                 .add(FinishedTaxForumPacket::register)
+                .add(MugOfCoffeePacket::register)
                 .build();
         SimpleEntityCapabilityStatusPacket.registerRetriever(BillionaireHolderAttacher.EXAMPLE_RL, BillionaireHolderAttacher::getHolderUnwrap);
         SimpleLevelCapabilityStatusPacket.registerRetriever(GlobalLevelHolderAttacher.EXAMPLE_GLOBAL_LEVEL_CAPABILITY_RL, GlobalLevelHolderAttacher::getGlobalLevelCapabilityUnwrap);

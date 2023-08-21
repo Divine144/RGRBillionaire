@@ -19,6 +19,8 @@ import com.google.common.collect.Multimap;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import dev._100media.hundredmediaabilities.capability.MarkerHolderAttacher;
+import dev._100media.hundredmediamorphs.capability.MorphHolderAttacher;
+import dev._100media.hundredmediamorphs.morph.Morph;
 import dev._100media.hundredmediaquests.cap.QuestHolderAttacher;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
@@ -47,6 +49,7 @@ import net.minecraft.world.level.levelgen.structure.BuiltinStructures;
 import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
@@ -54,6 +57,7 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.AdvancementEvent;
 import net.minecraftforge.event.entity.player.CriticalHitEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.Event;
@@ -200,7 +204,9 @@ public class CommonForgeEvents {
                             attackDistance.setBaseValue(attackDistance.getAttribute().getDefaultValue());
                         }
                     }
-                    SkillInit.removeAbility(player, AbilityInit.DOUBLE_JUMP.get());
+                    if (marker != null) {
+                        marker.removeMarker(MarkerInit.MUG_OF_COFFEE.get(), true);
+                    }
                 }
                 if (!h.isCanDoubleJump()) {
                     if (h.getMugEatTicks() > 0 && player.onGround()) {
@@ -341,6 +347,31 @@ public class CommonForgeEvents {
         if (player instanceof ServerPlayer serverPlayer) {
             if (serverPlayer.getItemBySlot(EquipmentSlot.CHEST).is(ItemInit.GOLDEN_JETPACK.get())) {
                 event.setResult(Event.Result.ALLOW);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onClone(PlayerEvent.Clone event) {
+        if (event.getEntity() instanceof ServerPlayer entity) {
+            var morph = MorphHolderAttacher.getCurrentMorphUnwrap(entity);
+            if (morph != null) {
+                if (morph == MorphInit.TIGHT_BUDGET_TEEN.get()) {
+                    entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 0, false, false, false));
+                    entity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, -1, 0, false, false, false));
+                }
+                else if (morph == MorphInit.MIDDLE_CLASS_MAN.get()) {
+                    entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 1, false, false, false));
+                    entity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, -1, 1, false, false, false));
+                }
+                else if (morph == MorphInit.MULTI_MILLIONAIRE.get()) {
+                    entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 2, false, false, false));
+                    entity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, -1, 2, false, false, false));
+                }
+                else if (morph == MorphInit.THE_BILLIONAIRE.get()) {
+                    entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 3, false, false, false));
+                    entity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, -1, 3, false, false, false));
+                }
             }
         }
     }

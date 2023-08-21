@@ -40,7 +40,7 @@ public class RocketToMarsQuest extends Quest {
                 return "quest.goal.rgrbillionaire.kill_player_fall_damage";
             }
         });
-        goals.add(new LootEndShipGoal(2));
+        goals.add(new LootEndShipGoal(1));
         return goals;
     }
 

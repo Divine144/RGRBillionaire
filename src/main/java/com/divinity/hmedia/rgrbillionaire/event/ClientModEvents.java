@@ -8,6 +8,7 @@ import com.divinity.hmedia.rgrbillionaire.client.screen.ButlerInventoryScreen;
 import com.divinity.hmedia.rgrbillionaire.client.screen.MarketplaceScreen;
 import com.divinity.hmedia.rgrbillionaire.client.screen.MinebookScreen;
 import com.divinity.hmedia.rgrbillionaire.client.screen.TaxForumScreen;
+import com.divinity.hmedia.rgrbillionaire.entity.RocketEntity;
 import com.divinity.hmedia.rgrbillionaire.init.*;
 import com.divinity.hmedia.rgrbillionaire.item.DollarFishingPoleItem;
 import com.mojang.blaze3d.platform.InputConstants;
@@ -287,6 +288,13 @@ public class ClientModEvents {
                 public ResourceLocation getTextureResource(T animatable, @Nullable AbstractClientPlayer player) {
                     return new ResourceLocation(RGRBillionaire.MODID, "textures/entity/" + name + ".png");
                 }
+
+                @Override
+                public void setupAnim(AbstractClientPlayer pEntity, float pLimbSwing, float pLimbSwingAmount, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
+                    if (!this.crouching) {
+                        super.setupAnim(pEntity, pLimbSwing, pLimbSwingAmount, pAgeInTicks, pNetHeadYaw, pHeadPitch);
+                    }
+                }
             }, animatable, scale) {
 
                 @Override
@@ -299,11 +307,13 @@ public class ClientModEvents {
 
                 @Override
                 public void render(AbstractClientPlayer player, T animatable1, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
-                    if (player.hasEffect(MobEffects.INVISIBILITY))
+                    if (player.hasEffect(MobEffects.INVISIBILITY) || player.getVehicle() instanceof RocketEntity)
                         return;
                    super.render(player, animatable1, entityYaw, partialTick, poseStack, bufferSource, packedLight);
                 }
-            };;
+
+
+            };
             renderer.addRenderLayer(new GeoPlayerArmorLayer<>(renderer) {
                 @Override
                 public @Nullable VertexConsumer renderRecursivelyPre(GeoBone bone, PoseStack poseStack, AbstractClientPlayer entity, T animatable, VertexConsumer vertexConsumer, int packedLight, int overlay, float red, float green, float blue, float alpha) {

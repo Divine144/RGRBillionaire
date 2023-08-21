@@ -5,6 +5,7 @@ import com.divinity.hmedia.rgrbillionaire.init.SoundInit;
 import com.divinity.hmedia.rgrbillionaire.util.BillionaireUtils;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -44,7 +45,7 @@ public class RocketEntity extends PathfinderMob implements GeoEntity {
 
     private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
 
-    private static int CONSTRUCTION_TIME = 2000;
+    private static int CONSTRUCTION_TIME = 1;
     protected static final EntityDataAccessor<Boolean> CAN_TAKEOFF = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.BOOLEAN);
     protected static final EntityDataAccessor<Boolean> CAUSED_DESTRUCTION = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.BOOLEAN);
 
@@ -103,11 +104,14 @@ public class RocketEntity extends PathfinderMob implements GeoEntity {
                     entityData.set(CAUSED_DESTRUCTION, true);
                 }
             }
-            if (this.canTakeOff()) {
+            if (this.isVehicle()) {
                 if (this.tickCount % 20 == 0) {
                     level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundInit.ROCKET_READY.get(), SoundSource.PLAYERS, 1, 1);
                 }
+                Vec3 vector3d1 = this.getDeltaMovement();
+                level.sendParticles(ParticleTypes.LARGE_SMOKE, this.getX() - vector3d1.x, this.getY() - 0.6 - vector3d1.y, this.getZ() + 0.6 - vector3d1.z, 5, 0, 0, 0, 0);
             }
+
         }
     }
 
@@ -149,9 +153,15 @@ public class RocketEntity extends PathfinderMob implements GeoEntity {
             }
             else {
                 if (BillionaireUtils.hasAnyMorph(pPlayer)) {
-                    pPlayer.sendSystemMessage(Component.literal("Space Rocket: ").withStyle(ChatFormatting.WHITE)
-                            .append(Component.literal("Ready For Takeoff!").withStyle(ChatFormatting.BLUE, ChatFormatting.BOLD)));
-                    pPlayer.startRiding(this);
+                    if (BillionaireUtils.hasEnoughMoney(pPlayer, 1_000_000_000)) {
+                        pPlayer.sendSystemMessage(Component.literal("Space Rocket: ").withStyle(ChatFormatting.WHITE)
+                                .append(Component.literal("Ready For Takeoff!").withStyle(ChatFormatting.BLUE, ChatFormatting.BOLD)));
+                        pPlayer.startRiding(this);
+                    }
+                    else {
+                        pPlayer.sendSystemMessage(Component.literal("Space Rocket: ").withStyle(ChatFormatting.WHITE)
+                                .append(Component.literal("Access Denied: Too Poor!").withStyle(ChatFormatting.RED, ChatFormatting.BOLD)));
+                    }
                 }
                 else {
                     pPlayer.sendSystemMessage(Component.literal("Space Rocket: ").withStyle(ChatFormatting.WHITE)
@@ -192,7 +202,7 @@ public class RocketEntity extends PathfinderMob implements GeoEntity {
                 if (this.isControlledByLocalInstance()) {
                     if (entityData.get(CAN_TAKEOFF)) {
                         super.travel(new Vec3(0, 1, 0));
-                        this.setDeltaMovement(0, 1.5, 0);
+                        this.setDeltaMovement(0, 1, 0);
                     }
                 }
                 else {

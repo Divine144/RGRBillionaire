@@ -12,6 +12,7 @@ public class SoundInit {
 
     public static final RegistryObject<SoundEvent> BUTLER_IDLE = sound("butler_idle");
     public static final RegistryObject<SoundEvent> COIN_CANNON_SHOOT = sound("coin_cannon_shoot");
+    public static final RegistryObject<SoundEvent> MARKET_CRASHER = sound("market_crasher");
     public static final RegistryObject<SoundEvent> GRAND_GIVEAWAY = sound("grand_giveaway");
     public static final RegistryObject<SoundEvent> ROCKET_READY = sound("rocket_ready");
 

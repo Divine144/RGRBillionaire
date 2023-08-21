@@ -2,6 +2,7 @@ package com.divinity.hmedia.rgrbillionaire.item;
 
 import com.divinity.hmedia.rgrbillionaire.RGRBillionaire;
 import com.divinity.hmedia.rgrbillionaire.init.EntityInit;
+import com.divinity.hmedia.rgrbillionaire.init.SoundInit;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import dev._100media.hundredmediageckolib.item.animated.AnimatedItemProperties;
@@ -9,6 +10,7 @@ import dev._100media.hundredmediageckolib.item.animated.SimpleAnimatedItem;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
@@ -96,6 +98,7 @@ public class MarketCrasherItem extends SimpleAnimatedItem {
                 entity.shootFromRotation(player, player.getXRot(), player.getYRot(), 0, 0.65F, 0);
                 player.level().addFreshEntity(entity);
                 player.getCooldowns().addCooldown(this, 20);
+                player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundInit.MARKET_CRASHER.get(), SoundSource.PLAYERS, 0.3f, 1);
             }
         }
     }

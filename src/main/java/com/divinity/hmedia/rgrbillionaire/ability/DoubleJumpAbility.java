@@ -22,6 +22,8 @@ public class DoubleJumpAbility extends Ability {
         super.executePressed(level, player);
     }
 
+
+
     @Override
     public boolean isHiddenAbility() {
         return true;
