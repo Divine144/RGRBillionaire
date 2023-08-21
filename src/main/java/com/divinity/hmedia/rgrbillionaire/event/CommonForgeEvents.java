@@ -352,7 +352,7 @@ public class CommonForgeEvents {
     }
 
     @SubscribeEvent
-    public static void onClone(PlayerEvent.Clone event) {
+    public static void onJoinLevel(EntityJoinLevelEvent event) {
         if (event.getEntity() instanceof ServerPlayer entity) {
             var morph = MorphHolderAttacher.getCurrentMorphUnwrap(entity);
             if (morph != null) {
@@ -374,6 +374,11 @@ public class CommonForgeEvents {
                 }
             }
         }
+    }
+
+    @SubscribeEvent
+    public static void onClone(PlayerEvent.Clone event) {
+
     }
 
     @SubscribeEvent
