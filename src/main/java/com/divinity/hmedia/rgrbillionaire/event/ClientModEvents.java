@@ -124,32 +124,12 @@ public class ClientModEvents {
         createAdvancedMorphRenderer(MorphInit.MULTI_MILLIONAIRE.get(), "multi_millionaire", new MotionAttackAnimatable(), 1f);
         createAdvancedMorphRenderer(MorphInit.THE_BILLIONAIRE.get(), "the_billionaire", new MotionAttackAnimatable() {
             @Override
-            protected PlayState attackAnimationEvent(AnimationState<? extends MotionAttackAnimatable> state) {
-                AnimationController<?> controller = state.getController();
-                if (state.getData(DataTickets.ENTITY) instanceof AbstractClientPlayer player) {
-                    controller.transitionLength(0);
-                    if (player.swingTime > 0) {
-                        controller.setAnimation(RawAnimation.begin().thenLoop("attack"));
-                        return PlayState.CONTINUE;
-                    }
-                    motionAnimationEvent(state);
-                }
-                return PlayState.CONTINUE;
-            }
-
-            @Override
             protected PlayState motionAnimationEvent(AnimationState<? extends MotionAttackAnimatable> state) {
                 AnimationController<?> controller = state.getController();
                 if (state.getData(DataTickets.ENTITY) instanceof AbstractClientPlayer player) {
                     controller.transitionLength(0);
                     if (player.getVehicle() != null) {
                         controller.setAnimation(RawAnimation.begin().thenLoop("sit"));
-                    }
-                    else if (state.isMoving()) {
-                        controller.setAnimation(RawAnimation.begin().thenLoop(player.isSprinting() ? "run" : "walk"));
-                    }
-                    else {
-                        controller.setAnimation(RawAnimation.begin().thenLoop("idle"));
                     }
                 }
                 return PlayState.CONTINUE;
@@ -288,39 +268,10 @@ public class ClientModEvents {
                 public ResourceLocation getTextureResource(T animatable, @Nullable AbstractClientPlayer player) {
                     return new ResourceLocation(RGRBillionaire.MODID, "textures/entity/" + name + ".png");
                 }
-
-
-//                @Override
-//                public void setupHeadAnim(AbstractClientPlayer pEntity, float pLimbSwing, float pLimbSwingAmount, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
-//                    var morph = MorphHolderAttacher.getCurrentMorphUnwrap(pEntity);
-//                    if (morph != null && morph == MorphInit.THE_BILLIONAIRE.get()) {
-//                        boolean flag = pEntity.getFallFlyingTicks() > 4;
-//                        boolean flag1 = pEntity.isVisuallySwimming();
-//                        this.head.setRotY(pNetHeadYaw * ((float) Math.PI / 180F));
-//                        if (flag) {
-//                            this.head.setRotX(-(-(float) Math.PI / 4F));
-//                        }
-//                        else if (this.swimAmount > 0.0F) {
-//                            if (flag1) {
-//                                this.head.setRotX(-this.rotlerpRad(this.swimAmount, this.head.getRotX(), (-(float) Math.PI / 4F)));
-//                            }
-//                            else {
-//                                this.head.setRotX(-this.rotlerpRad(this.swimAmount, this.head.getRotX(), pHeadPitch * ((float) Math.PI / 180F)));
-//                            }
-//                        }
-//                        else {
-//                            this.head.setRotX(pHeadPitch * ((float) Math.PI / 180F));
-//                        }
-//                    }
-//                    else super.setupHeadAnim(pEntity, pLimbSwing, pLimbSwingAmount, pAgeInTicks, pNetHeadYaw, pHeadPitch);
-//                }
             }, animatable, scale) {
 
                 @Override
                 protected @Nullable VertexConsumer handleArmorRenderingForBone(GeoBone bone, PoseStack stack, VertexConsumer vertexConsumer, int packedLightIn, int packedOverlayIn, ResourceLocation currentTexture, ItemStack armorForBone, EquipmentSlot boneSlot) {
-                    if (!armorForBone.is(ItemInit.GOLDEN_JETPACK.get())) {
-                        return super.handleArmorRenderingForBone(bone, stack, vertexConsumer, packedLightIn, packedOverlayIn, currentTexture, armorForBone, boneSlot);
-                    }
                     return null;
                 }
 
@@ -330,8 +281,6 @@ public class ClientModEvents {
                         return;
                    super.render(player, animatable1, entityYaw, partialTick, poseStack, bufferSource, packedLight);
                 }
-
-
             };
             renderer.addRenderLayer(new GeoPlayerArmorLayer<>(renderer) {
                 @Override
