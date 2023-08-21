@@ -289,40 +289,31 @@ public class ClientModEvents {
                     return new ResourceLocation(RGRBillionaire.MODID, "textures/entity/" + name + ".png");
                 }
 
-                @Override
-                public void setupAnim(AbstractClientPlayer pEntity, float pLimbSwing, float pLimbSwingAmount, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
-                    if (MorphHolderAttacher.getCurrentMorphUnwrap(pEntity) == MorphInit.THE_BILLIONAIRE.get()) {
-                        if (!this.crouching) {
-                            super.setupAnim(pEntity, pLimbSwing, pLimbSwingAmount, pAgeInTicks, pNetHeadYaw, pHeadPitch);
-                        }
-                    }
-                    else super.setupAnim(pEntity, pLimbSwing, pLimbSwingAmount, pAgeInTicks, pNetHeadYaw, pHeadPitch);
-                }
 
-                @Override
-                public void setupHeadAnim(AbstractClientPlayer pEntity, float pLimbSwing, float pLimbSwingAmount, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
-                    var morph = MorphHolderAttacher.getCurrentMorphUnwrap(pEntity);
-                    if (morph != null && morph == MorphInit.THE_BILLIONAIRE.get()) {
-                        boolean flag = pEntity.getFallFlyingTicks() > 4;
-                        boolean flag1 = pEntity.isVisuallySwimming();
-                        this.head.setRotY(pNetHeadYaw * ((float) Math.PI / 180F));
-                        if (flag) {
-                            this.head.setRotX(-(-(float) Math.PI / 4F));
-                        }
-                        else if (this.swimAmount > 0.0F) {
-                            if (flag1) {
-                                this.head.setRotX(-this.rotlerpRad(this.swimAmount, this.head.getRotX(), (-(float) Math.PI / 4F)));
-                            }
-                            else {
-                                this.head.setRotX(-this.rotlerpRad(this.swimAmount, this.head.getRotX(), pHeadPitch * ((float) Math.PI / 180F)));
-                            }
-                        }
-                        else {
-                            this.head.setRotX(pHeadPitch * ((float) Math.PI / 180F));
-                        }
-                    }
-                    else super.setupHeadAnim(pEntity, pLimbSwing, pLimbSwingAmount, pAgeInTicks, pNetHeadYaw, pHeadPitch);
-                }
+//                @Override
+//                public void setupHeadAnim(AbstractClientPlayer pEntity, float pLimbSwing, float pLimbSwingAmount, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
+//                    var morph = MorphHolderAttacher.getCurrentMorphUnwrap(pEntity);
+//                    if (morph != null && morph == MorphInit.THE_BILLIONAIRE.get()) {
+//                        boolean flag = pEntity.getFallFlyingTicks() > 4;
+//                        boolean flag1 = pEntity.isVisuallySwimming();
+//                        this.head.setRotY(pNetHeadYaw * ((float) Math.PI / 180F));
+//                        if (flag) {
+//                            this.head.setRotX(-(-(float) Math.PI / 4F));
+//                        }
+//                        else if (this.swimAmount > 0.0F) {
+//                            if (flag1) {
+//                                this.head.setRotX(-this.rotlerpRad(this.swimAmount, this.head.getRotX(), (-(float) Math.PI / 4F)));
+//                            }
+//                            else {
+//                                this.head.setRotX(-this.rotlerpRad(this.swimAmount, this.head.getRotX(), pHeadPitch * ((float) Math.PI / 180F)));
+//                            }
+//                        }
+//                        else {
+//                            this.head.setRotX(pHeadPitch * ((float) Math.PI / 180F));
+//                        }
+//                    }
+//                    else super.setupHeadAnim(pEntity, pLimbSwing, pLimbSwingAmount, pAgeInTicks, pNetHeadYaw, pHeadPitch);
+//                }
             }, animatable, scale) {
 
                 @Override
