@@ -291,9 +291,12 @@ public class ClientModEvents {
 
                 @Override
                 public void setupAnim(AbstractClientPlayer pEntity, float pLimbSwing, float pLimbSwingAmount, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
-                    if (!this.crouching) {
-                        super.setupAnim(pEntity, pLimbSwing, pLimbSwingAmount, pAgeInTicks, pNetHeadYaw, pHeadPitch);
+                    if (MorphHolderAttacher.getCurrentMorphUnwrap(pEntity) == MorphInit.THE_BILLIONAIRE.get()) {
+                        if (!this.crouching) {
+                            super.setupAnim(pEntity, pLimbSwing, pLimbSwingAmount, pAgeInTicks, pNetHeadYaw, pHeadPitch);
+                        }
                     }
+                    else super.setupAnim(pEntity, pLimbSwing, pLimbSwingAmount, pAgeInTicks, pNetHeadYaw, pHeadPitch);
                 }
 
                 @Override
