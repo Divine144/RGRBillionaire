@@ -142,7 +142,7 @@ dependencies {
     hundredMedia.addJarJarDep('dev._100media.hundredmediamorphs:hundredmediamorphs', hundredmediamorphs_version, hundredmediamorphs_version_range, 'fat', "1.20.1")
 
     // Geckolib
-    hundredMedia.addJarJarDep('software.bernie.geckolib:geckolib-forge-1.20', geckolib_version, geckolib_version_range, null, null)
+    hundredMedia.addJarJarDep("software.bernie.geckolib:geckolib-forge-${minecraft_version}", geckolib_version, geckolib_version_range, null, null)
 
     // 100 Media Geckolib
     hundredMedia.addJarJarDep('dev._100media.hundredmediageckolib:hundredmediageckolib', hundredmediageckolib_version, hundredmediageckolib_version_range, null, '1.20.1')
