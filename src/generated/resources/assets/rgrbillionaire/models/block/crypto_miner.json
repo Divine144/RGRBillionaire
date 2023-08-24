@@ -1,6 +1,7 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "rgrbillionaire:block/crypto_miner"
+    "all": "rgrbillionaire:block/crypto_miner",
+    "particle": "minecraft:block/stone"
   }
 }

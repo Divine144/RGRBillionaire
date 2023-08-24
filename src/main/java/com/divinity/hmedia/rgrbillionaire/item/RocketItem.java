@@ -1,5 +1,6 @@
 package com.divinity.hmedia.rgrbillionaire.item;
 
+import com.divinity.hmedia.rgrbillionaire.cap.GlobalLevelHolderAttacher;
 import com.divinity.hmedia.rgrbillionaire.entity.RocketEntity;
 import com.divinity.hmedia.rgrbillionaire.init.EntityInit;
 import dev._100media.hundredmediageckolib.item.animated.AnimatedItemProperties;
@@ -30,6 +31,10 @@ public class RocketItem extends SimpleAnimatedItem {
                 RocketEntity entity = new RocketEntity(EntityInit.ROCKET_ENTITY.get(), serverPlayer.serverLevel());
                 entity.setPos(blockpos.getX(), blockpos.getY(), blockpos.getZ());
                 serverPlayer.level().addFreshEntity(entity);
+                var holder = GlobalLevelHolderAttacher.getGlobalLevelCapabilityUnwrap(serverPlayer.level());
+                if (holder != null) {
+                    holder.setInitialDestructionPos(blockpos);
+                }
                 stack.shrink(1);
                 return InteractionResult.CONSUME;
             }

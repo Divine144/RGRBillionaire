@@ -8,6 +8,8 @@ import dev._100media.hundredmediamorphs.skin.SkinType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -17,13 +19,13 @@ public class MorphInit {
     public static final RegistryObject<Morph> BROKE_BABY = MORPHS.register("broke_baby", () -> new Morph(new Morph.Properties<>()
             .maxHealth(10)
             .swingDuration(7)
-            .dimensions(1, 1)
+            .dimensions(0.75f, 0.75f)
+            .eyeHeight(0.85f)
             .morphedTo(entity -> {
                 BillionaireHolderAttacher.getHolder(entity).ifPresent(h -> h.setMoneyCap(1_000));
             })
     ));
     public static final RegistryObject<Morph> TIGHT_BUDGET_TEEN = MORPHS.register("tight_budget_teen", () -> new Morph(new Morph.Properties<>()
-            .skinType(SkinType.SLIM)
             .maxHealth(30)
             .swingDuration(7)
             .dimensions(0.6f, 1.8f)
@@ -73,10 +75,18 @@ public class MorphInit {
                 BillionaireHolderAttacher.getHolder(entity).ifPresent(h -> h.setMoneyCap(1_000_000_000));
                 entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 3, false, false, false));
                 entity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, -1, 3, false, false, false));
+                var reachDistance = entity.getAttribute(ForgeMod.BLOCK_REACH.get());
+                if (reachDistance != null) {
+                    reachDistance.setBaseValue(reachDistance.getAttribute().getDefaultValue() + 3);
+                }
             })
             .demorph(entity -> {
                 entity.removeEffect(MobEffects.MOVEMENT_SPEED);
                 entity.removeEffect(MobEffects.DAMAGE_BOOST);
+                var reachDistance = entity.getAttribute(ForgeMod.BLOCK_REACH.get());
+                if (reachDistance != null) {
+                    reachDistance.setBaseValue(reachDistance.getAttribute().getDefaultValue());
+                }
             })
     ));
 }

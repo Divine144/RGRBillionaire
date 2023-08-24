@@ -25,6 +25,7 @@ import java.util.function.Consumer;
 
 public class MugOfCoffeeItem extends SimpleAnimatedItem {
 
+
     public MugOfCoffeeItem(AnimatedItemProperties pProperties) {
         super(pProperties);
     }

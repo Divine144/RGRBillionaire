@@ -175,7 +175,7 @@ public class AIRoboButlerEntity extends PathfinderMob implements GeoEntity, Cont
                 return !AIRoboButlerEntity.this.isSitting() && super.canContinueToUse();
             }
         });
-        this.goalSelector.addGoal(2, new WaterAvoidingRandomStrollGoal(this, 0.5D, 0.5F) {
+        this.goalSelector.addGoal(2, new WaterAvoidingRandomStrollGoal(this, 0.5D, 1F) {
             @Override
             public boolean canUse() {
                 return super.canUse() && !AIRoboButlerEntity.this.isSitting();

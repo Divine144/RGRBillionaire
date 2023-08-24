@@ -38,7 +38,7 @@ public class CurrencyProjectileEntity extends ThrowableProjectile implements Geo
     public void tick() {
         super.tick();
         if (!level().isClientSide) {
-            if (this.getOwner() != null && this.distanceTo(getOwner()) >= 25) {
+            if (this.getOwner() != null && this.distanceTo(getOwner()) >= 50) {
                 discard();
             }
         }
@@ -46,6 +46,7 @@ public class CurrencyProjectileEntity extends ThrowableProjectile implements Geo
 
     @Override
     protected void onHit(HitResult pResult) {
+        if (pResult instanceof EntityHitResult result && result.getEntity() == this.getOwner()) return;
         super.onHit(pResult);
         if (!level().isClientSide) {
             this.onHit.accept(this, pResult);
@@ -62,9 +63,7 @@ public class CurrencyProjectileEntity extends ThrowableProjectile implements Geo
     }
 
     @Override
-    protected void defineSynchedData() {
-
-    }
+    protected void defineSynchedData() {}
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {}

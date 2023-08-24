@@ -1,9 +1,12 @@
 package com.divinity.hmedia.rgrbillionaire.entity;
 
+import com.divinity.hmedia.rgrbillionaire.cap.BillionaireHolderAttacher;
+import com.divinity.hmedia.rgrbillionaire.util.BillionaireUtils;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
@@ -29,7 +32,7 @@ public class StockGraphEntity extends ThrowableProjectile implements GeoEntity {
     public void tick() {
         super.tick();
         if (!level().isClientSide) {
-            if (this.getOwner() != null && this.distanceTo(getOwner()) >= 25) {
+            if (this.getOwner() != null && this.distanceTo(getOwner()) >= 50) {
                 discard();
             }
         }
@@ -61,9 +64,10 @@ public class StockGraphEntity extends ThrowableProjectile implements GeoEntity {
             if (living instanceof ServerPlayer player) {
                 player.hurtMarked = true;
             }
-            if (getOwner() instanceof LivingEntity l) {
-                living.move(MoverType.PLAYER, l.getLookAngle().multiply(60, 1, 60).add(0, 55, 0));
-                living.hurt(this.damageSources().mobProjectile(this, l), 2);
+            if (getOwner() instanceof Player player) {
+                living.move(MoverType.PLAYER, player.getLookAngle().multiply(60, 1, 60).add(0, 55, 0));
+                living.hurt(this.damageSources().mobProjectile(this, player), 2);
+                BillionaireUtils.addMoney(player, 5000);
             }
         }
     }

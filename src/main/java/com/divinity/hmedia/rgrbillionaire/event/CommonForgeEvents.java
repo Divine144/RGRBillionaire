@@ -10,6 +10,8 @@ import com.divinity.hmedia.rgrbillionaire.item.PortableJailItem;
 import com.divinity.hmedia.rgrbillionaire.item.SwordOfTruthItem;
 import com.divinity.hmedia.rgrbillionaire.menu.MinebookMenu;
 import com.divinity.hmedia.rgrbillionaire.menu.TaxForumMenu;
+import com.divinity.hmedia.rgrbillionaire.network.NetworkHandler;
+import com.divinity.hmedia.rgrbillionaire.network.clientbound.SyncCryptoBlockPacket;
 import com.divinity.hmedia.rgrbillionaire.quest.goal.AquireAdvancementGoal;
 import com.divinity.hmedia.rgrbillionaire.quest.goal.LootDesertTempleGoal;
 import com.divinity.hmedia.rgrbillionaire.quest.goal.LootEndShipGoal;
@@ -27,7 +29,9 @@ import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -39,11 +43,9 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.AbstractChestBlock;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.levelgen.structure.BuiltinStructures;
 import net.minecraft.world.level.levelgen.structure.StructureType;
@@ -64,6 +66,7 @@ import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.network.PacketDistributor;
 
 import java.util.UUID;
 
@@ -161,7 +164,68 @@ public class CommonForgeEvents {
                                 )
                         )
                 )
+                .then(Commands.literal("moneyBarUI")
+                        .then(Commands.argument("xPos", IntegerArgumentType.integer())
+                                .then(Commands.argument("yPos", IntegerArgumentType.integer())
+                                        .executes(context -> {
+                                            int x = IntegerArgumentType.getInteger(context, "xPos");
+                                            int y = IntegerArgumentType.getInteger(context, "yPos");
+                                            var holder = GlobalLevelHolderAttacher.getGlobalLevelCapabilityUnwrap(context.getSource().getLevel());
+                                            if (holder != null) {
+                                                holder.setMoneyBarX(x);
+                                                holder.setMoneyBarY(y);
+                                            }
+                                            return Command.SINGLE_SUCCESS;
+                                        })
+                                )
+                        )
+                )
+                .then(Commands.literal("toggleRocketDestruction")
+                        .executes(context -> {
+                            var holder = GlobalLevelHolderAttacher.getGlobalLevelCapabilityUnwrap(context.getSource().getLevel());
+                            if (holder != null) {
+                                holder.setDestroying(!holder.isDestroying());
+                            }
+                            return Command.SINGLE_SUCCESS;
+                        })
+                )
         );
+    }
+
+    @SubscribeEvent
+    public static void onLevelTick(TickEvent.LevelTickEvent event) {
+        if (event.phase == TickEvent.Phase.END && event.level instanceof ServerLevel level) {
+            if (level.dimension() == Level.OVERWORLD) {
+                var holder = GlobalLevelHolderAttacher.getGlobalLevelCapabilityUnwrap(level);
+                if (holder != null) {
+                    if (holder.isDestroying() && level.getServer().getTickCount() % 20 == 0) {
+                        BlockPos.MutableBlockPos pos = holder.getInitialDestructionPos().mutable();
+                        BlockPos initialBlockPos = holder.getInitialDestructionPos();
+                        int radius = holder.getDestroyRadius();
+                        for (int x = initialBlockPos.getX() - radius; x < initialBlockPos.getX() + radius; ++x) {
+                            for (int y = initialBlockPos.getY() - radius; y < initialBlockPos.getY() + radius; ++y) {
+                                for (int z = initialBlockPos.getZ() - radius; z < initialBlockPos.getZ() + radius; ++z) {
+                                    pos.set(x, y, z);
+                                    if (!level.getBlockState(pos).isAir()) {
+                                        level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+                                        if (level.getRandom().nextIntBetweenInclusive(0, 300) == 0) {
+                                            level.explode(null, pos.getX(), pos.getY(), pos.getZ(), 4F, Level.ExplosionInteraction.NONE);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (holder.getDestroyRadius() >= 200) {
+                            holder.setDestroying(false);
+                            holder.setInitialDestructionPos(BlockPos.ZERO);
+                            holder.setDestroyRadius(10);
+                            return;
+                        }
+                        holder.setDestroyRadius(holder.getDestroyRadius() + 5);
+                    }
+                }
+            }
+        }
     }
 
     @SubscribeEvent
@@ -219,6 +283,16 @@ public class CommonForgeEvents {
 
     @SubscribeEvent
     public static void onHurtEnemy(LivingHurtEvent event) {
+        if (event.getEntity() instanceof ServerPlayer hurt) {
+            int amount = (int) (hurt.getAttributes().getValue(Attributes.MAX_HEALTH) - hurt.getAttributes().getBaseValue(Attributes.MAX_HEALTH));
+            if (amount > 0) {
+                amount = (int) Mth.clamp((amount - event.getAmount()), 0, 1000);
+                Multimap<Attribute, AttributeModifier> multimap = HashMultimap.create();
+                multimap.put(Attributes.MAX_HEALTH, new AttributeModifier(MAX_HEALTH_UUID, "Temp Hearts", amount, AttributeModifier.Operation.ADDITION));
+                hurt.getAttributes().removeAttributeModifiers(multimap);
+                hurt.getAttributes().addTransientAttributeModifiers(multimap);
+            }
+        }
         if (event.getSource().getDirectEntity() instanceof ServerPlayer player) {
             if (event.getEntity() instanceof ServerPlayer hurtPlayer) {
                 var holder = MarkerHolderAttacher.getMarkerHolderUnwrap(hurtPlayer);
@@ -281,10 +355,10 @@ public class CommonForgeEvents {
                     var nextState = player.level().getBlockState(result.getBlockPos().relative(state.getValue(BlockStateProperties.HORIZONTAL_FACING).getOpposite()));
                     if (nextState.is(BlockInit.UNBREAKABLE_STONE_BRICKS.get())) {
                         BlockPos pos = result.getBlockPos();
-                        BlockPos facingWest = result.getBlockPos().relative(Direction.DOWN, 3).relative(Direction.NORTH, 3);
-                        BlockPos facingNorth = result.getBlockPos().relative(Direction.DOWN, 3).relative(Direction.WEST, 3);
-                        BlockPos facingEast = result.getBlockPos().relative(Direction.DOWN, 3).relative(Direction.NORTH, 3).relative(Direction.WEST, 6);
-                        BlockPos facingSouth = result.getBlockPos().relative(Direction.DOWN, 3).relative(Direction.WEST, 3).relative(Direction.NORTH, 6);
+                        BlockPos facingWest = result.getBlockPos().relative(Direction.DOWN, 6).relative(Direction.NORTH, 3);
+                        BlockPos facingNorth = result.getBlockPos().relative(Direction.DOWN, 6).relative(Direction.WEST, 3);
+                        BlockPos facingEast = result.getBlockPos().relative(Direction.DOWN, 6).relative(Direction.NORTH, 3).relative(Direction.WEST, 6);
+                        BlockPos facingSouth = result.getBlockPos().relative(Direction.DOWN, 6).relative(Direction.WEST, 3).relative(Direction.NORTH, 6);
                         switch (state.getValue(BlockStateProperties.HORIZONTAL_FACING)) {
                             case EAST -> pos = facingEast;
                             case WEST -> pos = facingWest;
@@ -314,6 +388,7 @@ public class CommonForgeEvents {
                         });
                     }
                 }
+
             }
         }
     }
@@ -328,7 +403,7 @@ public class CommonForgeEvents {
             }
             else if (event.getItemStack().getItem() == ItemInit.HEART.get()) {
                 Multimap<Attribute, AttributeModifier> multimap = HashMultimap.create();
-                int amount = (int) (serverPlayer.getAttributes().getValue(Attributes.MAX_HEALTH) - 20);
+                int amount = (int) (serverPlayer.getAttributes().getValue(Attributes.MAX_HEALTH) - serverPlayer.getAttributes().getBaseValue(Attributes.MAX_HEALTH));
                 multimap.put(Attributes.MAX_HEALTH, new AttributeModifier(MAX_HEALTH_UUID, "Temp Hearts", 2 + amount, AttributeModifier.Operation.ADDITION));
                 serverPlayer.getAttributes().addTransientAttributeModifiers(multimap);
                 event.getItemStack().shrink(1);

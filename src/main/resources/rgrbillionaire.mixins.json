@@ -9,6 +9,7 @@
   ],
   "client": [
     "ItemRendererMixin",
+    "ParticleEngineMixin",
     "RenderBuffersMixin"
   ],
   "minVersion": "0.8.5"

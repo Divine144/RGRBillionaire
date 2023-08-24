@@ -4,6 +4,8 @@ import com.divinity.hmedia.rgrbillionaire.RGRBillionaire;
 import com.divinity.hmedia.rgrbillionaire.cap.BillionaireHolder;
 import com.divinity.hmedia.rgrbillionaire.cap.BillionaireHolderAttacher;
 import com.divinity.hmedia.rgrbillionaire.entity.AIRoboButlerEntity;
+import com.divinity.hmedia.rgrbillionaire.network.NetworkHandler;
+import com.divinity.hmedia.rgrbillionaire.network.clientbound.PlayConfettiAnimationPacket;
 import com.divinity.hmedia.rgrbillionaire.requirement.ArmorSetSkillRequirement;
 import com.divinity.hmedia.rgrbillionaire.requirement.ItemSkillRequirementSpecial;
 import com.divinity.hmedia.rgrbillionaire.requirement.ItemTreasureMapSkillRequirement;
@@ -26,12 +28,14 @@ import dev._100media.hundredmediaquests.skill.requirements.ItemSkillRequirement;
 import dev._100media.hundredmediaquests.skill.requirements.ItemTagSkillRequirement;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorMaterials;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -73,7 +77,7 @@ public class SkillInit {
             Component.literal("Multi Millionaire"),
             Component.literal("%s Hearts, Strength %s, Speed %s".formatted(35, "III", "III")),
             Arrays.asList(
-                    new ItemSkillRequirementSpecial(() -> Items.SENTRY_ARMOR_TRIM_SMITHING_TEMPLATE, 1, "[Sentry Armor Trim Smithing Template]"),
+                    new ItemSkillRequirement(() -> Items.CRYING_OBSIDIAN, 20),
                     new ItemSkillRequirement(() -> Items.TOTEM_OF_UNDYING, 2),
                     new ItemSkillRequirement(() -> Items.MAGMA_CREAM, 10)
             ),
@@ -81,7 +85,7 @@ public class SkillInit {
     ));
     public static final RegistryObject<Skill> THE_BILLIONAIRE = SKILLS.register("the_billionaire", () -> new MorphSkill(
             Component.literal("The Billionaire"),
-            Component.literal("%s Hearts, Strength %s, Speed %s".formatted(50, "IV", "IV")),
+            Component.literal("%s Hearts, Strength %s, Speed %s, +3 Block Reach".formatted(50, "IV", "IV")),
             Arrays.asList(
                     new ItemSkillRequirement(() -> Items.DRAGON_EGG, 1),
                     new ItemSkillRequirement(() -> Items.NETHER_STAR, 1),
@@ -109,19 +113,27 @@ public class SkillInit {
             Component.literal("""
                     You create a 6 block red ring aura around yourself.
                     Players that step within this aura have their life energy sucked out quickly and are given Weakness I.
-                    The taken health of other players is given to the you, and you also generate $50/s per player within the aura.
+                    The taken health of other players is given to you, and you also generate $125/s per player within the aura.
+                    MONEY: $125/s
                     """),
             QuestInit.EXPLOIT_WORKING_CLASS
     ));
     public static final RegistryObject<Skill> GRAND_GIVEAWAY = SKILLS.register("the_grand_giveaway", () -> new QuestSkill(
             Component.literal("The Grand Giveaway"),
-            Component.literal("Summon a shower of Dollar Bills and Coins that rain in a 20 block area following you. " +
-                    "Dollar bills do 10 impact damage and coins cause a small explosion upon impact, alongside 10 impact damage."),
+            Component.literal("""
+                    Summon a shower of Dollar Bills and Coins that rain in a 20 block area following you.
+                    Dollar bills do 10 impact damage and coins cause a small explosion upon impact, alongside 10 impact damage.
+                    MONEY: $100/s
+                    """),
             QuestInit.GRAND_GIVEAWAY
     ));
     public static final RegistryObject<Skill> MARKET_CRASHER = SKILLS.register("market_crasher", () -> new QuestSkill(
             Component.literal("Market Crasher"),
-            Component.literal("A slug shotgun that shoots one long red line that looks like a rising stock graph. This projectile line knocks the entities it comes into contact with upwards and backwards into the air 60+ blocks."),
+            Component.literal("""
+            A slug shotgun that shoots one long red line that looks like a rising stock graph.
+            This projectile line knocks the entities it comes into contact with upwards and backwards into the air 60+ blocks.
+            It also gives the user $5000 per entity hit.
+            """),
             QuestInit.MARKET_CRASHER
     ));
     public static final RegistryObject<Skill> ROCKET_TO_MARS = SKILLS.register("rocket_to_mars", () -> new QuestSkill(
@@ -232,6 +244,8 @@ public class SkillInit {
             player -> {
                 MarkerHolderAttacher.getMarkerHolder(player).ifPresent(m -> {
                     m.addMarker(MarkerInit.BILLIONAIRES_CLUB.get(), true);
+                    player.level().playSound(null, player.blockPosition(), SoundInit.BILLIONAIRE_CLUB.get(), SoundSource.PLAYERS, 0.4f, 0.4f);
+                    NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new PlayConfettiAnimationPacket());
                 });
             },
             player -> {

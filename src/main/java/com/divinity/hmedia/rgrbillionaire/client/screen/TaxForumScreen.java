@@ -31,6 +31,9 @@ public class TaxForumScreen extends AbstractContainerScreen<TaxForumMenu> {
 
     protected void init() {
         super.init();
+        if (selectedGuiCounter > 0) {
+            selectedGuiCounter = 0;
+        }
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2; //
         this.addWidget(new Button.Builder(Component.empty(), p -> {

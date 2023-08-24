@@ -15,8 +15,10 @@ import dev._100media.hundredmediageckolib.item.animated.SimpleAnimatedItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -28,6 +30,16 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
+import software.bernie.geckolib.constant.DataTickets;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.Animation;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.model.DefaultedItemGeoModel;
 import software.bernie.geckolib.renderer.GeoItemRenderer;
 
@@ -35,8 +47,16 @@ import java.util.function.Consumer;
 
 public class CoinCannonItem extends SimpleAnimatedItem {
 
+    private final RawAnimation pennyAnim = RawAnimation.begin().thenLoop("quarter");
+    private final RawAnimation quarterAnim = RawAnimation.begin().thenLoop("silvercoin");
+    private final RawAnimation silverDollarAnim = RawAnimation.begin().thenLoop("goldcoin");
+    private final RawAnimation pennyToQuarter = RawAnimation.begin().then("silvercoinspin", Animation.LoopType.PLAY_ONCE).thenLoop("silvercoin");
+    private final RawAnimation quarterToSilver = RawAnimation.begin().then("goldcoinspin", Animation.LoopType.PLAY_ONCE).thenLoop("goldcoin");
+    private final RawAnimation silverToPenny = RawAnimation.begin().then("quarterspin", Animation.LoopType.PLAY_ONCE).thenLoop("quarter");
+
     public CoinCannonItem(AnimatedItemProperties pProperties) {
         super(pProperties);
+        SingletonGeoAnimatable.registerSyncedAnimatable(this);
     }
 
     @Override
@@ -53,7 +73,7 @@ public class CoinCannonItem extends SimpleAnimatedItem {
                             switch (transformType) {
                                 case THIRD_PERSON_LEFT_HAND, THIRD_PERSON_RIGHT_HAND -> {
                                     poseStack.mulPose(Axis.YP.rotationDegrees(-90));
-                                    poseStack.translate(0.1, -0.05, -0.95);
+                                    poseStack.translate(-0.4, -0.05, -0.95);
 
                                 }
                                 case FIRST_PERSON_LEFT_HAND, FIRST_PERSON_RIGHT_HAND -> {
@@ -70,8 +90,8 @@ public class CoinCannonItem extends SimpleAnimatedItem {
                         @Override
                         protected void renderInGui(ItemDisplayContext transformType, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
                             poseStack.pushPose();
-                            poseStack.scale(1.2f, 1.2f, 1.2f);
-                            poseStack.translate(0.02, -0.5, -0.5);
+                            poseStack.scale(0.9f, 0.9f, 0.9f);
+                            poseStack.translate(0.05, -0.2, -0.5);
                             super.renderInGui(transformType, poseStack, bufferSource, packedLight, packedOverlay);
                             poseStack.popPose();
                         }
@@ -80,6 +100,37 @@ public class CoinCannonItem extends SimpleAnimatedItem {
                 return this.renderer;
             }
         });
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "controller", 0, event -> {
+            var data = event.getData(DataTickets.ITEMSTACK);
+            if (data != null && data.getItem() == this) {
+                CompoundTag tag = data.getShareTag();
+                if (tag != null) {
+                    int cycle = tag.getInt("cycle");
+                    return switch (cycle) {
+                        case 1 -> event.setAndContinue(quarterAnim);
+                        case 2 -> event.setAndContinue(silverDollarAnim);
+                        default -> event.setAndContinue(pennyAnim);
+                    };
+                }
+            }
+            return PlayState.CONTINUE;
+        }).triggerableAnim("pennyAnim", pennyAnim)
+          .triggerableAnim("quarterAnim", quarterAnim)
+          .triggerableAnim("silverDollarAnim", silverDollarAnim)
+          .triggerableAnim("pennyToQuarter", pennyToQuarter)
+          .triggerableAnim("quarterToSilver", quarterToSilver)
+          .triggerableAnim("silverToPenny", silverToPenny));
+    }
+
+    @Override
+    public @Nullable CompoundTag getShareTag(ItemStack stack) {
+        CompoundTag tag = new CompoundTag();
+        tag.putInt("cycle", CannonHolderAttacher.getItemStackCapability(stack).map(CannonHolder::getCycle).orElse(0));
+        return tag;
     }
 
     @Override
@@ -94,6 +145,13 @@ public class CoinCannonItem extends SimpleAnimatedItem {
                 h.cycleSelection();
                 pPlayer.sendSystemMessage(Component.literal("Currency: " + this.getNameForEntityType(this.getAmmoForCycle(h.getCycle())))
                         .withStyle(ChatFormatting.DARK_RED));
+                String animName = "pennyAnim";
+                switch (h.getCycle()) {
+                    case 0 -> animName = "silverToPenny";
+                    case 1 -> animName = "pennyToQuarter";
+                    case 2 -> animName = "quarterToSilver";
+                }
+                triggerAnim(pPlayer, GeoItem.getOrAssignId(itemStack, (ServerLevel) pLevel), "controller", animName);
             });
             return InteractionResultHolder.consume(itemStack);
         }
@@ -122,7 +180,7 @@ public class CoinCannonItem extends SimpleAnimatedItem {
                 BillionaireHolderAttacher.getHolder(player).ifPresent(h -> h.addMoney(-this.getCostForAmmo(type)));
                 switch (cycle) {
                     case 1 -> {
-                        player.getCooldowns().addCooldown(this, 60);
+                        player.getCooldowns().addCooldown(this, 40);
                         player.stopUsingItem();
                     }
                     case 2 -> {

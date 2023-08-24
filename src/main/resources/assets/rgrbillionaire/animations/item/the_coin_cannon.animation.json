@@ -1,0 +1,81 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"goldcoinspin": {
+			"animation_length": 0.5,
+			"bones": {
+				"bone3": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.5": {
+							"vector": [1170, 0, 0]
+						}
+					}
+				}
+			}
+		},
+		"quarterspin": {
+			"animation_length": 0.5,
+			"bones": {
+				"bone3": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.5": {
+							"vector": [1257.5, 0, 0]
+						}
+					}
+				}
+			}
+		},
+		"silvercoinspin": {
+			"animation_length": 0.5,
+			"bones": {
+				"bone3": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.5": {
+							"vector": [990, 0, 0]
+						}
+					}
+				}
+			}
+		},
+		"quarter": {
+			"loop": true,
+			"bones": {
+				"bone3": {
+					"rotation": {
+						"vector": [1257.5, 0, 0]
+					}
+				}
+			}
+		},
+		"silvercoin": {
+			"loop": true,
+			"bones": {
+				"bone3": {
+					"rotation": {
+						"vector": [990, 0, 0]
+					}
+				}
+			}
+		},
+		"goldcoin": {
+			"loop": true,
+			"bones": {
+				"bone3": {
+					"rotation": {
+						"vector": [1170, 0, 0]
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

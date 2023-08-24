@@ -1,5 +1,6 @@
 package com.divinity.hmedia.rgrbillionaire.ability;
 
+import com.divinity.hmedia.rgrbillionaire.entity.DollarBillEntity;
 import com.divinity.hmedia.rgrbillionaire.init.EntityInit;
 import com.divinity.hmedia.rgrbillionaire.init.SoundInit;
 import com.divinity.hmedia.rgrbillionaire.util.BillionaireUtils;
@@ -27,7 +28,7 @@ public class GrandGiveawayAbility extends Ability {
             for (int x = (int) (player.getX() - 10); x < player.getX() + 10; x++) {
                 for (int z = (int) player.getZ() - 10; z < player.getZ() + 10; z++) {
                     if (level.getRandom().nextIntBetweenInclusive(0, 50) == 0) {
-                        var type = EntityInit.PENNY_ENTITY.get();
+                        var type = EntityInit.DOLLAR_COIN_ENTITY.get();
                         if (level.getRandom().nextIntBetweenInclusive(0, 10) <= 7) {
                             type = EntityInit.DOLLAR_BILL_ENTITY.get();
                         }

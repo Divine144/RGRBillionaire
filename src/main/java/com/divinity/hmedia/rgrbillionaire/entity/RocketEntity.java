@@ -5,6 +5,7 @@ import com.divinity.hmedia.rgrbillionaire.init.SoundInit;
 import com.divinity.hmedia.rgrbillionaire.util.BillionaireUtils;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -59,10 +60,11 @@ public class RocketEntity extends PathfinderMob implements GeoEntity {
         if (this.level() instanceof ServerLevel level) {
             var holder = GlobalLevelHolderAttacher.getGlobalLevelCapabilityUnwrap(level);
             if (holder != null) {
-                if (holder.getRocketTimer() > CONSTRUCTION_TIME) {
+                if (CONSTRUCTION_TIME != holder.getRocketTimer()) {
                     CONSTRUCTION_TIME = holder.getRocketTimer();
                 }
             }
+
             if (this.tickCount == CONSTRUCTION_TIME) {
                 entityData.set(CAN_TAKEOFF, true);
             }
@@ -100,6 +102,9 @@ public class RocketEntity extends PathfinderMob implements GeoEntity {
                         player1.sendSystemMessage(Component.literal("Space Rocket: ").withStyle(ChatFormatting.WHITE)
                                 .append(Component.literal("Protocol Initiated: Destroy Everything")
                                         .withStyle(ChatFormatting.RED, ChatFormatting.BOLD)));
+                        if (!holder.isDestroying()) {
+                            holder.setDestroying(true);
+                        }
                     }
                     entityData.set(CAUSED_DESTRUCTION, true);
                 }

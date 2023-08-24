@@ -81,6 +81,7 @@ public class DollarFishingHookEntity extends FishingHook implements GeoEntity {
     private final int luck;
     private final int lureSpeed;
     private Vec3 initialLookAngle = Vec3.ZERO;
+    private int hookedinTicks = 0;
 
     private DollarFishingHookEntity(EntityType<? extends FishingHook> pEntityType, Level pLevel, int pLuck, int pLureSpeed) {
         super(pEntityType, pLevel);
@@ -223,6 +224,10 @@ public class DollarFishingHookEntity extends FishingHook implements GeoEntity {
                 if (this.currentState == FishHookState.HOOKED_IN_ENTITY) {
                     if (this.hookedIn != null) {
                         if (!this.hookedIn.isRemoved() && this.hookedIn.level().dimension() == this.level().dimension()) {
+                            if (++hookedinTicks >= 80) {
+                                discard();
+                                return;
+                            }
                             if (hookedIn.distanceTo(player) > 5) {
                                 hookedIn.setDeltaMovement(initialLookAngle);
                             }
@@ -239,6 +244,7 @@ public class DollarFishingHookEntity extends FishingHook implements GeoEntity {
                                 this.setHookedEntity((Entity)null);
                                 this.currentState = FishHookState.FLYING;
                                 discard();
+                                return;
                             }
 
                         }

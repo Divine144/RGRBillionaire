@@ -15,6 +15,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
@@ -29,6 +30,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,7 +45,7 @@ public class CryptoMinerBlock extends BaseEntityBlock {
             Items.GOLD_INGOT, 5,
             Items.DIAMOND, 7,
             Items.NETHERITE_SCRAP, 10,
-            Items.DRAGON_EGG, 1000
+            Items.END_CRYSTAL, 1000
     );
 
     private static final Map<Integer, Item> itemForProductionRateMap = Map.of(
@@ -51,7 +53,7 @@ public class CryptoMinerBlock extends BaseEntityBlock {
             3, Items.GOLD_INGOT,
             5, Items.DIAMOND,
             7, Items.NETHERITE_SCRAP,
-            10, Items.DRAGON_EGG
+            10, Items.END_CRYSTAL
     );
 
     public CryptoMinerBlock(Properties pProperties) {

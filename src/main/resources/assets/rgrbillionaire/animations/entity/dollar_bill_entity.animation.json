@@ -1,0 +1,27 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"fall": {
+			"loop": true,
+			"animation_length": 2,
+			"bones": {
+				"bone": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 37.5]
+						},
+						"1.0": {
+							"vector": [-900, 0, -40],
+							"easing": "easeInQuad"
+						},
+						"2.0": {
+							"vector": [-1800, 0, 37.5],
+							"easing": "easeOutQuad"
+						}
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

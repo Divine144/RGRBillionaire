@@ -1,4 +1,14 @@
 {
+  "billionaires_club": {
+    "sounds": [
+      "rgrbillionaire:billionaires_club"
+    ]
+  },
+  "boing": {
+    "sounds": [
+      "rgrbillionaire:boing"
+    ]
+  },
   "butler_idle": {
     "sounds": [
       "rgrbillionaire:butler_idle"
@@ -14,9 +24,34 @@
       "rgrbillionaire:grand_giveaway"
     ]
   },
+  "jetpack": {
+    "sounds": [
+      "rgrbillionaire:jetpack"
+    ]
+  },
   "market_crasher": {
     "sounds": [
       "rgrbillionaire:market_crasher"
+    ]
+  },
+  "richhigh": {
+    "sounds": [
+      "rgrbillionaire:richhigh"
+    ]
+  },
+  "richlittlelow": {
+    "sounds": [
+      "rgrbillionaire:richlittlelow"
+    ]
+  },
+  "richlow": {
+    "sounds": [
+      "rgrbillionaire:richlow"
+    ]
+  },
+  "richnormal": {
+    "sounds": [
+      "rgrbillionaire:richnormal"
     ]
   },
   "rocket_ready": {

@@ -36,6 +36,8 @@ import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.cache.object.GeoBone;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -137,6 +139,26 @@ public final class BillionaireUtils {
      */
     private static Comparator<Entity> getEntityComparator(LivingEntity other) {
         return Comparator.comparing(entity -> entity.distanceToSqr(other.getX(), other.getY(), other.getZ()));
+    }
+
+    @Nullable
+    public static GeoBone getChildBoneOfName(String name, GeoBone parentBone) {
+        if (parentBone.getChildBones().isEmpty()) return null;
+        for (var bones : parentBone.getChildBones()) {
+            if (bones.getName().equals(name)) {
+                return bones;
+            }
+        }
+
+        // At this point we know the parent's child bones do not match the name, so we recursively search for it
+        GeoBone bone = null;
+        for (var childBones : parentBone.getChildBones()) {
+            bone = getChildBoneOfName(name, childBones);
+            if (bone != null) {
+                break;
+            }
+        }
+        return bone;
     }
 
 

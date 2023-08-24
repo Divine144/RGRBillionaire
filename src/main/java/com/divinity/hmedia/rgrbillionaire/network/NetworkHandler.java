@@ -3,6 +3,8 @@ package com.divinity.hmedia.rgrbillionaire.network;
 import com.divinity.hmedia.rgrbillionaire.RGRBillionaire;
 import com.divinity.hmedia.rgrbillionaire.cap.BillionaireHolderAttacher;
 import com.divinity.hmedia.rgrbillionaire.cap.GlobalLevelHolderAttacher;
+import com.divinity.hmedia.rgrbillionaire.network.clientbound.PlayConfettiAnimationPacket;
+import com.divinity.hmedia.rgrbillionaire.network.clientbound.StopSoundPacket;
 import com.divinity.hmedia.rgrbillionaire.network.clientbound.SyncCryptoBlockPacket;
 import com.divinity.hmedia.rgrbillionaire.network.serverbound.*;
 import com.google.common.collect.ImmutableList;
@@ -36,6 +38,9 @@ public class NetworkHandler {
                 .add(SyncCryptoBlockPacket::register)
                 .add(FinishedTaxForumPacket::register)
                 .add(MugOfCoffeePacket::register)
+                .add(RecallButlerPacket::register)
+                .add(PlayConfettiAnimationPacket::register)
+                .add(StopSoundPacket::register)
                 .build();
         SimpleEntityCapabilityStatusPacket.registerRetriever(BillionaireHolderAttacher.EXAMPLE_RL, BillionaireHolderAttacher::getHolderUnwrap);
         SimpleLevelCapabilityStatusPacket.registerRetriever(GlobalLevelHolderAttacher.EXAMPLE_GLOBAL_LEVEL_CAPABILITY_RL, GlobalLevelHolderAttacher::getGlobalLevelCapabilityUnwrap);

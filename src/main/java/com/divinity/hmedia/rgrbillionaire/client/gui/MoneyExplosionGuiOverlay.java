@@ -19,7 +19,7 @@ import java.util.List;
 
 public class MoneyExplosionGuiOverlay implements IGuiOverlay {
 
-    public static final MoneyExplosionGuiOverlay INSTANCE = new MoneyExplosionGuiOverlay();
+    public static final MoneyExplosionGuiOverlay[] INSTANCES = new MoneyExplosionGuiOverlay[30];
     private static final ResourceLocation[] MONEY_EXPLOSION_FRAMES = initializeMoneyFrames();
 
     private long startTime = 0;
@@ -33,7 +33,17 @@ public class MoneyExplosionGuiOverlay implements IGuiOverlay {
         this.enabled = enabled;
     }
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
     private MoneyExplosionGuiOverlay() {}
+
+    public static void initializeGuiOverlays() {
+        for (int i = 0; i < INSTANCES.length; i++) {
+            INSTANCES[i] = new MoneyExplosionGuiOverlay();
+        }
+    }
 
     private static ResourceLocation[] initializeMoneyFrames() {
         List<ResourceLocation> locations = new ArrayList<>();
@@ -57,6 +67,7 @@ public class MoneyExplosionGuiOverlay implements IGuiOverlay {
         }
 
         int currentFrame = Mth.clamp((int) (elapsedTime / 20), 0, 149);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, ((float) (149 - currentFrame) / 149));
         RenderSystem.setShaderTexture(0, MONEY_EXPLOSION_FRAMES[currentFrame]);
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder bufferbuilder = tesselator.getBuilder();

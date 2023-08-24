@@ -12,6 +12,12 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,17 +37,18 @@ public class EntityInit {
     public static final RegistryObject<EntityType<CurrencyProjectileEntity>> SILVER_DOLLAR_ENTITY = registerEntity("silver_dollar_entity", () ->
             EntityType.Builder.<CurrencyProjectileEntity>of((type, level) -> new CurrencyProjectileEntity(type, level, 0, (entity, hitResult) -> {
                 Entity sourceEntity = entity.getOwner() instanceof Player player ? player : entity;
-                entity.level().explode(sourceEntity, entity.getX(), entity.getY(), entity.getZ(), 4.0F, Level.ExplosionInteraction.TNT);
+                entity.level().explode(sourceEntity, entity.getX(), entity.getY(), entity.getZ(), 4.0F, Level.ExplosionInteraction.NONE);
             }), MobCategory.MISC).sized(0.25F, 0.25F));
 
     public static final RegistryObject<EntityType<CurrencyProjectileEntity>> DOLLAR_COIN_ENTITY = registerEntity("dollar_coin_entity", () ->
             EntityType.Builder.<CurrencyProjectileEntity>of((type, level) -> new CurrencyProjectileEntity(type, level, 10, (entity, hitResult) -> {
                 Entity sourceEntity = entity.getOwner() instanceof Player player ? player : entity;
-                entity.level().explode(sourceEntity, entity.getX(), entity.getY(), entity.getZ(), 2.0F, Level.ExplosionInteraction.TNT);
-            }), MobCategory.MISC).sized(0.25F, 0.25F));
+                entity.level().explode(sourceEntity, entity.getX(), entity.getY(), entity.getZ(), 2.0F, Level.ExplosionInteraction.NONE);
+            }), MobCategory.MISC).sized(0.5F, 0.5F));
 
     public static final RegistryObject<EntityType<CurrencyProjectileEntity>> DOLLAR_BILL_ENTITY = registerEntity("dollar_bill_entity", () ->
-            EntityType.Builder.<CurrencyProjectileEntity>of((type, level) -> new CurrencyProjectileEntity(type, level, 10), MobCategory.MISC).sized(0.25F, 0.25F));
+            EntityType.Builder.<CurrencyProjectileEntity>of((type, level) -> new DollarBillEntity(type, level, 10), MobCategory.MISC)
+                    .sized(0.5F, 0.5F));
 
     public static final RegistryObject<EntityType<StockGraphEntity>> STOCK_GRAPH_ENTITY = registerEntity("stock_graph_entity", () ->
             EntityType.Builder.of(StockGraphEntity::new, MobCategory.MISC).sized(0.25F, 0.25F));

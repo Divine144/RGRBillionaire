@@ -41,7 +41,9 @@ public class ModLangProvider extends LanguageProvider {
 
         add("key.rgrbillionaire.skill_tree", "Open Skill Tree");
         add("key.rgrbillionaire.money_explosion", "Money Explosion");
+        add("key.rgrbillionaire.butler_recall", "Recall Butler");
         add("key.category.rgrbillionaire", "RGRBillionaire");
+
         add("item.rgrbillionaire.stackable_money", "Money");
 
         add("itemGroup.hundredMediaTab", "100 Media");
@@ -51,10 +53,10 @@ public class ModLangProvider extends LanguageProvider {
         add("quest.goal.rgrbillionaire.steal_money_goal.description", "Steal $2,500 from players using Exploit The Working Class");
         add("quest.goal.rgrbillionaire.new_look_advancement_goal.description", "Earn the Advancement \"Crafting a New Look\"");
         add("quest.goal.rgrbillionaire.kill_player_coin_cannon.description", "Kill 3 players with the Coin Cannon");
-        add("quest.goal.rgrbillionaire.little_sniffs_advancement_goal.description", "Earn the Advancement \"Little Sniffs\"");
+        add("quest.goal.rgrbillionaire.summon_iron_golem_advancement_goal.description", "Earn the Advancement \"Hired Help\"");
         add("quest.goal.rgrbillionaire.light_as_a_rabbit_advancement_goal.description", "Earn the Advancement \"Light as a Rabbit\"");
         add("quest.goal.rgrbillionaire.kill_player_grand_giveaway.description", "Kill 3 Players with the Grand Giveaway");
-        add("quest.goal.rgrbillionaire.smithing_with_style_advancement_goal.description", "Earn the Advancement \"Smithing With Style\"");
+        add("quest.goal.rgrbillionaire.cure_zombie_villager_advancement_goal.description", "Earn the Advancement \"Zombie Doctor\"");
         add("quest.goal.rgrbillionaire.kill_player_fall_damage.description", "Kill 5 Players with fall damage");
         add("quest.goal.rgrbillionaire.smells_interesting_advancement_goal.description", "Earn the Advancement \"Smells Interesting\"");
         add("quest.goal.rgrbillionaire.harvest_spawner.description", "Harvest two Spawners of any kind");
@@ -65,10 +67,10 @@ public class ModLangProvider extends LanguageProvider {
         add("quest.goal.rgrbillionaire.steal_money_goal", "Steal $2,500 from players using Exploit The Working Class");
         add("quest.goal.rgrbillionaire.new_look_advancement_goal", "Earn the Advancement \"Crafting a New Look\"");
         add("quest.goal.rgrbillionaire.kill_player_coin_cannon", "Kill 3 players with the Coin Cannon");
-        add("quest.goal.rgrbillionaire.little_sniffs_advancement_goal", "Earn the Advancement \"Little Sniffs\"");
+        add("quest.goal.rgrbillionaire.summon_iron_golem_advancement_goal", "Earn the Advancement \"Hired Help\"");
         add("quest.goal.rgrbillionaire.light_as_a_rabbit_advancement_goal", "Earn the Advancement \"Light as a Rabbit\"");
         add("quest.goal.rgrbillionaire.kill_player_grand_giveaway", "Kill 3 Players with the Grand Giveaway");
-        add("quest.goal.rgrbillionaire.smithing_with_style_advancement_goal", "Earn the Advancement \"Smithing With Style\"");
+        add("quest.goal.rgrbillionaire.cure_zombie_villager_advancement_goal", "Earn the Advancement \"Zombie Doctor\"");
         add("quest.goal.rgrbillionaire.kill_player_fall_damage", "Kill 5 Players with fall damage");
         add("quest.goal.rgrbillionaire.smells_interesting_advancement_goal", "Earn the Advancement \"Smells Interesting\"");
         add("quest.goal.rgrbillionaire.harvest_spawner", "Harvest Two Spawners");

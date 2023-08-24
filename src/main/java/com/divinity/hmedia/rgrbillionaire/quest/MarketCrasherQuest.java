@@ -28,8 +28,8 @@ public class MarketCrasherQuest extends Quest {
     protected List<QuestGoal> initializeGoals() {
         List<QuestGoal> goals = new ArrayList<>();
         goals.add(new AquireAdvancementGoal("walk_on_powder_snow_with_leather_boots", "light_as_a_rabbit_advancement_goal"));
-        goals.add(new KillSpecificTypeGoal(2, EntityType.WARDEN));
-        goals.add(new KillPlayersGoal(3) {
+        goals.add(new KillSpecificTypeGoal(1, EntityType.WARDEN));
+        goals.add(new KillPlayersGoal(4) {
             @Override
             public boolean tallyKill(Entity entity, DamageSource source) {
                 return source.getDirectEntity() instanceof CurrencyProjectileEntity projectile && projectile.getDeltaMovement().x == 0 && super.tallyKill(entity, source);

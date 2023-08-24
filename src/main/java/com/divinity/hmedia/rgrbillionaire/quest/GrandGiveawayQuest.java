@@ -23,7 +23,7 @@ public class GrandGiveawayQuest extends Quest {
     @Override
     protected List<QuestGoal> initializeGoals() {
         List<QuestGoal> goals = new ArrayList<>();
-        goals.add(new AquireAdvancementGoal("feed_snifflet", "little_sniffs_advancement_goal"));
+        goals.add(new AquireAdvancementGoal("summon_iron_golem", "summon_iron_golem_advancement_goal"));
         goals.add(new HarvestBlocksGoal(2, Blocks.SPAWNER) {
             @Override
             public String getDescriptionId() {

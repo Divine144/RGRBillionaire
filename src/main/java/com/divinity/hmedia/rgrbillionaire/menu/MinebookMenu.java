@@ -14,6 +14,7 @@ public class MinebookMenu extends AlwaysValidMenu {
 
     @Override
     public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
+
         return ItemStack.EMPTY;
     }
 

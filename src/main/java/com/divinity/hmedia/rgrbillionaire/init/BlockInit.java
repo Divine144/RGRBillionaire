@@ -7,6 +7,7 @@ import com.divinity.hmedia.rgrbillionaire.block.be.CryptoMinerBlockEntity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.IronBarsBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -29,7 +30,7 @@ public class BlockInit {
     public static final RegistryObject<Block> UNBREAKABLE_STONE_BRICKS = registerBlock("stone_bricks", () -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM).strength(-1.0F, 3600000.0F).isValidSpawn((q, w, e, r) -> false)));
     public static final RegistryObject<Block> UNBREAKABLE_IRON_BARS = registerBlock("iron_bars", () ->  new IronBarsBlock(BlockBehaviour.Properties.of().strength(-1.0F, 3600000.0F).sound(SoundType.METAL).noOcclusion()));
 
-    public static final RegistryObject<Block> CRYPTO_MINER_BLOCK = registerBlock("crypto_miner", () -> new CryptoMinerBlock(BlockBehaviour.Properties.of().mapColor(MapColor.RAW_IRON).requiresCorrectToolForDrops().strength(5.0F, 6.0F).noOcclusion()));
+    public static final RegistryObject<Block> CRYPTO_MINER_BLOCK = registerBlock("crypto_miner", () -> new CryptoMinerBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(1.5F, 6.0F).noOcclusion()));
     public static final RegistryObject<BlockEntityType<CryptoMinerBlockEntity>> MINER_BLOCK_ENTITY = BLOCK_ENTITIES.register("miner_block_entity", () -> BlockEntityType.Builder.of(CryptoMinerBlockEntity::new, CRYPTO_MINER_BLOCK.get()).build(null));
 
 
