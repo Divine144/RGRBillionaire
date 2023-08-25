@@ -285,7 +285,7 @@ public class ClientModEvents {
                 poseStack.pushPose();
                 poseStack.scale(scale, scale, scale);
                 if (player.getVehicle() != null) {
-                    poseStack.translate(0, 0.6, 0);
+                    poseStack.translate(0, 0, 0);
                     super.render(player, animatable1, entityYaw, partialTick, poseStack, bufferSource, packedLight);
                 }
                 else super.render(player, animatable1, entityYaw, partialTick, poseStack, bufferSource, packedLight);

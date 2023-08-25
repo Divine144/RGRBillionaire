@@ -37,7 +37,7 @@ public class EntityInit {
     public static final RegistryObject<EntityType<CurrencyProjectileEntity>> SILVER_DOLLAR_ENTITY = registerEntity("silver_dollar_entity", () ->
             EntityType.Builder.<CurrencyProjectileEntity>of((type, level) -> new CurrencyProjectileEntity(type, level, 0, (entity, hitResult) -> {
                 Entity sourceEntity = entity.getOwner() instanceof Player player ? player : entity;
-                entity.level().explode(sourceEntity, entity.getX(), entity.getY(), entity.getZ(), 4.0F, Level.ExplosionInteraction.NONE);
+                entity.level().explode(sourceEntity, entity.getX(), entity.getY(), entity.getZ(), 4.0F, Level.ExplosionInteraction.TNT);
             }), MobCategory.MISC).sized(0.25F, 0.25F));
 
     public static final RegistryObject<EntityType<CurrencyProjectileEntity>> DOLLAR_COIN_ENTITY = registerEntity("dollar_coin_entity", () ->
