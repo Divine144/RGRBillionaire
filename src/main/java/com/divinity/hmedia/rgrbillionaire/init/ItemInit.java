@@ -23,7 +23,7 @@ public class ItemInit {
     public static final RegistryObject<Item> MARKETPLACE = ITEMS.register("starlinked_minebook_marketplace", () -> new SimpleAnimatedItem(new AnimatedItemProperties().stacksTo(1)));
     public static final RegistryObject<Item> MONEY = ITEMS.register("money", () -> new MoneyItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> STACKABLE_MONEY = ITEMS.register("stackable_money", () -> new MoneyItem(new Item.Properties().stacksTo(64)));
-    public static final RegistryObject<Item> HEART = ITEMS.register("heart", () -> new Item(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> HEART = ITEMS.register("heart", () -> new Item(new Item.Properties().stacksTo(64)));
     public static final RegistryObject<Item> DOLLAR_FISHING_ROD = ITEMS.register("dollar_fishing_rod", () -> new DollarFishingPoleItem(new Item.Properties().stacksTo(1).durability(64)));
     public static final RegistryObject<Item> GOLDEN_JETPACK = ITEMS.register("golden_jetpack", () -> new GoldenJetpackArmorItem(new AnimatedItemProperties().stacksTo(1)));
     public static final RegistryObject<Item> MUG_OF_COFFEE = ITEMS.register("mug_of_coffee", () -> new MugOfCoffeeItem(new AnimatedItemProperties().stacksTo(1).food(

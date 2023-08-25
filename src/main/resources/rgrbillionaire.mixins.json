@@ -6,6 +6,7 @@
   "mixins": [
     "MorphRidingOffsetMixin",
     "ProjectileAccessor",
+    "SummonCommandMixin",
     "TemplateStructurePieceAccessor"
   ],
   "client": [

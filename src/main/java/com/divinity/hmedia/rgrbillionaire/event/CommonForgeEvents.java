@@ -3,6 +3,7 @@ package com.divinity.hmedia.rgrbillionaire.event;
 import com.divinity.hmedia.rgrbillionaire.RGRBillionaire;
 import com.divinity.hmedia.rgrbillionaire.block.CryptoMinerBlock;
 import com.divinity.hmedia.rgrbillionaire.block.be.CryptoMinerBlockEntity;
+import com.divinity.hmedia.rgrbillionaire.cap.BillionaireHolder;
 import com.divinity.hmedia.rgrbillionaire.cap.BillionaireHolderAttacher;
 import com.divinity.hmedia.rgrbillionaire.cap.GlobalLevelHolder;
 import com.divinity.hmedia.rgrbillionaire.cap.GlobalLevelHolderAttacher;
@@ -284,16 +285,6 @@ public class CommonForgeEvents {
 
     @SubscribeEvent
     public static void onHurtEnemy(LivingHurtEvent event) {
-        if (event.getEntity() instanceof ServerPlayer hurt) {
-            int amount = (int) (hurt.getAttributes().getValue(Attributes.MAX_HEALTH) - hurt.getAttributes().getBaseValue(Attributes.MAX_HEALTH));
-            if (amount > 0) {
-                amount = (int) Mth.clamp((amount - event.getAmount()), 0, 1000);
-                Multimap<Attribute, AttributeModifier> multimap = HashMultimap.create();
-                multimap.put(Attributes.MAX_HEALTH, new AttributeModifier(MAX_HEALTH_UUID, "Temp Hearts", amount, AttributeModifier.Operation.ADDITION));
-                hurt.getAttributes().removeAttributeModifiers(multimap);
-                hurt.getAttributes().addTransientAttributeModifiers(multimap);
-            }
-        }
         if (event.getSource().getDirectEntity() instanceof ServerPlayer player) {
             if (event.getEntity() instanceof ServerPlayer hurtPlayer) {
                 var holder = MarkerHolderAttacher.getMarkerHolderUnwrap(hurtPlayer);
@@ -403,10 +394,7 @@ public class CommonForgeEvents {
                         new SimpleMenuProvider((id, inv, pl) -> new MinebookMenu(MenuInit.MINEBOOK_SCREEN.get(), id), Component.literal("How are we here")));
             }
             else if (event.getItemStack().getItem() == ItemInit.HEART.get()) {
-                Multimap<Attribute, AttributeModifier> multimap = HashMultimap.create();
-                int amount = (int) (serverPlayer.getAttributes().getValue(Attributes.MAX_HEALTH) - serverPlayer.getAttributes().getBaseValue(Attributes.MAX_HEALTH));
-                multimap.put(Attributes.MAX_HEALTH, new AttributeModifier(MAX_HEALTH_UUID, "Temp Hearts", 2 + amount, AttributeModifier.Operation.ADDITION));
-                serverPlayer.getAttributes().addTransientAttributeModifiers(multimap);
+                serverPlayer.setAbsorptionAmount(serverPlayer.getAbsorptionAmount() + 2);
                 event.getItemStack().shrink(1);
             }
         }
