@@ -198,7 +198,7 @@ public class CommonForgeEvents {
             if (level.dimension() == Level.OVERWORLD) {
                 var holder = GlobalLevelHolderAttacher.getGlobalLevelCapabilityUnwrap(level);
                 if (holder != null) {
-                    if (holder.isDestroying() && level.getServer().getTickCount() % 20 == 0) {
+                    if (holder.isDestroying() && level.getServer().getTickCount() % 4 == 0) {
                         BlockPos.MutableBlockPos pos = holder.getInitialDestructionPos().mutable();
                         BlockPos initialBlockPos = holder.getInitialDestructionPos();
                         int radius = holder.getDestroyRadius();
@@ -215,13 +215,13 @@ public class CommonForgeEvents {
                                 }
                             }
                         }
-                        if (holder.getDestroyRadius() >= 80) {
+                        if (holder.getDestroyRadius() >= 100) {
                             holder.setDestroying(false);
                             holder.setInitialDestructionPos(BlockPos.ZERO);
                             holder.setDestroyRadius(10);
                             return;
                         }
-                        holder.setDestroyRadius(holder.getDestroyRadius() + 5);
+                        holder.setDestroyRadius(holder.getDestroyRadius() + 1);
                     }
                 }
             }

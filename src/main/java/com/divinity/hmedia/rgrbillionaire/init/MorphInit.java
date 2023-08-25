@@ -19,8 +19,8 @@ public class MorphInit {
     public static final RegistryObject<Morph> BROKE_BABY = MORPHS.register("broke_baby", () -> new Morph(new Morph.Properties<>()
             .maxHealth(10)
             .swingDuration(7)
-            .dimensions(0.75f, 0.75f)
-            .eyeHeight(0.80f)
+            .dimensions(0.65f, 0.65f)
+            .eyeHeight(0.5f)
             .morphedTo(entity -> {
                 BillionaireHolderAttacher.getHolder(entity).ifPresent(h -> h.setMoneyCap(1_000));
             })
