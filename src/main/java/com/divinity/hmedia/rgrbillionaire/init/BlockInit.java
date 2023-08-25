@@ -1,8 +1,7 @@
 package com.divinity.hmedia.rgrbillionaire.init;
 
 import com.divinity.hmedia.rgrbillionaire.RGRBillionaire;
-import com.divinity.hmedia.rgrbillionaire.block.CryptoMinerBlock;
-import com.divinity.hmedia.rgrbillionaire.block.HundredMediaBlock;
+import com.divinity.hmedia.rgrbillionaire.block.*;
 import com.divinity.hmedia.rgrbillionaire.block.be.CryptoMinerBlockEntity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
@@ -31,7 +30,13 @@ public class BlockInit {
     public static final RegistryObject<Block> UNBREAKABLE_IRON_BARS = registerBlock("iron_bars", () ->  new IronBarsBlock(BlockBehaviour.Properties.of().strength(-1.0F, 3600000.0F).sound(SoundType.METAL).noOcclusion()));
 
     public static final RegistryObject<Block> CRYPTO_MINER_BLOCK = registerBlock("crypto_miner", () -> new CryptoMinerBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(1.5F, 6.0F).noOcclusion().isValidSpawn((a, b, c, d) -> false)));
-    public static final RegistryObject<BlockEntityType<CryptoMinerBlockEntity>> MINER_BLOCK_ENTITY = BLOCK_ENTITIES.register("miner_block_entity", () -> BlockEntityType.Builder.of(CryptoMinerBlockEntity::new, CRYPTO_MINER_BLOCK.get()).build(null));
+    public static final RegistryObject<Block> IRON_MINER_BLOCK = registerBlock("iron_miner", () -> new IronMinerBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(1.5F, 6.0F).noOcclusion().isValidSpawn((a, b, c, d) -> false)));
+    public static final RegistryObject<Block> GOLD_MINER_BLOCK = registerBlock("gold_miner", () -> new GoldMinerBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(1.5F, 6.0F).noOcclusion().isValidSpawn((a, b, c, d) -> false)));
+    public static final RegistryObject<Block> DIAMOND_MINER_BLOCK = registerBlock("diamond_miner", () -> new DiamondMinerBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(1.5F, 6.0F).noOcclusion().isValidSpawn((a, b, c, d) -> false)));
+    public static final RegistryObject<Block> NETHERITE_MINER_BLOCK = registerBlock("netherite_miner", () -> new NetheriteMinerBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(1.5F, 6.0F).noOcclusion().isValidSpawn((a, b, c, d) -> false)));
+    public static final RegistryObject<Block> OMNI_MINER_BLOCK = registerBlock("omni_miner", () -> new OmniMinerBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(1.5F, 6.0F).noOcclusion().isValidSpawn((a, b, c, d) -> false)));
+
+    public static final RegistryObject<BlockEntityType<CryptoMinerBlockEntity>> MINER_BLOCK_ENTITY = BLOCK_ENTITIES.register("miner_block_entity", () -> BlockEntityType.Builder.of(CryptoMinerBlockEntity::new, CRYPTO_MINER_BLOCK.get(), IRON_MINER_BLOCK.get(), GOLD_MINER_BLOCK.get(), DIAMOND_MINER_BLOCK.get(), NETHERITE_MINER_BLOCK.get(), OMNI_MINER_BLOCK.get()).build(null));
 
 
     protected static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {

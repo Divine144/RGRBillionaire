@@ -1,3 +1,13 @@
-// 1.20.1	2023-08-08T18:38:59.4855647	Block States: rgrbillionaire
+// 1.20.1	2023-08-25T09:29:19.5113506	Block States: rgrbillionaire
 68e616939537ef822807c40a618f99282154e090 assets/rgrbillionaire/blockstates/crypto_miner.json
+c5212bc8bab08fee2ad2923e6b1cb4ea120821dc assets/rgrbillionaire/blockstates/diamond_miner.json
+97bfd4dc0adb4f3e6d0e7a13a07fab44f56da17e assets/rgrbillionaire/blockstates/gold_miner.json
+e5a9c3db3ea5618b6c6c9b03f23b0b661b056767 assets/rgrbillionaire/blockstates/iron_miner.json
+6008729fe8e2398af3f36e0e5cf81459a2dd9b3f assets/rgrbillionaire/blockstates/netherite_miner.json
+d25d96cf8321725bf15c99ab2c0a73fb59cdb82a assets/rgrbillionaire/blockstates/omni_miner.json
 ed98658f3142096446adba4bcb2e080dfb9b8711 assets/rgrbillionaire/models/block/crypto_miner.json
+ebebf8d4f3709d45851745353713eef3ca776285 assets/rgrbillionaire/models/block/diamond_miner.json
+f31bbadfc3bdc69293e174a0202005b047e7ca90 assets/rgrbillionaire/models/block/gold_miner.json
+c45eb545b25563a1eef6b3a1778d1eb5045bc022 assets/rgrbillionaire/models/block/iron_miner.json
+7424166b16100a0c8a9c3912dc94ed63b7a9eb9c assets/rgrbillionaire/models/block/netherite_miner.json
+08838aa698569e3fb37621d7651e8b9dbb1f2f11 assets/rgrbillionaire/models/block/omni_miner.json

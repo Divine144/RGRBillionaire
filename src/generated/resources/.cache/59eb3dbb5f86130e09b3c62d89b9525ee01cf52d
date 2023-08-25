@@ -1,5 +1,10 @@
-// 1.20.1	2023-08-10T13:45:10.4741221	Loot Tables
+// 1.20.1	2023-08-25T09:29:19.508351	Loot Tables
 f7c8f77c9e44a6b732800653892aad14dc12c156 data/rgrbillionaire/loot_tables/blocks/crypto_miner.json
+f28f17bdfe2b1b33b342a5a1cec3146ded474ee9 data/rgrbillionaire/loot_tables/blocks/diamond_miner.json
+244467b22645d9c2492d55e98f63d3025aed9f57 data/rgrbillionaire/loot_tables/blocks/gold_miner.json
 575483ef13f80a14942319ac7a64a3b6edcfe09c data/rgrbillionaire/loot_tables/blocks/hundred_media.json
 dde2b78630d1682cf4c5d278d70f127f1eb95eae data/rgrbillionaire/loot_tables/blocks/iron_bars.json
+86d6dbd8a85305d06528cfe066f90d7dee4aafa2 data/rgrbillionaire/loot_tables/blocks/iron_miner.json
+76f5232112ee6ce0d6304ea9b143163638ca12f8 data/rgrbillionaire/loot_tables/blocks/netherite_miner.json
+8fcb5a71a690345e9aecf6eb58bc09de4fa8ad19 data/rgrbillionaire/loot_tables/blocks/omni_miner.json
 9883bed968f6ce0c8096f5ed0528948e251d1832 data/rgrbillionaire/loot_tables/blocks/stone_bricks.json

@@ -1,5 +1,6 @@
 package com.divinity.hmedia.rgrbillionaire.mixin;
 
+import com.divinity.hmedia.rgrbillionaire.block.CryptoMinerBlock;
 import com.divinity.hmedia.rgrbillionaire.block.be.CryptoMinerBlockEntity;
 import com.divinity.hmedia.rgrbillionaire.init.BlockInit;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -36,7 +37,7 @@ public abstract class ParticleEngineMixin {
               cancellable = true
       )
     public void destroy(BlockPos pPos, BlockState pState, CallbackInfo ci) {
-        if (pState.is(BlockInit.CRYPTO_MINER_BLOCK.get())) {
+        if (pState.getBlock() instanceof CryptoMinerBlock) {
 
             VoxelShape voxelshape = pState.getShape(this.level, pPos);
             double d0 = 0.25D;
@@ -84,7 +85,7 @@ public abstract class ParticleEngineMixin {
     )
     public void crack(BlockPos pPos, Direction pSide, CallbackInfo ci) {
         BlockState blockstate = this.level.getBlockState(pPos);
-        if (blockstate.is(BlockInit.CRYPTO_MINER_BLOCK.get())) {
+        if (blockstate.getBlock() instanceof CryptoMinerBlock) {
             if (blockstate.getRenderShape() != RenderShape.INVISIBLE) {
                 int i = pPos.getX();
                 int j = pPos.getY();

@@ -1,6 +1,7 @@
 package com.divinity.hmedia.rgrbillionaire.event;
 
 import com.divinity.hmedia.rgrbillionaire.RGRBillionaire;
+import com.divinity.hmedia.rgrbillionaire.block.CryptoMinerBlock;
 import com.divinity.hmedia.rgrbillionaire.block.be.CryptoMinerBlockEntity;
 import com.divinity.hmedia.rgrbillionaire.cap.BillionaireHolderAttacher;
 import com.divinity.hmedia.rgrbillionaire.cap.GlobalLevelHolder;
@@ -331,7 +332,7 @@ public class CommonForgeEvents {
             Player player = event.getPlayer();
             BlockPos pos = event.getPos();
             Level level = player.level();
-            if (level.getBlockState(pos).is(BlockInit.CRYPTO_MINER_BLOCK.get())) {
+            if (level.getBlockState(pos).getBlock() instanceof CryptoMinerBlock) {
                 BlockEntity entity = level.getBlockEntity(pos);
                 if (entity instanceof CryptoMinerBlockEntity crypto) {
                     if (crypto.amount == 1000) {

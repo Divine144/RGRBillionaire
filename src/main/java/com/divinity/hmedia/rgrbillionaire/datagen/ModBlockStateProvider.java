@@ -26,7 +26,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
         //         .map(Supplier::get)
         //         .forEach(this::simpleCubeBottomTopBlockState);
         //
-         Stream.of(BlockInit.CRYPTO_MINER_BLOCK)
+         Stream.of(BlockInit.CRYPTO_MINER_BLOCK, BlockInit.IRON_MINER_BLOCK, BlockInit.GOLD_MINER_BLOCK, BlockInit.DIAMOND_MINER_BLOCK, BlockInit.NETHERITE_MINER_BLOCK, BlockInit.OMNI_MINER_BLOCK)
                  .map(Supplier::get)
                  .forEach(this::simpleBlock);
 
