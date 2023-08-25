@@ -51,7 +51,7 @@ public class ClientForgeEvents {
                         var soundList = List.of(SoundInit.RICH_LOW.get(), SoundInit.RICH_LITTLE_LOW.get(), SoundInit.RICH_NORMAL.get(), SoundInit.RICH_HIGH.get());
                         SoundEvent sound = Util.getRandom(soundList, player.getRandom());
                         ClientHandler.startMoneyExplosionAnimation();
-                        player.level().playLocalSound(player.blockPosition(), sound, SoundSource.PLAYERS, 0.3f, 0.3f, false);
+                        player.level().playLocalSound(player.blockPosition(), sound, SoundSource.PLAYERS, 0.3f, 1f, false);
                     }
                 }
             });

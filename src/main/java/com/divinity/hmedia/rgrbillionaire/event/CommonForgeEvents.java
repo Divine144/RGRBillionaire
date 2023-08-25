@@ -203,19 +203,19 @@ public class CommonForgeEvents {
                         BlockPos initialBlockPos = holder.getInitialDestructionPos();
                         int radius = holder.getDestroyRadius();
                         for (int x = initialBlockPos.getX() - radius; x < initialBlockPos.getX() + radius; ++x) {
-                            for (int y = initialBlockPos.getY() - radius; y < initialBlockPos.getY() + radius; ++y) {
+                            for (int y = initialBlockPos.getY() - 20; y < initialBlockPos.getY() + 20; ++y) {
                                 for (int z = initialBlockPos.getZ() - radius; z < initialBlockPos.getZ() + radius; ++z) {
                                     pos.set(x, y, z);
                                     if (!level.getBlockState(pos).isAir()) {
                                         level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
-                                        if (level.getRandom().nextIntBetweenInclusive(0, 300) == 0) {
-                                            level.explode(null, pos.getX(), pos.getY(), pos.getZ(), 4F, Level.ExplosionInteraction.NONE);
+                                        if (level.getRandom().nextIntBetweenInclusive(0, 700) == 0) {
+                                            level.explode(null, pos.getX(), pos.getY(), pos.getZ(), 3F, Level.ExplosionInteraction.NONE);
                                         }
                                     }
                                 }
                             }
                         }
-                        if (holder.getDestroyRadius() >= 200) {
+                        if (holder.getDestroyRadius() >= 100) {
                             holder.setDestroying(false);
                             holder.setInitialDestructionPos(BlockPos.ZERO);
                             holder.setDestroyRadius(10);
