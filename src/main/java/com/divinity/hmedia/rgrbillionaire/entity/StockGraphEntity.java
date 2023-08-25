@@ -3,6 +3,7 @@ package com.divinity.hmedia.rgrbillionaire.entity;
 import com.divinity.hmedia.rgrbillionaire.cap.BillionaireHolderAttacher;
 import com.divinity.hmedia.rgrbillionaire.util.BillionaireUtils;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
@@ -11,6 +12,7 @@ import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -32,7 +34,16 @@ public class StockGraphEntity extends ThrowableProjectile implements GeoEntity {
     public void tick() {
         super.tick();
         if (!level().isClientSide) {
-            if (this.getOwner() != null && this.distanceTo(getOwner()) >= 50) {
+            Vec3 vec3 = this.getDeltaMovement();
+            if (this.getOwner() != null) {
+                if (this.xRotO == 0.0F && this.yRotO == 0.0F) {
+                    this.setYRot(this.getOwner().getYRot());
+                    this.setXRot(this.getOwner().getXRot());
+                    this.yRotO = getOwner().yRotO;
+                    this.xRotO = getOwner().xRotO;
+                }
+            }
+            if (this.getOwner() != null && this.distanceTo(getOwner()) >= 25) {
                 discard();
             }
         }

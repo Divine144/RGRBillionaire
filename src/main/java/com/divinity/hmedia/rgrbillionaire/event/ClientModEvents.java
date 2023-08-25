@@ -20,6 +20,7 @@ import com.mojang.datafixers.util.Pair;
 import dev._100media.hundredmediageckolib.client.animatable.IHasGeoRenderer;
 import dev._100media.hundredmediageckolib.client.animatable.MotionAttackAnimatable;
 import dev._100media.hundredmediageckolib.client.model.SimpleGeoPlayerModel;
+import dev._100media.hundredmediageckolib.client.renderer.GeoPlayerRenderer;
 import dev._100media.hundredmediageckolib.client.renderer.layer.GeoPlayerArmorLayer;
 import dev._100media.hundredmediageckolib.client.renderer.layer.GeoSeparatedEntityRenderLayer;
 import dev._100media.hundredmediamorphs.capability.AnimationHolderAttacher;
@@ -270,24 +271,25 @@ public class ClientModEvents {
     }
 
     private static <T extends IHasGeoRenderer & GeoAnimatable> void createSimpleMorphRenderer(Morph morph, String name, T animatable, float scale) {
-        MorphRenderers.registerPlayerMorphRenderer(morph, context -> new AdvancedGeoPlayerRenderer<T>(context, new SimpleGeoPlayerModel<>(RGRBillionaire.MODID, name) {
+        MorphRenderers.registerPlayerMorphRenderer(morph, context -> new GeoPlayerRenderer<>(context, new SimpleGeoPlayerModel<>(RGRBillionaire.MODID, name) {
             @Override
             public ResourceLocation getTextureResource(T animatable1, @Nullable AbstractClientPlayer player) {
                 return new ResourceLocation(RGRBillionaire.MODID, "textures/entity/" + name + ".png");
             }
-        }, animatable, scale, true, false) {
+        }, animatable) {
 
             @Override
             public void render(AbstractClientPlayer player, T animatable1, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
                 if (player.hasEffect(MobEffects.INVISIBILITY))
                     return;
+                poseStack.pushPose();
+                poseStack.scale(scale, scale, scale);
                 if (player.getVehicle() != null) {
-                    poseStack.pushPose();
                     poseStack.translate(0, 0.6, 0);
                     super.render(player, animatable1, entityYaw, partialTick, poseStack, bufferSource, packedLight);
-                    poseStack.popPose();
                 }
                 else super.render(player, animatable1, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+                poseStack.popPose();
             }
         });
     }
@@ -392,6 +394,7 @@ public class ClientModEvents {
                     else super.render(player, animatable1, entityYaw, partialTick, poseStack, bufferSource, packedLight);
                 }
             };
+            renderer.getEntityRenderLayers().clear();
             renderer.addRenderLayer(new GeoPlayerArmorLayer<>(renderer) {
                 @Override
                 public @Nullable VertexConsumer renderRecursivelyPre(GeoBone bone, PoseStack poseStack, AbstractClientPlayer entity, T animatable, VertexConsumer vertexConsumer, int packedLight, int overlay, float red, float green, float blue, float alpha) {

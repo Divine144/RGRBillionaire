@@ -20,7 +20,7 @@ public class MorphInit {
             .maxHealth(10)
             .swingDuration(7)
             .dimensions(0.75f, 0.75f)
-            .eyeHeight(0.85f)
+            .eyeHeight(0.80f)
             .morphedTo(entity -> {
                 BillionaireHolderAttacher.getHolder(entity).ifPresent(h -> h.setMoneyCap(1_000));
             })
@@ -76,16 +76,20 @@ public class MorphInit {
                 entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 3, false, false, false));
                 entity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, -1, 3, false, false, false));
                 var reachDistance = entity.getAttribute(ForgeMod.BLOCK_REACH.get());
-                if (reachDistance != null) {
+                var attackDistance = entity.getAttribute(ForgeMod.ENTITY_REACH.get());
+                if (reachDistance != null && attackDistance != null) {
                     reachDistance.setBaseValue(reachDistance.getAttribute().getDefaultValue() + 3);
+                    attackDistance.setBaseValue(attackDistance.getAttribute().getDefaultValue() + 3);
                 }
             })
             .demorph(entity -> {
                 entity.removeEffect(MobEffects.MOVEMENT_SPEED);
                 entity.removeEffect(MobEffects.DAMAGE_BOOST);
                 var reachDistance = entity.getAttribute(ForgeMod.BLOCK_REACH.get());
-                if (reachDistance != null) {
+                var attackDistance = entity.getAttribute(ForgeMod.ENTITY_REACH.get());
+                if (reachDistance != null && attackDistance != null) {
                     reachDistance.setBaseValue(reachDistance.getAttribute().getDefaultValue());
+                    attackDistance.setBaseValue(attackDistance.getAttribute().getDefaultValue());
                 }
             })
     ));
