@@ -34,15 +34,7 @@ public class StockGraphEntity extends ThrowableProjectile implements GeoEntity {
     public void tick() {
         super.tick();
         if (!level().isClientSide) {
-            Vec3 vec3 = this.getDeltaMovement();
-            if (this.getOwner() != null) {
-                if (this.xRotO == 0.0F && this.yRotO == 0.0F) {
-                    this.setYRot(this.getOwner().getYRot());
-                    this.setXRot(this.getOwner().getXRot());
-                    this.yRotO = getOwner().yRotO;
-                    this.xRotO = getOwner().xRotO;
-                }
-            }
+
             if (this.getOwner() != null && this.distanceTo(getOwner()) >= 25) {
                 discard();
             }

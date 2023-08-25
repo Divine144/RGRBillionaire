@@ -1,6 +1,7 @@
 package com.divinity.hmedia.rgrbillionaire.item;
 
 import com.divinity.hmedia.rgrbillionaire.RGRBillionaire;
+import com.divinity.hmedia.rgrbillionaire.entity.StockGraphEntity;
 import com.divinity.hmedia.rgrbillionaire.init.EntityInit;
 import com.divinity.hmedia.rgrbillionaire.init.SoundInit;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -11,6 +12,7 @@ import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
@@ -89,17 +91,19 @@ public class MarketCrasherItem extends SimpleAnimatedItem {
             return;
         }
         if (pRemainingUseDuration % 20 == 0) {
-            var type = EntityInit.STOCK_GRAPH_ENTITY.get();
-            var entity = type.create(pLevel);
-            if (entity != null) {
-                entity.setPos(player.getX(), player.getEyeY() - 0.40, player.getZ());
-                entity.setOwner(player);
-                entity.setNoGravity(true);
-                entity.shootFromRotation(player, player.getXRot(), player.getYRot(), 0, 0.65F, 0);
-                player.level().addFreshEntity(entity);
-                player.getCooldowns().addCooldown(this, 20);
-                player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundInit.MARKET_CRASHER.get(), SoundSource.PLAYERS, 0.3f, 1);
-            }
+            StockGraphEntity entity = new StockGraphEntity(EntityInit.STOCK_GRAPH_ENTITY.get(), pLevel);
+            entity.setPos(player.getX(), player.getEyeY() - 0.40, player.getZ());
+            entity.setOwner(player);
+            entity.setNoGravity(true);
+            entity.shootFromRotation(player, player.getXRot(), player.getYRot(), 0, 0.65F, 0);
+            entity.setYRot(-Mth.wrapDegrees(player.getYRot()));
+            entity.setXRot(-Mth.wrapDegrees(player.getXRot()));
+            entity.xRotO = -Mth.wrapDegrees(player.xRotO);
+            entity.yRotO = -Mth.wrapDegrees(player.yRotO);
+            player.level().addFreshEntity(entity);
+            player.getCooldowns().addCooldown(this, 20);
+            player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundInit.MARKET_CRASHER.get(), SoundSource.PLAYERS, 0.3f, 1);
+
         }
     }
 
