@@ -18,7 +18,6 @@ public class MorphInit {
 
     public static final RegistryObject<Morph> BROKE_BABY = MORPHS.register("broke_baby", () -> new Morph(new Morph.Properties<>()
             .maxHealth(10)
-            .swingDuration(7)
             .dimensions(0.65f, 0.65f)
             .eyeHeight(0.5f)
             .morphedTo(entity -> {
@@ -27,7 +26,6 @@ public class MorphInit {
     ));
     public static final RegistryObject<Morph> TIGHT_BUDGET_TEEN = MORPHS.register("tight_budget_teen", () -> new Morph(new Morph.Properties<>()
             .maxHealth(30)
-            .swingDuration(7)
             .dimensions(0.6f, 1.8f)
             .morphedTo(entity -> {
                 BillionaireHolderAttacher.getHolder(entity).ifPresent(h -> h.setMoneyCap(75_000));
@@ -41,7 +39,6 @@ public class MorphInit {
     ));
     public static final RegistryObject<Morph> MIDDLE_CLASS_MAN = MORPHS.register("middle_class_man", () -> new Morph(new Morph.Properties<>()
             .maxHealth(50)
-            .swingDuration(7)
             .dimensions(0.6f, 1.8f)
             .morphedTo(entity -> {
                 BillionaireHolderAttacher.getHolder(entity).ifPresent(h -> h.setMoneyCap(500_000));
@@ -55,7 +52,6 @@ public class MorphInit {
     ));
     public static final RegistryObject<Morph> MULTI_MILLIONAIRE = MORPHS.register("multi_millionaire", () -> new Morph(new Morph.Properties<>()
             .maxHealth(70)
-            .swingDuration(7)
             .dimensions(0.6f, 1.8f)
             .morphedTo(entity -> {
                 BillionaireHolderAttacher.getHolder(entity).ifPresent(h -> h.setMoneyCap(10_000_000));
@@ -69,7 +65,6 @@ public class MorphInit {
     ));
     public static final RegistryObject<Morph> THE_BILLIONAIRE = MORPHS.register("the_billionaire", () -> new Morph(new Morph.Properties<>()
             .maxHealth(100)
-            .swingDuration(7)
             .dimensions(2, 5)
             .morphedTo(entity -> {
                 BillionaireHolderAttacher.getHolder(entity).ifPresent(h -> h.setMoneyCap(1_000_000_000));
