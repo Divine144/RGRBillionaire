@@ -1,7 +1,7 @@
 plugins {
     id 'eclipse'
     id 'maven-publish'
-    id 'net.minecraftforge.gradle' version '5.1.+'
+    id 'net.neoforged.gradle' version '[6.0,6.2)'
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
     id 'org.spongepowered.mixin' version '0.7.+'
     id 'dev._100media.gradleutils' version '1.+'
@@ -107,6 +107,14 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
+    maven {
+        name = 'MinecraftForge'
+        url = 'https://maven.minecraftforge.net/'
+        content {
+            includeGroup 'net.minecraftforge'
+        }
+    }
+
     maven hundredMedia.get100MediaMaven()
 
     maven {
@@ -115,9 +123,6 @@ repositories {
         content {
             includeGroup 'curse.maven'
         }
-    }
-    maven {
-        url = 'https://harleyoconnor.com/maven'
     }
 }
 
