@@ -244,7 +244,6 @@ public class DollarFishingHookEntity extends FishingHook implements GeoEntity {
                                 this.setHookedEntity((Entity)null);
                                 this.currentState = FishHookState.FLYING;
                                 discard();
-                                return;
                             }
 
                         }
